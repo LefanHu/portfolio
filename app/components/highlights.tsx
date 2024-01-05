@@ -1,6 +1,18 @@
 'use client'
 
 import Image from "next/image"
+import { LoremIpsum } from "lorem-ipsum";
+
+const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 8,
+    min: 4
+  },
+  wordsPerSentence: {
+    max: 16,
+    min: 4
+  }
+});
 
 export default function Highlights() {
   return (
@@ -8,19 +20,18 @@ export default function Highlights() {
       <div className="container mx-auto px-6 text-center md:px-12">
         <div className="mb-16">
           <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 dark:text-white md:text-4xl">
-            Tailus blocks leadership
+            Computer Engineer @ University of Waterloo
           </h2>
           <p className="text-gray-600 dark:text-gray-300 lg:mx-auto lg:w-8/12">
-            Tailus prides itself not only on award-winning technology, but also on the talent of its
-            people of some of the brightest minds and most experienced executives in business.
+            {/* {lorem.generateSentences(3)} */}
           </p>
         </div>
         <div className="grid gap-28 py-20 md:grid-cols-3 md:gap-12">
-          <div className="group space-y-8 border-t-4 border-gray-100 dark:border-gray-800">
-            <div className="mx-auto -mt-16 h-32 w-32 rotate-45 overflow-hidden rounded-[2rem] border-dashed border-2 border-sky-500">
+          <div className="group space-y-8 border-t-4 border-gray-100 dark:border-white-800">
+            <div className="mx-auto -mt-16 h-32 w-32 rotate-45 overflow-hidden rounded-[2rem]">
               <Image
                 className="mx-auto h-full w-full -rotate-45 scale-125 object-cover transition duration-300 group-hover:scale-[1.4]"
-                src="/images/oni.png"
+                src="/images/placeholder.png"
                 width={500}
                 height={500}
                 alt="oni"
@@ -35,11 +46,11 @@ export default function Highlights() {
             </div>
           </div>
 
-          <div className="group space-y-8 border-t-4 border-gray-100 dark:border-gray-800">
-            <div className="mx-auto -mt-16 h-32 w-32 rotate-45 overflow-hidden rounded-[2rem] border-solid border-2 border-sky-500">
+          <div className="group space-y-8 border-t-4 border-gray-100 dark:border-white-800">
+            <div className="mx-auto -mt-16 h-32 w-32 rotate-45 overflow-hidden rounded-[2rem]">
               <Image
                 className="mx-auto h-full w-full -rotate-45 scale-125 object-cover transition duration-300 group-hover:scale-[1.4]"
-                src="/images/oni.png"
+                src="/images/placeholder.png"
                 width={500}
                 height={500}
                 alt="oni"
@@ -54,11 +65,11 @@ export default function Highlights() {
             </div>
           </div>
 
-          <div className="group space-y-8 border-t-4 border-gray-100 dark:border-gray-800">
-            <div className="mx-auto -mt-16 h-32 w-32 rotate-45 overflow-hidden rounded-[2rem] border-dashed border-2 border-sky-500">
+          <div className="group space-y-8 border-t-4 border-gray-100 dark:border-white-800">
+            <div className="mx-auto -mt-16 h-32 w-32 rotate-45 overflow-hidden rounded-[2rem]">
               <Image
                 className="mx-auto h-full w-full -rotate-45 scale-125 object-cover transition duration-300 group-hover:scale-[1.4]"
-                src="/images/oni.png"
+                src="/images/placeholder.png"
                 width={500}
                 height={500}
                 alt="oni"
