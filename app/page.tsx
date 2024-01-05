@@ -7,9 +7,9 @@ export default function Home() {
     <main className="h-lvh">
       <Navbar />
       <div className="h-full flex items-center justify-center">
-        <div>
+        <div className="w-full">
           <h2 className="pt-10 text-center text-6xl font-bold md:text-7xl flex items-center justify-center bg-gradient-to-l from-purple-500 via-violet-800 to-pink-400 bg-clip-text text-transparent">
-            Lefan's Portfolio
+            Lefan&apos;s Portfolio
           </h2>
           <Highlights></Highlights>
         </div>
