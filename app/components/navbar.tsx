@@ -2,30 +2,33 @@
 
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { AcademicCapIcon, Bars3Icon, BellIcon, DocumentTextIcon, LightBulbIcon, PuzzlePieceIcon, RocketLaunchIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import {
+  AcademicCapIcon,
+  Bars3Icon,
+  BellIcon,
+  DocumentTextIcon,
+  LightBulbIcon,
+  PuzzlePieceIcon,
+  RocketLaunchIcon,
+  StarIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline'
 import FlyoutMenu from './flyoutmenu'
 import Image from 'next/image'
-
-// const navigation = [
-//   { name: 'test', href: '#', current: true },
-//   { name: 'Projects', href: '#', current: false },
-//   { name: 'Algorithms', href: '#', current: false },
-//   { name: 'Fun Stuff', href: '#', current: false },
-// ]
 
 const nav = [
   {
     title: "Home",
     entries: [
       {
-        name: "About Me",
+        name: "About Me (Home Page)",
         description: "Who am I?",
         href: "/",
         icon: AcademicCapIcon
       }, {
         name: "Resume",
         description: "Current resume",
-        href: "#",
+        href: "/resume-page",
         icon: DocumentTextIcon
       },
     ]
@@ -59,13 +62,13 @@ const nav = [
       {
         name: "Algorithm Gallery",
         description: "some description",
-        href: "#",
+        href: "/algo",
         icon: PuzzlePieceIcon
       },
       {
         name: "JS Canvas",
         description: "A collection of weird and playful experiments with JS canvas",
-        href: "#",
+        href: "/js",
         icon: LightBulbIcon
       },
     ]
@@ -155,27 +158,7 @@ export default function Navbar() {
                             href="#"
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
-                            Your Profile
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Sign out
+                            Contact Me
                           </a>
                         )}
                       </Menu.Item>
@@ -185,25 +168,6 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-
-          {/* <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
-          </Disclosure.Panel> */}
         </>
       )
       }
