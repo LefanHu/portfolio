@@ -1,0 +1,10 @@
+services:
+  portfolio:
+    image: portfolio:latest
+    container_name: portfolio
+    restart: unless-stopped
+
+networks:
+  default:
+    name: swag
+    external: true
