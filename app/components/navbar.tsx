@@ -2,7 +2,7 @@
 
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { AcademicCapIcon, Bars3Icon, BellIcon, BoltIcon, DocumentTextIcon, LightBulbIcon, PuzzlePieceIcon, RocketLaunchIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { AcademicCapIcon, Bars3Icon, BellIcon, DocumentTextIcon, LightBulbIcon, PuzzlePieceIcon, RocketLaunchIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import FlyoutMenu from './flyoutmenu'
 import Image from 'next/image'
 
@@ -130,8 +130,10 @@ export default function Navbar() {
                     <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
-                      <img
+                      <Image
                         className="h-8 w-8 rounded-full"
+                        width={500}
+                        height={500}
                         src="/images/profilepic.jpeg"
                         alt=""
                       />
