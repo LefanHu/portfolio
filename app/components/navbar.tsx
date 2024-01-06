@@ -2,47 +2,71 @@
 
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, RocketLaunchIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { AcademicCapIcon, Bars3Icon, BellIcon, BoltIcon, DocumentTextIcon, LightBulbIcon, PuzzlePieceIcon, RocketLaunchIcon, StarIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import FlyoutMenu from './flyoutmenu'
 import Image from 'next/image'
 
-const navigation = [
-  { name: 'Home', href: '#', current: true },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Algorithms', href: '#', current: false },
-  { name: 'Fun Stuff', href: '#', current: false },
-]
+// const navigation = [
+//   { name: 'test', href: '#', current: true },
+//   { name: 'Projects', href: '#', current: false },
+//   { name: 'Algorithms', href: '#', current: false },
+//   { name: 'Fun Stuff', href: '#', current: false },
+// ]
 
 const nav = [
   {
-    title: "navbar item 1",
+    title: "Home",
     entries: [
       {
-        name: "some name",
-        description: "some description",
-        href: "#",
-        icon: RocketLaunchIcon
+        name: "About Me",
+        description: "Who am I?",
+        href: "/",
+        icon: AcademicCapIcon
       }, {
-        name: "some name 2",
-        description: "some description 2",
+        name: "Resume",
+        description: "Current resume",
         href: "#",
-        icon: RocketLaunchIcon
+        icon: DocumentTextIcon
       },
     ]
   },
   {
-    title: "navbar item 2",
+    title: "Projects",
     entries: [
       {
-        name: "some name",
+        name: "On-going",
+        description: "Some on-going projects",
+        href: "/project-gallery",
+        icon: RocketLaunchIcon
+      },
+      {
+        name: "Completed",
+        description: "Some of my completed projects (including hackathons)",
+        href: "#",
+        icon: StarIcon
+      },
+      {
+        name: "Dropped",
+        description: "Projects that were unfeasible / uninteresting",
+        href: "#",
+        icon: XMarkIcon
+      },
+    ]
+  },
+  {
+    title: "Fun Stuff",
+    entries: [
+      {
+        name: "Algorithm Gallery",
         description: "some description",
         href: "#",
-        icon: RocketLaunchIcon
-      }, {
-        name: "some name 2",
-        description: "some description 2",
+        icon: PuzzlePieceIcon
+      },
+      {
+        name: "JS Canvas",
+        description: "A collection of weird and playful experiments with JS canvas",
         href: "#",
-        icon: RocketLaunchIcon
+        icon: LightBulbIcon
       },
     ]
   },
@@ -87,19 +111,6 @@ export default function Navbar() {
                         />
                       </a>
                     ))}
-                    {/* {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
-                      </a>
-                    ))} */}
                   </div>
                 </div>
               </div>
@@ -173,7 +184,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          {/* <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
               {navigation.map((item) => (
                 <Disclosure.Button
@@ -190,7 +201,7 @@ export default function Navbar() {
                 </Disclosure.Button>
               ))}
             </div>
-          </Disclosure.Panel>
+          </Disclosure.Panel> */}
         </>
       )
       }

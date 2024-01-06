@@ -20,10 +20,11 @@ export default function Highlights() {
       <div className="container mx-auto px-6 text-center md:px-12">
         <div className="mb-16">
           <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 dark:text-white md:text-4xl">
-            Computer Engineer @ University of Waterloo
+            2-nd Year Computer Engineer @ University of Waterloo
           </h2>
           <p className="text-gray-600 dark:text-gray-300 lg:mx-auto lg:w-8/12">
             {/* {lorem.generateSentences(3)} */}
+            Deserunt tempor reprehenderit elit ex sit voluptate aute consectetur labore nostrud non mollit pariatur anim incididunt. Ea nulla ut reprehenderit ex labore. Cupidatat laborum fugiat nostrud magna irure qui proident exercitation et do id nostrud aliqua culpa.
           </p>
         </div>
         <div className="grid gap-28 py-20 md:grid-cols-3 md:gap-12">
