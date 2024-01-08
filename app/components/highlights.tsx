@@ -28,7 +28,7 @@ export default function Highlights() {
         </div>
         <div className="grid gap-28 py-20 md:grid-cols-3 md:gap-12">
           <div className="group space-y-8 border-t-4 border-gray-100 dark:border-white-800">
-            <div className="mx-auto -mt-16 h-32 w-32 overflow-hidden rounded-[2rem]">
+            <div className="mx-auto -mt-16 h-32 w-32 overflow-hidden rounded-[0.5rem]">
               <Image
                 className="mx-auto h-full w-full object-cover transition duration-300 group-hover:scale-[1.1] bg-white"
                 src="/images/interqu.svg"
@@ -47,7 +47,7 @@ export default function Highlights() {
           </div>
 
           <div className="group space-y-8 border-t-4 border-gray-100 dark:border-white-800">
-            <div className="mx-auto -mt-16 h-32 w-32  overflow-hidden rounded-[2rem]">
+            <div className="mx-auto -mt-16 h-32 w-32  overflow-hidden rounded-[0.5rem]">
               <Image
                 className="mx-auto h-full w-full object-cover transition duration-300 group-hover:scale-[1.1]"
                 src="/images/hivehq.png"
@@ -66,7 +66,7 @@ export default function Highlights() {
           </div>
 
           <div className="group space-y-8 border-t-4 border-gray-100 dark:border-white-800">
-            <div className="mx-auto -mt-16 h-32 w-32  overflow-hidden rounded-[2rem]">
+            <div className="mx-auto -mt-16 h-32 w-32  overflow-hidden rounded-[0.5rem]">
               <Image
                 className="mx-auto h-full w-full scale-150 object-cover transition duration-300 group-hover:scale-[1.6]"
                 src="/images/drawbot-logo.png"
