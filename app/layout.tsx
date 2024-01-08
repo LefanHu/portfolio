@@ -6,7 +6,7 @@ import Navbar from './components/navbar'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Lefan&apos;s Website',
+  title: "Lefan's Website",
   description: 'Portfolio website showcasing various projects & algorithms',
 }
 
@@ -18,8 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
-        {children}</body>
+        <div className='flex flex-col h-screen'>
+          <Navbar />
+          {children}
+        </div>
+      </body>
     </html>
   )
 }

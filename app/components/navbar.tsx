@@ -11,6 +11,7 @@ import {
   PuzzlePieceIcon,
   RocketLaunchIcon,
   StarIcon,
+  WindowIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline'
 import FlyoutMenu from './flyoutmenu'
@@ -70,6 +71,12 @@ const nav = [
         description: "A collection of weird and playful experiments with JS canvas",
         href: "/js",
         icon: LightBulbIcon
+      },
+      {
+        name: "CSS",
+        description: "A collection of react components that I've written",
+        href: "/in-complete",
+        icon: WindowIcon
       },
     ]
   },
