@@ -1,5 +1,4 @@
-import ProjectCard from "@/app/components/projectCard"
-import Navbar from "../components/navbar"
+import ProjectCard from "@/components/projectCard"
 
 const products = [
   {
