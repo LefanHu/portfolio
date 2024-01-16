@@ -142,8 +142,8 @@ export default function Navbar() {
                       <span className="sr-only">Open user menu</span>
                       <Image
                         className="h-8 w-8 rounded-full"
-                        width={500}
-                        height={500}
+                        width={50}
+                        height={50}
                         src="/images/profilepic.jpeg"
                         alt=""
                       />

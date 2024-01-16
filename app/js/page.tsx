@@ -1,6 +1,5 @@
 import AdList from "@/components/adList";
-import Divider from "@/components/divider";
-import GenericList from "@/components/genericList";
+import JSCanvas from "@/components/jsCanvas";
 import { WindowIcon } from "@heroicons/react/24/outline";
 
 const jsList = [
@@ -10,22 +9,12 @@ const jsList = [
     icon: WindowIcon
   },
   {
-    title: "experiment #1",
+    title: "experiment #2",
     description: "some description",
     icon: WindowIcon
   },
   {
-    title: "experiment #1",
-    description: "some description",
-    icon: WindowIcon
-  },
-  {
-    title: "experiment #1",
-    description: "some description",
-    icon: WindowIcon
-  },
-  {
-    title: "experiment #1",
+    title: "experiment #3",
     description: "some description",
     icon: WindowIcon
   },
@@ -37,7 +26,8 @@ export default function JSPage() {
       <div className="col-span-1 h-full box-border">
         <AdList className="flex-grow-1" entries={jsList} title="JS Experiments" />
       </div>
-      <div className="ml-8 col-span-3 rounded-xl border-white border-2 border-dashed box-border">
+      <div className="ml-8 col-span-3 rounded-xl border-white border-2 border-dashed box-border overflow-clip">
+        <JSCanvas className="w-full h-full" scriptSrc="scripts/balls.js" />
       </div>
     </div>
   )
