@@ -1,6 +1,6 @@
-import Highlights from "../components/highlights";
-import HoverTiltCard from "../components/hoverTiltCard";
-import ParticlesBackground from "../components/particlesbackground";
+import Highlights from "@/components/highlights";
+import HoverTiltCard from "@/components/hoverTiltCard";
+import ParticlesBackground from "@/components/particlesbackground";
 
 const features = [
   { name: 'Origin', description: 'Designed by Good Goods, Inc.' },
