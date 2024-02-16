@@ -13,7 +13,7 @@ interface ImageData {
 
 interface ImageSliderProps {
   className?: string;
-  imageList: ImageData[];
+  imageList?: ImageData[];
 }
 
 export default function ImageSlider({

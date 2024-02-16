@@ -9,7 +9,7 @@ export default function Warn() {
           Screen size too small!
         </h1>
         <p className="mt-6 text-base leading-7 text-gray-600">
-          Sorry silly goose, I forbid passage.
+          Sorry silly goose, your car&apos;s extended waranty has expired.
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Link

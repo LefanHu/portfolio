@@ -50,7 +50,7 @@ export default function SillyGoose() {
         <p className="mt-6 text-lg leading-8 text-gray-600">
           My silly goose is 20? Whoa...
         </p>
-        <Link href="/silly-goose/intro" className="z-51">
+        <Link href="/silly-goose/wat" className="z-51">
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <div className="z-11 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               Open Your Birthday Present
@@ -60,7 +60,7 @@ export default function SillyGoose() {
       </div>
       {
         <Explosion
-          autorun={{ speed: 1, delay: 1000 }}
+          autorun={{ speed: 1.5, delay: 1000 }}
           decorateOptions={(options) => {
             options.gravity = 1;
             return options;
