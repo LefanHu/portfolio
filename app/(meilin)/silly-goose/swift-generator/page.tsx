@@ -1,14 +1,14 @@
 "use client";
 
-import ImageSlider from "@/components/imageSlider";
 import {
-  ArchiveBoxArrowDownIcon,
+  HeartIcon,
   InformationCircleIcon,
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import Snow from "react-canvas-confetti/dist/presets/snow";
 
 type InferenceInput = {
   inputs: string;
@@ -20,7 +20,8 @@ type InferenceInput = {
 
 const NEGATIVE_PROMPTS =
   " Negative propmts: blank eyes, extra fingers, missing limbs, extra limbs";
-const POSITIVE_PROMPTS = "beautiful face, beautiful eyes, modeling.";
+const POSITIVE_PROMPTS = ", beautiful face, beautiful eyes.";
+// const POSITIVE_PROMPTS = "beautiful face, beautiful eyes, modeling.";
 
 export default function SwiftGenerator() {
   const [imageUrl, setImageUrl] = useState("/images/bucket-swift.jpg");
@@ -67,7 +68,7 @@ export default function SwiftGenerator() {
     if (isGenerating) {
       return;
     }
-    setIsGenerating(true)
+    setIsGenerating(true);
 
     // show loading for image
 
@@ -90,7 +91,7 @@ export default function SwiftGenerator() {
     const url = URL.createObjectURL(result);
     console.log(url);
     setImageUrl(url);
-    setIsGenerating(false)
+    setIsGenerating(false);
   };
   return (
     <div className="overflow-hidden py-20">
@@ -139,7 +140,7 @@ export default function SwiftGenerator() {
                         cy="12"
                         r="10"
                         stroke="currentColor"
-                        stroke-width="4"
+                        strokeWidth="4"
                       ></circle>
                       <path
                         className="opacity-75"
@@ -150,6 +151,17 @@ export default function SwiftGenerator() {
                   )}
                   Generate
                 </button>
+                {isGenerating && (
+                  <Snow
+                    autorun={{ speed: 10, delay: 1000 }}
+                    decorateOptions={(options) => {
+                      options.gravity = 1;
+                      options.shapes = ["circle", "square", "star"]
+                      return options;
+                    }}
+                    globalOptions={{ useWorker: true }}
+                  />
+                )}
               </form>
               <div className="flex">
                 <p className="mt-2 text-xl font-bold tracking-tight text-gray-900">
@@ -163,9 +175,9 @@ export default function SwiftGenerator() {
                     Taylor Swift Generator.
                   </dt>
                   <dd className="">
-                    This website will generate taylor swift images for you...
-                    For example on the right you can see taylor swift in a
-                    bucket...swimming in sand... and even in a selfie with you
+                    Your <b>first</b> image can take up to <b>2 minutes</b>,
+                    please have patience silly goose... Subsequent images should
+                    only take <b>15 seconds</b>...
                   </dd>
                 </div>
                 <div className="relative pl-9">
@@ -174,19 +186,16 @@ export default function SwiftGenerator() {
                     Be persistent with the images.
                   </dt>
                   <dd className="">
-                    It generates a lot of taylor swift images... if the image
-                    comes out weird... just try again :D
+                    If the image doesn&apos;t contain what you specified, try
+                    again or change up the wording!
                   </dd>
                 </div>
                 <div className="relative pl-9">
                   <dt className="inline font-semibold text-gray-900">
-                    <ArchiveBoxArrowDownIcon className="absolute left-1 top-1 h-5 w-5 text-indigo-600" />
-                    Database backups.
+                    <HeartIcon className="absolute left-1 top-1 h-5 w-5 text-indigo-600" />
+                    Enjoy!
                   </dt>
-                  <dd className="">
-                    Generated images dont&apos;t disappear, they get saved in
-                    the image gallery. You can access it at the top.
-                  </dd>
+                  <dd className="">Play around with it and have fun :)</dd>
                 </div>
               </dl>
             </div>
@@ -197,10 +206,8 @@ export default function SwiftGenerator() {
             height={1024}
             alt="a generated image of taylor swift"
             className="rounded-lg mt-14"
+            priority={true}
           />
-          {/* <ImageSlider
-            className="rounded-lg mt-14"
-          ></ImageSlider> */}
         </div>
       </div>
     </div>
