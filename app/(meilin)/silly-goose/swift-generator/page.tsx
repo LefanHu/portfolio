@@ -12,6 +12,10 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 type InferenceInput = {
   inputs: string;
+  options: {
+    use_cache: boolean;
+    wait_for_model: boolean;
+  };
 };
 
 const NEGATIVE_PROMPTS =
@@ -20,8 +24,13 @@ const POSITIVE_PROMPTS = "beautiful face, beautiful eyes, modeling.";
 
 export default function SwiftGenerator() {
   const [imageUrl, setImageUrl] = useState("/images/bucket-swift.jpg");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [inputs, setInputs] = useState<InferenceInput>({
     inputs: "",
+    options: {
+      use_cache: false,
+      wait_for_model: true,
+    },
   });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +63,12 @@ export default function SwiftGenerator() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
+    // if is already waiting, don't submit again
+    if (isGenerating) {
+      return;
+    }
+    setIsGenerating(true)
+
     // show loading for image
 
     // api fetch
@@ -64,7 +79,9 @@ export default function SwiftGenerator() {
     const response = await fetch(
       "https://api-inference.huggingface.co/models/leaf-me-alone/sdxl-ts-lora-dream",
       {
-        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_TOKEN}` },
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_TOKEN}`,
+        },
         method: "POST",
         body: JSON.stringify(inputs),
       }
@@ -73,6 +90,7 @@ export default function SwiftGenerator() {
     const url = URL.createObjectURL(result);
     console.log(url);
     setImageUrl(url);
+    setIsGenerating(false)
   };
   return (
     <div className="overflow-hidden py-20">
@@ -108,6 +126,28 @@ export default function SwiftGenerator() {
                   type="submit"
                   className="rounded-lg inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-blue-700 border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                 >
+                  {isGenerating && (
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  )}
                   Generate
                 </button>
               </form>
