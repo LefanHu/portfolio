@@ -85,8 +85,8 @@ export default function SwiftGallery() {
                 <CakeIcon className="ml-5 mt-1 w-8 text-black" />
               </div>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                It&pos;s your birthday today... I started working on this in
-                Februrary, and now it&pos;s done... This is your birthday gift
+                It&apos;s your birthday today... I started working on this in
+                Februrary, and now it&apos;s done... This is your birthday gift
                 from me :)
               </p>
               <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
@@ -117,15 +117,15 @@ export default function SwiftGallery() {
                     Database backups.
                   </dt>
                   <dd className="">
-                    Generated images dont&pos;t disappear, they get saved in the
-                    image gallery. You can access it at the top.
+                    Generated images dont&apos;t disappear, they get saved in
+                    the image gallery. You can access it at the top.
                   </dd>
                 </div>
               </dl>
             </div>
           </div>
           <ImageSlider
-            className="rounded-lg overflow-clip mt-14"
+            className="rounded-lg mt-14"
             imageList={carouselList}
           ></ImageSlider>
         </div>

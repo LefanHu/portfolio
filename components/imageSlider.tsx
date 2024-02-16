@@ -54,6 +54,7 @@ export default function ImageSlider({
         {imageList.map((entry) => (
           <div key={entry.alt}>
             <Image
+              className="rounded-lg"
               src={entry.src}
               alt={entry.alt}
               width={entry.height}
