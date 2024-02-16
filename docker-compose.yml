@@ -3,6 +3,9 @@ services:
     image: portfolio:latest
     container_name: portfolio
     restart: unless-stopped
+    env_file:
+      - .env.local
+      - .env.production
 
 networks:
   default:
