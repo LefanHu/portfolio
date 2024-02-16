@@ -35,7 +35,7 @@ export default function RootLayout({
               <div className="flex lg:flex-1"></div>
               <div className="hidden md:flex md:gap-x-10 lg:flex lg:gap-x-12">
                 <Link
-                  href="/silly-goose"
+                  href="/silly-goose/happy-birthday"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
                   Happy Birthday
