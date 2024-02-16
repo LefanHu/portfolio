@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
+import Link from "next/link";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,30 +34,36 @@ export default function RootLayout({
             >
               <div className="flex lg:flex-1"></div>
               <div className="hidden md:flex md:gap-x-10 lg:flex lg:gap-x-12">
-                <a
-                  href="#"
+                <Link
+                  href="/silly-goose"
+                  className="text-sm font-semibold leading-6 text-gray-900"
+                >
+                  Happy Birthday
+                </Link>
+                <Link
+                  href="/silly-goose/wat"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
                   Wat is this?
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  href="/silly-goose/image-gallery"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
                   Image Gallery
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  href="/silly-goose/swift-generator"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
                   Swift Generator
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  href="/silly-goose/simp"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
                   How did I make this?
-                </a>
+                </Link>
               </div>
               <div className="hidden lg:flex lg:flex-1 lg:justify-end"></div>
             </nav>
