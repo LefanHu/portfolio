@@ -2,8 +2,8 @@
 'use client'
 
 import { ReactElement } from "react";
-import HoverTiltCard from "../../components/hoverTiltCard"
-import FlyoutMenu from "../../components/flyoutmenu";
+import HoverTiltCard from "@/components/hoverTiltCard"
+import FlyoutMenu from "@/components/flyoutmenu";
 import { LightBulbIcon, PuzzlePieceIcon, WindowIcon } from "@heroicons/react/24/outline";
 
 const components: ReactElement[] = [
