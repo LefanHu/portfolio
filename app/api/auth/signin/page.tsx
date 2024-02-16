@@ -29,7 +29,7 @@ export default function LoginPage({ searchParams }: PageProps) {
     await signIn("credentials", {
       username: inputs.username,
       password: inputs.password,
-      callbackUrl: "/silly-goose",
+      callbackUrl: "/silly-goose/happy-birthday",
     });
   };
   return (
