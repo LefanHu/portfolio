@@ -18,10 +18,8 @@ type InferenceInput = {
   };
 };
 
-const NEGATIVE_PROMPTS =
-  " Negative propmts: blank eyes, extra fingers, missing limbs, extra limbs";
-const POSITIVE_PROMPTS = ", beautiful face, beautiful eyes.";
-// const POSITIVE_PROMPTS = "beautiful face, beautiful eyes, modeling.";
+const NEGATIVE_PROMPTS = "";
+const POSITIVE_PROMPTS = "";
 
 export default function SwiftGenerator() {
   const [imageUrl, setImageUrl] = useState("/images/chickenbutt.webp");
@@ -154,7 +152,7 @@ export default function SwiftGenerator() {
                     autorun={{ speed: 10, delay: 1000 }}
                     decorateOptions={(options) => {
                       options.gravity = 1;
-                      options.shapes = ["circle", "square", "star"]
+                      options.shapes = ["circle", "square", "star"];
                       return options;
                     }}
                     globalOptions={{ useWorker: true }}
