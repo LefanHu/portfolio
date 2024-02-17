@@ -24,7 +24,7 @@ const POSITIVE_PROMPTS = ", beautiful face, beautiful eyes.";
 // const POSITIVE_PROMPTS = "beautiful face, beautiful eyes, modeling.";
 
 export default function SwiftGenerator() {
-  const [imageUrl, setImageUrl] = useState("/images/bucket-swift.jpg");
+  const [imageUrl, setImageUrl] = useState("/images/chickenbutt.webp");
   const [isGenerating, setIsGenerating] = useState(false);
   const [inputs, setInputs] = useState<InferenceInput>({
     inputs: "",
