@@ -70,8 +70,6 @@ export default function SwiftGenerator() {
     }
     setIsGenerating(true);
 
-    // show loading for image
-
     // api fetch
     inputs["inputs"] = inputs["inputs"].concat(
       POSITIVE_PROMPTS,

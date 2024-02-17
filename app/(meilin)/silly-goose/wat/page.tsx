@@ -38,6 +38,18 @@ export default function SwiftGallery() {
 
   const carouselList = [
     {
+      src: "/images/swift-beach.jpg",
+      alt: "taylor swift modeling on beach",
+      width: 1024,
+      height: 1024,
+    },
+    {
+      src: "/images/swift-castle.jpg",
+      alt: "taylor swift beach sand castle",
+      width: 1024,
+      height: 1024,
+    },
+    {
       src: "/images/taylor-sand.jpg",
       alt: "taylor swift swimming in sand",
       width: 1024,
