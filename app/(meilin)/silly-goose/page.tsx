@@ -1,5 +1,6 @@
 "use client";
 
+import RunawayButton from "@/components/runawayButton";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -28,6 +29,9 @@ export default function SwiftGallery() {
     return () => window.removeEventListener("resize", handleResize);
   });
   return (
-    <div className="text-black">easter egg! hehe</div>
+    <div>
+      <div className="text-black">easter egg! hehe</div>
+      <RunawayButton href="/silly-goose/happy-birthday" />
+    </div>
   );
 }
