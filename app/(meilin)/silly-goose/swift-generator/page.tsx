@@ -235,6 +235,7 @@ export default function SwiftGenerator() {
                     decorateOptions={(options) => {
                       options.gravity = 1;
                       options.shapes = ["circle", "square", "star"];
+                      options.colors = ["FFFFA6"];
                       return options;
                     }}
                     globalOptions={{ useWorker: true }}

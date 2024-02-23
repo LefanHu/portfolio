@@ -1,7 +1,6 @@
 "use client";
 
 import BlurredImage from "@/components/blurredImage";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -67,7 +66,7 @@ export default function SwiftGallery() {
   return (
     <div className="h-full max-w-2xl mx-auto py-6 px-4 sm:py-8 sm:px-6 lg:max-w-7xl lg:px-8 overflow-y-scroll no-scrollbar">
       <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        {images.map((entry) => (
+        {images.reverse().map((entry) => (
           <BlurredImage
             key={entry._id}
             src={entry.image_url}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface BlurredImageData {
   src?: string;
@@ -16,14 +17,14 @@ export default function BlurredImage({
 }: BlurredImageData) {
   const [isLoading, setLoading] = useState(true);
 
-  if (caption.length > 100) {
-    caption = caption.slice(0, 97) + "...";
+  if (caption.length > 50) {
+    caption = caption.slice(0, 47) + "...";
   }
 
   // TODO: add button to copy full prompt
 
   return (
-    <a href="#" className="group">
+    <Link href={src} className="group">
       <div className="p-2 max-w-sm rounded-lg overflow-hidden shadow-lg border-solid border border-black bg-white">
         <Image
           alt=""
@@ -40,6 +41,6 @@ export default function BlurredImage({
         />
       </div>
       <h3 className="mt-4 text-sm text-gray-700">{caption}</h3>
-    </a>
+    </Link>
   );
 }
