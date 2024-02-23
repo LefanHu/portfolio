@@ -10,7 +10,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "For my silly goose",
-  description: "Happy birthday project to my silly goose... I hope she's happy <3",
+  description:
+    "Happy birthday project to my silly goose... I hope she's happy <3",
 };
 
 export default function RootLayout({
@@ -68,7 +69,7 @@ export default function RootLayout({
               <div className="hidden lg:flex lg:flex-1 lg:justify-end"></div>
             </nav>
           </header>
-          <div className="relative isolate px-6 pt-14 lg:px-8">
+          <div className="relative isolate px-6 pt-14 lg:px-8 h-screen">
             <div
               className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
               aria-hidden="true"
@@ -78,7 +79,9 @@ export default function RootLayout({
                 style={clipPathStyle}
               ></div>
             </div>
-            <div className="flex flex-col h-full box-border">{children}</div>
+            <div className="mt-3 flex flex-col h-full box-border">
+              {children}
+            </div>
             <div
               className="absolute -z-10 inset-x-0 top-[calc(100%-13rem)] transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
               aria-hidden="true"

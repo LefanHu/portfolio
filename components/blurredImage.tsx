@@ -2,33 +2,38 @@ import { useState } from "react";
 import Image from "next/image";
 
 interface BlurredImageData {
-  src: string;
-  caption: string;
+  src?: string;
+  caption?: string;
 }
 
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function BlurredImage(props: BlurredImageData) {
+export default function BlurredImage({
+  src = "/images/swift-beach.jpg",
+  caption = "taylor swift dancing on the beach",
+}: BlurredImageData) {
   const [isLoading, setLoading] = useState(true);
 
-  if (props.caption.length > 100) {
-    props.caption = props.caption.slice(0, 97) + "...";
+  if (caption.length > 100) {
+    caption = caption.slice(0, 97) + "...";
   }
 
   // TODO: add button to copy full prompt
 
   return (
     <a href="#" className="group">
-      <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+      <div className="p-2 max-w-sm rounded-lg overflow-hidden shadow-lg border-solid border border-black bg-white">
         <Image
           alt=""
-          src={props.src}
-          layout="fill"
+          src={src}
+          //   layout="fill"
           objectFit="cover"
+          width={500}
+          height={500}
           className={cn(
-            "group-hover:opacity-75 duration-700 ease-in-out",
+            "group-hover:opacity-75 duration-300 ease-in-out rounded-lg",
             isLoading
               ? "grayscale blur-2xl scale-110"
               : "grayscale-0 blur-0 scale-100"
@@ -36,7 +41,7 @@ export default function BlurredImage(props: BlurredImageData) {
           onLoadingComplete={() => setLoading(false)}
         />
       </div>
-      <h3 className="mt-4 text-sm text-gray-700">{props.caption}</h3>
+      <h3 className="mt-4 text-sm text-gray-700">{caption}</h3>
     </a>
   );
 }
