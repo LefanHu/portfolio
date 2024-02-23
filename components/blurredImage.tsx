@@ -11,12 +11,21 @@ function cn(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
+const copyToClipboard = async (text: string) => {
+  try {
+    navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export default function BlurredImage({
   src = "/images/swift-beach.jpg",
   caption = "taylor swift dancing on the beach",
 }: BlurredImageData) {
   const [isLoading, setLoading] = useState(true);
 
+  const originalCaption: string = caption;
   if (caption.length > 65) {
     caption = caption.slice(0, 63) + "...";
   }
@@ -24,8 +33,13 @@ export default function BlurredImage({
   // TODO: add button to copy full prompt
 
   return (
-    <Link href={src} className="group">
-      <div className="p-2 max-w-sm rounded-lg overflow-hidden shadow-lg border-solid border border-black bg-white">
+    <a
+      onClick={() => copyToClipboard(originalCaption)}
+      href={src}
+      target="_blank"
+      className="group"
+    >
+      <div className="p-0 max-w-sm rounded-lg overflow-hidden shadow-lg border-solid border-[10px] border-white border-opacity-40 hover:outline-fuchsia-100 hover:outline-dashed transition-all ease-in-out">
         <Image
           alt=""
           src={src}
@@ -41,6 +55,6 @@ export default function BlurredImage({
         />
       </div>
       <h3 className="mt-4 text-sm text-gray-700">{caption}</h3>
-    </Link>
+    </a>
   );
 }

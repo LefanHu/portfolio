@@ -130,7 +130,8 @@ export default function SwiftGallery() {
                   </dt>
                   <dd className="">
                     Generated images don&apos;t disappear, they get saved in the
-                    image gallery. You can access it at the top.
+                    image gallery. Click on an image to copy the prompt used
+                    (and to open it)
                   </dd>
                 </div>
               </dl>
