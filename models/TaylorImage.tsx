@@ -42,10 +42,10 @@ const TaylorImageSchema = new mongoose.Schema<TaylorImages>({
   image_url: {
     /* Url to taylor image in s3 */
 
-    required: [true, "Please provide an image url for this iamge."],
+    required: [true, "Please provide an image url for this image."],
     type: String,
   },
 });
 
-export default mongoose.models.Pet ||
+export default mongoose.models.TaylorImage ||
   mongoose.model<TaylorImages>("TaylorImage", TaylorImageSchema);

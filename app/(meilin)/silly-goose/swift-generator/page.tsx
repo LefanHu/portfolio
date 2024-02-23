@@ -39,7 +39,6 @@ const createImageDbEntry = async (taylorImageData: TaylorImageData) => {
       },
       body: JSON.stringify(taylorImageData),
     });
-    console.log(`sending req: ${JSON.stringify(taylorImageData)}`);
 
     // Throw error with status code in case Fetch API req failed
     if (!res.ok) {

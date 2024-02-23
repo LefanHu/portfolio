@@ -14,7 +14,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: `${process.env.AWS_BUCKET_NAME}.amazonaws.com`,
+        hostname: `${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com`,
         pathname: "**",
       },
     ],

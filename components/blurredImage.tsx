@@ -28,8 +28,6 @@ export default function BlurredImage({
         <Image
           alt=""
           src={src}
-          //   layout="fill"
-          objectFit="cover"
           width={500}
           height={500}
           className={cn(
@@ -38,7 +36,7 @@ export default function BlurredImage({
               ? "grayscale blur-2xl scale-110"
               : "grayscale-0 blur-0 scale-100"
           )}
-          onLoadingComplete={() => setLoading(false)}
+          onLoad={() => setLoading(false)}
         />
       </div>
       <h3 className="mt-4 text-sm text-gray-700">{caption}</h3>

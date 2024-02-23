@@ -4,7 +4,7 @@ import TaylorImage from "@/models/TaylorImage";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const {
     query: { id },
