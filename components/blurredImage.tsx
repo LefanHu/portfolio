@@ -39,7 +39,7 @@ export default function BlurredImage({
       target="_blank"
       className="group"
     >
-      <div className="p-0 max-w-sm rounded-lg overflow-hidden shadow-lg border-solid border-[10px] border-white border-opacity-40 hover:outline-fuchsia-100 hover:outline-dashed transition-all ease-in-out">
+      <div className=" backdrop-blur-md p-2 max-w-sm rounded-lg overflow-hidden shadow-lg hover:outline-fuchsia-100 hover:outline-dashed transition-all ease-in-out">
         <Image
           alt=""
           src={src}
@@ -48,7 +48,7 @@ export default function BlurredImage({
           className={cn(
             "group-hover:opacity-75 duration-300 ease-in-out rounded-lg",
             isLoading
-              ? "grayscale blur-2xl scale-110"
+              ? "grayscale blur-lg scale-105"
               : "grayscale-0 blur-0 scale-100"
           )}
           onLoad={() => setLoading(false)}
