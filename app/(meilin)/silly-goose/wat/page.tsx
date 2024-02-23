@@ -129,8 +129,8 @@ export default function SwiftGallery() {
                     Database backups.
                   </dt>
                   <dd className="">
-                    Generated images dont&apos;t disappear, they get saved in
-                    the image gallery. You can access it at the top.
+                    Generated images don&apos;t disappear, they get saved in the
+                    image gallery. You can access it at the top.
                   </dd>
                 </div>
               </dl>

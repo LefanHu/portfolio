@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ExclamationCircleIcon,
   HeartIcon,
   InformationCircleIcon,
   MusicalNoteIcon,
@@ -267,6 +268,16 @@ export default function SwiftGenerator() {
                   <dd className="">
                     If the image doesn&apos;t contain what you specified, try
                     again or change up the wording!
+                  </dd>
+                </div>
+                <div className="relative pl-9">
+                  <dt className="inline font-semibold text-gray-900">
+                    <ExclamationCircleIcon className="absolute left-1 top-1 h-5 w-5 text-indigo-600" />
+                    Tags!
+                  </dt>
+                  <dd className="">
+                    Use tags in your prompt like 8k, photorealistic, natural
+                    lighting, etc. Look at the gallery for some examples.
                   </dd>
                 </div>
                 <div className="relative pl-9">

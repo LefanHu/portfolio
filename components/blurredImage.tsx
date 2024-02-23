@@ -17,8 +17,8 @@ export default function BlurredImage({
 }: BlurredImageData) {
   const [isLoading, setLoading] = useState(true);
 
-  if (caption.length > 50) {
-    caption = caption.slice(0, 47) + "...";
+  if (caption.length > 65) {
+    caption = caption.slice(0, 63) + "...";
   }
 
   // TODO: add button to copy full prompt
