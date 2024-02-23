@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export interface TaylorImages extends mongoose.Document {
+  _id: string;
   prompt: string;
   date_created: string;
   tags: string[];
@@ -8,7 +9,14 @@ export interface TaylorImages extends mongoose.Document {
 }
 
 const TaylorImageSchema = new mongoose.Schema<TaylorImages>({
-    prompt: {
+  _id: {
+    /* typically just the datetime string */
+
+    type: String,
+    required: [true, "Please provide the datetime string as id"],
+    maxlength: [1000, "datetime string cannot be more than 1000 characters"],
+  },
+  prompt: {
     /* The name of this pet */
 
     type: String,
@@ -19,13 +27,17 @@ const TaylorImageSchema = new mongoose.Schema<TaylorImages>({
     /* The owner of this pet */
 
     type: String,
-    required: [true, "Please provide datetime string of creation of this image"],
+    required: [
+      true,
+      "Please provide datetime string of creation of this image",
+    ],
     maxlength: [60, "datetime string cannot be more than 60 characters"],
   },
   tags: {
     /* List of dietary needs, if applicable */
 
     type: [String],
+    required: false,
   },
   image_url: {
     /* Url to taylor image in s3 */
@@ -35,4 +47,5 @@ const TaylorImageSchema = new mongoose.Schema<TaylorImages>({
   },
 });
 
-export default mongoose.models.Pet || mongoose.model<TaylorImages>("TaylorImage", TaylorImageSchema);
+export default mongoose.models.Pet ||
+  mongoose.model<TaylorImages>("TaylorImage", TaylorImageSchema);

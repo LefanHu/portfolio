@@ -9,8 +9,8 @@ config.autoAddCss = false;
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Lefan's Website",
-  description: "Portfolio website showcasing various projects & algorithms",
+  title: "For my silly goose",
+  description: "Happy birthday project to my silly goose... I hope she's happy <3",
 };
 
 export default function RootLayout({

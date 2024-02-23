@@ -1,12 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    esmExternals: "loose", // <-- add this
-    serverComponentsExternalPackages: ["mongoose"] // <-- and this
-  },
+  // experimental: {
+  //   esmExternals: "loose",
+  //   serverComponentsExternalPackages: ["mongoose"]
+  // },
   output: "standalone",
   images: {
-    domains: ["images.unsplash.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: `${process.env.AWS_BUCKET_NAME}.amazonaws.com`,
+        pathname: "**",
+      },
+    ],
   },
 };
 

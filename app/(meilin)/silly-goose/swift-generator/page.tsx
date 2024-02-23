@@ -18,8 +18,80 @@ type InferenceInput = {
   };
 };
 
+interface TaylorImageData {
+  _id: string;
+  prompt: string;
+  date_created: string;
+  image_url: string;
+  tags?: string;
+}
+
 const NEGATIVE_PROMPTS = "";
 const POSITIVE_PROMPTS = "";
+
+const createImageDbEntry = async (taylorImageData: TaylorImageData) => {
+  try {
+    const res = await fetch("/api/ts-images", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taylorImageData),
+    });
+    console.log(`sending req: ${JSON.stringify(taylorImageData)}`);
+
+    // Throw error with status code in case Fetch API req failed
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+  } catch (error) {
+    console.log(`failed to create taylor image with error: ${error}`);
+  }
+};
+
+const uploadImageS3 = async (image: Blob, filename: string) => {
+  // create fileobject
+  const file = new File([image], filename);
+
+  try {
+    const res = await fetch("/api/ts-images/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        filename: `${filename}.jpeg`,
+        contentType: "image/jpeg",
+      }),
+    });
+
+    if (!res.ok) {
+      // throw some error
+    }
+
+    const { url, fields } = await res.json();
+
+    const formData = new FormData();
+    Object.entries(fields).forEach(([key, value]) => {
+      formData.append(key, value as string);
+    });
+    formData.append("file", file);
+
+    const uploadResponse = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) {
+      console.log("S3 Upload Error:", uploadResponse);
+      alert("Something went wrong trying upload this image.");
+    }
+  } catch (error) {
+    console.log(`Error while posting image to lefan's server: ${error}`);
+    alert("Error saving image");
+  }
+};
 
 export default function SwiftGenerator() {
   const [imageUrl, setImageUrl] = useState("/images/chickenbutt.webp");
@@ -63,9 +135,7 @@ export default function SwiftGenerator() {
     event.preventDefault();
 
     // if is already waiting, don't submit again
-    if (isGenerating) {
-      return;
-    }
+    if (isGenerating) return;
     setIsGenerating(true);
 
     // api fetch
@@ -85,9 +155,22 @@ export default function SwiftGenerator() {
     );
     const result = await response.blob();
     const url = URL.createObjectURL(result);
-    console.log(url);
+    // console.log(url);
     setImageUrl(url);
     setIsGenerating(false);
+
+    // upload to s3
+    const creationDate: string = Date.now().toString();
+    await uploadImageS3(result, creationDate);
+
+    // store data in database
+    const taylorImage: TaylorImageData = {
+      _id: creationDate,
+      prompt: inputs.inputs,
+      date_created: creationDate,
+      image_url: url,
+    };
+    await createImageDbEntry(taylorImage);
   };
   return (
     <div className="overflow-hidden py-20">
