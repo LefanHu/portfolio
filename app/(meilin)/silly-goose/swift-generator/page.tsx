@@ -103,6 +103,8 @@ export default function SwiftGenerator() {
       wait_for_model: true,
     },
   });
+  const [generationStatus, setGenerationStatus] =
+    useState("waiting for prompt");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
@@ -137,6 +139,7 @@ export default function SwiftGenerator() {
     // if is already waiting, don't submit again
     if (isGenerating) return;
     setIsGenerating(true);
+    setGenerationStatus("generating image...");
 
     // api fetch
     inputs["inputs"] = inputs["inputs"].concat(
@@ -153,6 +156,16 @@ export default function SwiftGenerator() {
         body: JSON.stringify(inputs),
       }
     );
+    const contentType = response.headers.get("content-type");
+    console.log(`received content type: ${contentType}`);
+    if (contentType != "image/jpeg") {
+      setGenerationStatus(
+        "GPU ran out of memory (this is rare) but it happens. Try again"
+      );
+      setIsGenerating(false);
+      return;
+    }
+
     const result = await response.blob();
     const url = URL.createObjectURL(result);
     // console.log(url);
@@ -160,10 +173,12 @@ export default function SwiftGenerator() {
     setIsGenerating(false);
 
     // upload to s3
+    setGenerationStatus("Uploading image to storage...");
     const creationDate: string = Date.now().toString();
     await uploadImageS3(result, creationDate);
 
     // store data in database
+    setGenerationStatus("storing information in database...");
     const taylorImage: TaylorImageData = {
       _id: creationDate,
       prompt: inputs.inputs,
@@ -171,6 +186,9 @@ export default function SwiftGenerator() {
       image_url: url,
     };
     await createImageDbEntry(taylorImage);
+
+    // complete
+    setGenerationStatus("Generation complete.");
   };
   return (
     <div className="overflow-hidden py-10">
@@ -243,6 +261,9 @@ export default function SwiftGenerator() {
                   />
                 )}
               </form>
+              <p className="text-gray-500 text-xs">
+                Status: {generationStatus}
+              </p>
               <div className="flex">
                 <p className="mt-2 text-xl font-bold tracking-tight text-gray-900">
                   Some generation tips
