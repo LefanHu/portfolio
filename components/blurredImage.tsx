@@ -55,14 +55,16 @@ export default function BlurredImage({
             onClick={() => copyToClipboard(originalCaption)}
           />
         </a>
-        <div className="flex items-center justify-between space-x-2 z-50 flex-grow">
-          <span className="text-sm text-gray-700">{caption}</span>
+        <div className="flex justify-between space-x-2 z-50 flex-grow p-1">
+          <span className="mt-1 align-text-top text-sm text-gray-700">
+            {caption}
+          </span>
           <button
             onClick={() => {
               copyToClipboard(originalCaption);
               alert("prompt copied to clipboard");
             }}
-            className="m-3 aspect-square h-12 max-h-[36px] w-12 max-w-[36px] rounded-lg bg-pink-500 font-sans text-sm font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            className="m-1 aspect-square h-12 max-h-[36px] w-12 max-w-[36px] rounded-lg bg-pink-500 font-sans text-sm font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
             <ClipboardDocumentIcon className="p-1 text-2xl leading-none" />
           </button>
