@@ -93,6 +93,21 @@ const uploadImageS3 = async (image: Blob, filename: string) => {
   }
 };
 
+const generateImage = async (inputs: InferenceInput) => {
+  const res = await fetch(
+    "https://api-inference.huggingface.co/models/leaf-me-alone/sdxl-ts-lora-dream",
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_TOKEN}`,
+      },
+      method: "POST",
+      body: JSON.stringify(inputs),
+    }
+  );
+
+  return res;
+};
+
 export default function SwiftGenerator() {
   const [imageUrl, setImageUrl] = useState("/images/chickenbutt.webp");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -100,7 +115,7 @@ export default function SwiftGenerator() {
     inputs: "",
     options: {
       use_cache: false,
-      wait_for_model: true,
+      wait_for_model: false,
     },
   });
   const [generationStatus, setGenerationStatus] =
@@ -141,26 +156,27 @@ export default function SwiftGenerator() {
     setIsGenerating(true);
     setGenerationStatus("generating image...");
 
-    // api fetch
     inputs["inputs"] = inputs["inputs"].concat(
       POSITIVE_PROMPTS,
       NEGATIVE_PROMPTS
     );
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/leaf-me-alone/sdxl-ts-lora-dream",
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_TOKEN}`,
-        },
-        method: "POST",
-        body: JSON.stringify(inputs),
-      }
-    );
-    const contentType = response.headers.get("content-type");
-    console.log(`received content type: ${contentType}`);
-    if (contentType != "image/jpeg") {
+
+    var response = await generateImage(inputs);
+    if (response.status == 503) {
+      // model is loading
+      setGenerationStatus("Cold start. Model is loading...");
+      const wait_for_model_inputs: InferenceInput = inputs;
+      wait_for_model_inputs["options"]["wait_for_model"] = true;
+      response = await generateImage(wait_for_model_inputs);
+    }
+
+    // const contentType = response.headers.get("content-type");
+    // console.log(`received content type: ${contentType}`);
+
+    if (response.status == 500) {
+      // gpu out of memory
       setGenerationStatus(
-        "GPU ran out of memory (this is rare) but it happens. Try again"
+        `GPU ran out of memory (this is rare) but it happens. Try again.`
       );
       setIsGenerating(false);
       return;
