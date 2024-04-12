@@ -1,10 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import {
-  ClipboardDocumentIcon,
-  ClipboardIcon,
-} from "@heroicons/react/24/outline";
+import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 
 interface BlurredImageData {
   src?: string;
@@ -33,8 +29,6 @@ export default function BlurredImage({
   if (caption.length > 85) {
     caption = caption.slice(0, 83) + "...";
   }
-
-  // TODO: add button to copy full prompt
 
   return (
     <div className="group h-full">
