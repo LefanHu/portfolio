@@ -170,9 +170,9 @@ export default function SwiftGenerator() {
       response = await generateImage(wait_for_model_inputs);
     }
 
-    // const contentType = response.headers.get("content-type");
-    // console.log(`received content type: ${contentType}`);
-
+    const contentType = response.headers.get("content-type");
+    console.log(`received content type: ${contentType}`);
+    console.log(`generation status: ${response.status}`);
     if (response.status == 500) {
       // gpu out of memory
       setGenerationStatus(
