@@ -1,5 +1,6 @@
 "use client";
 
+import BlurredImage from "@/components/blurredImage";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -11,8 +12,17 @@ interface AttacImages {
   StorageClass: string;
 }
 
+function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    const chunk = array.slice(i, i + chunkSize);
+    chunks.push(chunk);
+  }
+  return chunks;
+}
+
 export default function SneakAttacGallery() {
-  const [images, setImages] = useState<AttacImages[]>([]);
+  const [images, setImages] = useState<AttacImages[][]>([]);
 
   useEffect(() => {
     // fetch images for gallery
@@ -26,7 +36,7 @@ export default function SneakAttacGallery() {
           },
         });
         const results = await res.json();
-        setImages(results);
+        setImages(chunkArray(results, 4));
 
         // Throw error with status code in case Fetch API req failed
         if (!res.ok) {
@@ -40,22 +50,28 @@ export default function SneakAttacGallery() {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div className="grid gap-4">
-        {images.map((entry) => (
-          <div key={entry.Key}>
-            <Image
-              className="h-auto max-w-full rounded-lg"
-              key={entry.Key}
-              src={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`}
-              layout='fill'
-              objectFit='contain'
-              alt=""
-            />
-            <a href={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`}>link</a>
+    <div className="grid grid-cols-3 md:grid-cols-5 gap-3 overflow-y-scroll no-scrollbar">
+      {images.map((col) =>
+        col.map((entry) => (
+          <div key={entry.Key} className="grid gap-2">
+            <div>
+              <BlurredImage
+                // className="h-auto max-w-full rounded-lg"
+                // key={entry.Key}
+                src={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`}
+                // width={500}
+                // height={500}
+                // layout='fill'
+                // objectFit='contain'
+                // alt=""
+              />
+              {/* <a className="text-black" href={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`}> */}
+              {/*   link */}
+              {/* </a> */}
+            </div>
           </div>
-        ))}
-      </div>
+        )),
+      )}
     </div>
   );
 }
