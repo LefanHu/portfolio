@@ -1,7 +1,6 @@
 "use client";
 
 import BlurredImage from "@/components/blurredImage";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface AttacImages {
@@ -22,7 +21,7 @@ function chunkArray<T>(array: T[], chunkSize: number): T[][] {
 }
 
 export default function SneakAttacGallery() {
-  const [images, setImages] = useState<AttacImages[][]>([]);
+  const [images, setImages] = useState<AttacImages[]>([]);
 
   useEffect(() => {
     // fetch images for gallery
@@ -36,7 +35,7 @@ export default function SneakAttacGallery() {
           },
         });
         const results = await res.json();
-        setImages(chunkArray(results, 4));
+        setImages(results);
 
         // Throw error with status code in case Fetch API req failed
         if (!res.ok) {
@@ -51,27 +50,11 @@ export default function SneakAttacGallery() {
 
   return (
     <div className="grid grid-cols-3 md:grid-cols-5 gap-3 overflow-y-scroll no-scrollbar">
-      {images.map((col) =>
-        col.map((entry) => (
-          <div key={entry.Key} className="grid gap-2">
-            <div>
-              <BlurredImage
-                // className="h-auto max-w-full rounded-lg"
-                // key={entry.Key}
-                src={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`}
-                // width={500}
-                // height={500}
-                // layout='fill'
-                // objectFit='contain'
-                // alt=""
-              />
-              {/* <a className="text-black" href={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`}> */}
-              {/*   link */}
-              {/* </a> */}
-            </div>
-          </div>
-        )),
-      )}
+      {images.map((entry) => (
+        <div>
+          <BlurredImage src={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`} />
+        </div>
+      ))}
     </div>
   );
 }
