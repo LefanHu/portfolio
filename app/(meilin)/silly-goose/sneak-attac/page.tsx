@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import BlurredImage from "@/components/blurredImage";
 import { useEffect, useState } from "react";
 
 interface AttacImages {
-  object_key: string;
-  width: number;
-  height: number;
-  image_url: string;
+  ETag: string;
+  Key: string;
+  LastModified: string;
+  Size: number;
+  StorageClass: string;
 }
 
 export default function SneakAttacGallery() {
@@ -18,7 +18,7 @@ export default function SneakAttacGallery() {
     // fetch images for gallery
     const fetchImages = async () => {
       try {
-        const res = await fetch("/api/s3", {
+        const res = await fetch("/api/s3/buckets/sneak-attacs/files", {
           method: "GET",
           headers: {
             Accept: "application/json",
@@ -43,16 +43,16 @@ export default function SneakAttacGallery() {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div className="grid gap-4">
         {images.map((entry) => (
-          // <BlurredImage key={entry.object_key} src={entry.image_url} />
-          <div>
+          <div key={entry.Key}>
             <Image
               className="h-auto max-w-full rounded-lg"
-              key={entry.object_key}
-              src={entry.image_url}
-              width={entry.width}
-              height={entry.height}
+              key={entry.Key}
+              src={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`}
+              layout='fill'
+              objectFit='contain'
               alt=""
             />
+            <a href={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`}>link</a>
           </div>
         ))}
       </div>
