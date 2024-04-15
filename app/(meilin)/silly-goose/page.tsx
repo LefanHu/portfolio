@@ -16,7 +16,7 @@ export default function SwiftGallery() {
 
         // Redirect if screen width is less than or equal to 768 pixels
         if (screenWidth <= 768) {
-          router.push("/silly-goose/warn"); // Change '/another-page' to your desired redirection target
+          router.push("/silly-goose/warn");
         }
       }
     };
@@ -36,7 +36,7 @@ export default function SwiftGallery() {
         Not sure if you'll see this, but I just wanted to say that... spiritually... i'll always be
         the first to wish you a happy birthday
       </div>
-      <Link href="/silly-goose/sneak-attac">Check this out</Link>
+      <Link className="text-blue-500 underline" href="/silly-goose/sneak-attac">sneak attac!!!</Link>
       <RunawayButton href="/silly-goose/happy-birthday" />
     </div>
   );
