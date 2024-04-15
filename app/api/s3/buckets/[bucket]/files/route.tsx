@@ -3,7 +3,9 @@ import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 const client = new S3Client({});
 
 export async function GET(req: Request, { params }: { params: { bucket: string } }) {
-  console.log(`sneak attacs requested!!! ${new Date().toString()}`);
+  console.log(
+    `sneak attacs requested!!! ${new Date().toString()} from ip ${req.headers.get("x-forwarded-for")}`,
+  );
   const command = new ListObjectsV2Command({
     Bucket: params.bucket,
   });
