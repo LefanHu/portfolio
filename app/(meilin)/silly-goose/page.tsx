@@ -34,7 +34,7 @@ export default function SwiftGallery() {
     <div>
       <div className="text-black">easter egg! hehe</div>
       <div className="text-black">
-        spiritually... i'll always be the first to wish you a happy birthday
+        spiritually... i&apos;ll always be the first to wish you a happy birthday
       </div>
       <p>(p.s. i finished it)</p>
 
