@@ -3,7 +3,7 @@ import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 const client = new S3Client({});
 
 export async function GET(req: Request, { params }: { params: { bucket: string } }) {
-  console.log("sneak attacs requested!!!");
+  console.log(`sneak attacs requested!!! ${new Date().toString()}`);
   const command = new ListObjectsV2Command({
     Bucket: params.bucket,
   });
