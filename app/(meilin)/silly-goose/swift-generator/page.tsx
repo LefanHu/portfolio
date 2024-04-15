@@ -173,7 +173,7 @@ export default function SwiftGenerator() {
     const contentType = response.headers.get("content-type");
     console.log(`received content type: ${contentType}`);
     console.log(`generation status: ${response.status}`);
-    if (response.status == 500) {
+    if (response.status != 200) {
       // gpu out of memory
       setGenerationStatus(
         `GPU ran out of memory (this is rare) but it happens. Try again.`
