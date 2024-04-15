@@ -21,7 +21,8 @@ const copyToClipboard = async (text: string) => {
 
 export default function BlurredImage({
   src = "/images/swift-beach.jpg",
-  caption = "taylor swift dancing on the beach",
+  caption = "",
+  // caption = "taylor swift dancing on the beach",
 }: BlurredImageData) {
   const [isLoading, setLoading] = useState(true);
 
@@ -37,32 +38,30 @@ export default function BlurredImage({
           <Image
             alt=""
             src={src}
-            width={500}
-            height={500}
+            width={600}
+            height={600}
             className={cn(
               "group-hover:opacity-75 duration-300 ease-in-out rounded-lg",
-              isLoading
-                ? "grayscale blur-lg scale-105"
-                : "grayscale-0 blur-0 scale-100"
+              isLoading ? "grayscale blur-lg scale-105" : "grayscale-0 blur-0 scale-100",
             )}
             onLoad={() => setLoading(false)}
             onClick={() => copyToClipboard(originalCaption)}
           />
         </a>
-        <div className="flex justify-between space-x-2 z-50 flex-grow p-1">
-          <span className="mt-1 align-text-top text-sm text-gray-700">
-            {caption}
-          </span>
-          <button
-            onClick={() => {
-              copyToClipboard(originalCaption);
-              alert("prompt copied to clipboard");
-            }}
-            className="m-1 aspect-square h-12 max-h-[36px] w-12 max-w-[36px] rounded-lg bg-pink-500 font-sans text-sm font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          >
-            <ClipboardDocumentIcon className="p-1 text-2xl leading-none" />
-          </button>
-        </div>
+        {caption && (
+          <div className="flex justify-between space-x-2 z-50 flex-grow p-1">
+            <span className="mt-1 align-text-top text-sm text-gray-700">{caption}</span>
+            <button
+              onClick={() => {
+                copyToClipboard(originalCaption);
+                alert("prompt copied to clipboard");
+              }}
+              className="m-1 aspect-square h-12 max-h-[36px] w-12 max-w-[36px] rounded-lg bg-pink-500 font-sans text-sm font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            >
+              <ClipboardDocumentIcon className="p-1 text-2xl leading-none" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export default function SillyGoose() {
         <div className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
           <h1 className="p-2 text-6xl font-bold tracking-tight">Happy Birthday!</h1>
         </div>
-        <p className="mt-6 text-lg leading-8 text-gray-600">My silly goose is 20? Whoa...</p>
+        <p className="mt-6 text-lg leading-8 text-gray-600">My silly goose is 20? Whoa... (birthday update! look around)</p>
         <Link href="/silly-goose/wat" className="z-51">
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <div className="z-11 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
