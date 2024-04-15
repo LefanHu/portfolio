@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+
 export default function SwiftGallery() {
   const router = useRouter();
 
@@ -33,10 +34,13 @@ export default function SwiftGallery() {
     <div>
       <div className="text-black">easter egg! hehe</div>
       <div className="text-black">
-        Not sure if you'll see this, but I just wanted to say that... spiritually... i'll always be
-        the first to wish you a happy birthday
+        spiritually... i'll always be the first to wish you a happy birthday
       </div>
-      <Link className="text-blue-500 underline" href="/silly-goose/sneak-attac">sneak attac!!!</Link>
+      <p>(p.s. i finished it)</p>
+
+      <Link className="text-blue-500 underline" href="/silly-goose/sneak-attac">
+        sneak attac!!!
+      </Link>
       <RunawayButton href="/silly-goose/happy-birthday" />
     </div>
   );

@@ -3,6 +3,8 @@
 import BlurredImage from "@/components/blurredImage";
 import { useEffect, useState } from "react";
 
+import Snow from "react-canvas-confetti/dist/presets/snow";
+
 interface AttacImages {
   ETag: string;
   Key: string;
@@ -49,12 +51,24 @@ export default function SneakAttacGallery() {
   }, []);
 
   return (
-    <div className="grid grid-cols-3 md:grid-cols-5 gap-3 overflow-y-scroll no-scrollbar">
-      {images.map((entry) => (
-        <div>
-          <BlurredImage src={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`} />
-        </div>
-      ))}
+    <div className="overflow-y-scroll no-scrollbar">
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-3" >
+        {images.map((entry) => (
+          <div key={entry.Key}>
+            <BlurredImage src={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`} />
+          </div>
+        ))}
+      </div>
+      <Snow
+        autorun={{ speed: 10, delay: 1000 }}
+        decorateOptions={(options) => {
+          options.gravity = 1;
+          // options.shapes = ["circle", "square", "star"];
+          options.colors = ["FFD700"];
+          return options;
+        }}
+        globalOptions={{ useWorker: true }}
+      />
     </div>
   );
 }
