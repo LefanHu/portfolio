@@ -4,6 +4,7 @@ import "../globals.css";
 import Link from "next/link";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import ComeBackWrapper from "@/components/comebackWrapper";
 config.autoAddCss = false;
 
 const inter = Inter({ subsets: ["latin"] });
@@ -80,7 +81,7 @@ export default function RootLayout({
               ></div>
             </div>
             <div className="mt-3 flex flex-col h-full box-border">
-              {children}
+              <ComeBackWrapper>{children}</ComeBackWrapper>
             </div>
             <div
               className="absolute -z-10 inset-x-0 top-[calc(100%-13rem)] transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
