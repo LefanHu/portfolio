@@ -52,7 +52,7 @@ export default function SneakAttacGallery() {
 
   return (
     <div className="overflow-y-scroll no-scrollbar">
-      <div className="grid grid-cols-3 md:grid-cols-5 gap-3" >
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
         {images.map((entry) => (
           <div key={entry.Key}>
             <BlurredImage src={`https://sneak-attacs.s3.amazonaws.com/${entry.Key}`} />

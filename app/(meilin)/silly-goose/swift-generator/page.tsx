@@ -7,8 +7,7 @@ import {
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import Snow from "react-canvas-confetti/dist/presets/snow";
 
 type InferenceInput = {
@@ -102,7 +101,7 @@ const generateImage = async (inputs: InferenceInput) => {
       },
       method: "POST",
       body: JSON.stringify(inputs),
-    }
+    },
   );
 
   return res;
@@ -118,35 +117,13 @@ export default function SwiftGenerator() {
       wait_for_model: false,
     },
   });
-  const [generationStatus, setGenerationStatus] =
-    useState("waiting for prompt");
+  const [generationStatus, setGenerationStatus] = useState("waiting for prompt");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   };
-
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleResize = () => {
-      // Check if window is available since Next.js does server-side rendering
-      if (typeof window !== "undefined") {
-        const screenWidth: number = window.innerWidth;
-
-        if (screenWidth <= 768) {
-          router.push("/silly-goose/warn");
-        }
-      }
-    };
-
-    // check screen size immediately
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  });
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -156,10 +133,7 @@ export default function SwiftGenerator() {
     setIsGenerating(true);
     setGenerationStatus("generating image...");
 
-    inputs["inputs"] = inputs["inputs"].concat(
-      POSITIVE_PROMPTS,
-      NEGATIVE_PROMPTS
-    );
+    inputs["inputs"] = inputs["inputs"].concat(POSITIVE_PROMPTS, NEGATIVE_PROMPTS);
 
     var response = await generateImage(inputs);
     if (response.status == 503) {
@@ -175,9 +149,7 @@ export default function SwiftGenerator() {
     console.log(`generation status: ${response.status}`);
     if (response.status != 200) {
       // gpu out of memory
-      setGenerationStatus(
-        `GPU ran out of memory (this is rare) but it happens. Try again.`
-      );
+      setGenerationStatus(`GPU ran out of memory (this is rare) but it happens. Try again.`);
       setIsGenerating(false);
       return;
     }
@@ -212,9 +184,7 @@ export default function SwiftGenerator() {
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
           <div className="lg:pr-8 lg:pt-4">
             <div className="lg:max-w-lg">
-              <h2 className="text-base font-semibold leading-7 text-indigo-600">
-                Welcome...
-              </h2>
+              <h2 className="text-base font-semibold leading-7 text-indigo-600">Welcome...</h2>
               <div className="flex">
                 <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                   Taylor Swift Generator
@@ -277,9 +247,7 @@ export default function SwiftGenerator() {
                   />
                 )}
               </form>
-              <p className="text-gray-500 text-xs">
-                Status: {generationStatus}
-              </p>
+              <p className="text-gray-500 text-xs">Status: {generationStatus}</p>
               <div className="flex">
                 <p className="mt-2 text-xl font-bold tracking-tight text-gray-900">
                   Some generation tips
@@ -292,9 +260,8 @@ export default function SwiftGenerator() {
                     Taylor Swift Generator.
                   </dt>
                   <dd className="">
-                    Your <b>first</b> image can take up to <b>2 minutes</b>,
-                    please have patience silly goose... Subsequent images should
-                    only take <b>15 seconds</b>...
+                    Your <b>first</b> image can take up to <b>2 minutes</b>, please have patience
+                    silly goose... Subsequent images should only take <b>15 seconds</b>...
                   </dd>
                 </div>
                 <div className="relative pl-9">
@@ -303,8 +270,8 @@ export default function SwiftGenerator() {
                     Be persistent with the images.
                   </dt>
                   <dd className="">
-                    If the image doesn&apos;t contain what you specified, try
-                    again or change up the wording!
+                    If the image doesn&apos;t contain what you specified, try again or change up the
+                    wording!
                   </dd>
                 </div>
                 <div className="relative pl-9">
@@ -313,8 +280,8 @@ export default function SwiftGenerator() {
                     Tags!
                   </dt>
                   <dd className="">
-                    Use tags in your prompt like 8k, photorealistic, natural
-                    lighting, etc. Look at the gallery for some examples.
+                    Use tags in your prompt like 8k, photorealistic, natural lighting, etc. Look at
+                    the gallery for some examples.
                   </dd>
                 </div>
                 <div className="relative pl-9">
