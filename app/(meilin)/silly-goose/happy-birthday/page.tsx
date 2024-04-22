@@ -13,10 +13,13 @@ export default function SillyGoose() {
       </div>
       <div className="text-center">
         <div className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
-          <h1 className="p-2 text-6xl font-bold tracking-tight">Happy Birthday!</h1>
+          <h1 className="p-2 text-6xl font-bold tracking-tight">
+            Happy Birthday!
+          </h1>
         </div>
         <p className="mt-6 text-lg leading-8 text-gray-600">
-          My silly goose is 20? Whoa... (birthday update! look around)
+          My silly goose is 20? Whoa... (birthday update! What&apos;s
+          different?)
         </p>
         <Link href="/silly-goose/wat" className="z-51">
           <div className="mt-10 flex items-center justify-center gap-x-6">
