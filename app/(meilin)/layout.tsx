@@ -4,7 +4,7 @@ import "../globals.css";
 import Link from "next/link";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import ComeBackWrapper from "@/components/comebackWrapper";
+import ComeBackWrapper from "@/components/wrappers/comebackWrapper";
 import WindowSizeEnforceWrapper from "@/components/wrappers/preventSmallWindowSize";
 config.autoAddCss = false;
 
@@ -12,10 +12,15 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "For my silly goose",
-  description: "Happy birthday project to my silly goose... I hope she's happy <3",
+  description:
+    "Happy birthday project to my silly goose... I hope she's happy <3",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const clipPathStyle: React.CSSProperties = {
     clipPath:
       "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
@@ -26,7 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={inter.className}>
         <div className="bg-white h-screen overflow-clip">
           <header className="absolute inset-x-0 top-0 z-50">
-            <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+            <nav
+              className="flex items-center justify-between p-6 lg:px-8"
+              aria-label="Global"
+            >
               <div className="flex lg:flex-1"></div>
               <div className="hidden md:flex md:gap-x-10 lg:flex lg:gap-x-12">
                 <Link
