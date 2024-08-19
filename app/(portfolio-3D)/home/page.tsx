@@ -84,7 +84,7 @@ function Effects() {
   //
   // });
   return (
-    <EffectComposer stencilBuffer disableNormalPass autoClear={false} multisampling={4}>
+    <EffectComposer stencilBuffer autoClear={false} multisampling={4}>
       <Outline
         visibleEdgeColor={0x42d4f5}
         hiddenEdgeColor={0}
