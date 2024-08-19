@@ -11,7 +11,7 @@ type GLTFResult = GLTF & {
   materials: {
     Material_295: THREE.MeshStandardMaterial;
   };
-  animations: GLTFAction[];
+  // animations: GLTFAction[];
 };
 
 export function GuitarModel(props: JSX.IntrinsicElements["group"]) {

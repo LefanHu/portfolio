@@ -25,7 +25,7 @@ type GLTFResult = GLTF & {
     ["02_Body"]: THREE.MeshStandardMaterial;
     ["03_Base"]: THREE.MeshStandardMaterial;
   };
-  animations: GLTFAction[];
+  // animations: GLTFAction[];
 };
 
 export function RobotModel(props: JSX.IntrinsicElements["group"]) {

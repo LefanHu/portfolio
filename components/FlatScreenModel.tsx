@@ -11,7 +11,7 @@ type GLTFResult = GLTF & {
   materials: {
     ["02___Default"]: THREE.MeshStandardMaterial;
   };
-  animations: GLTFAction[];
+  // animations: GLTFAction[];
 };
 
 export function FlatScreenTVModel(props: JSX.IntrinsicElements["group"]) {

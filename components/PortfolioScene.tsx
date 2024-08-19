@@ -40,7 +40,7 @@ type GLTFResult = GLTF & {
     Sofa_Dark: THREE.MeshStandardMaterial;
     ["Material.005"]: THREE.MeshStandardMaterial;
   };
-  animations: GLTFAction[];
+  // animations: GLTFAction[];
 };
 
 export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
