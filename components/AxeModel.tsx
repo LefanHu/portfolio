@@ -18,6 +18,8 @@ export function AxeModel(props: JSX.IntrinsicElements["group"]) {
   return (
     <group {...props} dispose={null}>
       <mesh
+        castShadow
+        receiveShadow
         geometry={nodes.Sylvaxe_Sylvaxe_0.geometry}
         material={materials.Sylvaxe}
         rotation={[1.123, 0.06, 0.007]}
