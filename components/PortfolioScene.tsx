@@ -146,6 +146,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
         castShadow
+        receiveShadow
       />
       <mesh
         name="Box040_Material_0"
@@ -155,15 +156,17 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
         castShadow
+        receiveShadow
       />
       <mesh
         name="Box040_Sofa_Dark_0"
         geometry={nodes.Box040_Sofa_Dark_0.geometry}
         material={materials.Sofa_Dark}
+        // material={materials.PaletteMaterial001}
         position={[1.687, 0.125, -1.014]}
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
-        castShadow
+        receiveShadow={true}
       />
       <mesh
         name="Cube003_Material005_0"

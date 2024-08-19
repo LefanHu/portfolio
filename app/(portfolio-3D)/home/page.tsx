@@ -1,8 +1,6 @@
 "use client";
 
-import { easing } from "maath";
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
-import { debounce } from "lodash";
 import {
   Environment,
   OrbitControls,
@@ -12,12 +10,7 @@ import {
 } from "@react-three/drei";
 import { EffectComposer, Selection, Outline } from "@react-three/postprocessing";
 import { Suspense, useCallback, useState } from "react";
-// import { FlatScreenTVModel } from "@/components/FlatScreenModel";
-// import { KnifeGooseModel } from "@/components/KnifeGooseModel";
-// import { RobotModel } from "@/components/RobotModel";
-// import { GuitarModel } from "@/components/GuitarModel";
 import { PortfolioScene } from "@/components/PortfolioScene";
-import { HemisphereLight } from "three";
 
 function CameraSetup() {
   const { camera } = useThree();
@@ -35,8 +28,8 @@ export default function Home3DPage() {
       <Canvas shadows className="bg-white" camera={{ position: [0.5, 0, 3], fov: 50 }}>
         <CameraSetup />
         <Suspense fallback={null} />
-        {/* <pointLight color={0x450fff} position={[10, 10, 10]} decay={0} intensity={Math.PI} /> */}
-        <hemisphereLight intensity={0.3} groundColor={0x00ff00} color={0x0000ff} />
+        <pointLight color={0xff8800} position={[10, 10, 10]} decay={0} intensity={Math.PI} castShadow />
+        <hemisphereLight intensity={0.3} groundColor={0x00ff00} color={0x0000ff} castShadow />
         <AccumulativeShadows
           position={[0, -0.5, 0]}
           temporal
@@ -44,7 +37,7 @@ export default function Home3DPage() {
           alphaTest={0.75}
           opacity={0.9}
         >
-          <RandomizedLight radius={6} position={[5, 5, 10]} bias={0.001} />
+          <RandomizedLight radius={6} position={[5, 5, 10]} bias={0.001} castShadow/>
         </AccumulativeShadows>
         <PortfolioScene position={[1, -0.5, 0]} castShadow />
 
