@@ -68,15 +68,10 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
     <group {...props} dispose={null}>
       <directionalLight
         intensity={4}
-        position={[-1.449, 11.4, 10.477]}
-        target={nodes.DirectionalLight.target}
         color={0xf5ad64}
-      >
-        <primitive
-          object={nodes.DirectionalLight.target}
-          position={[0, 0, -1]}
-        />
-      </directionalLight>
+        position={[-1.449, 11.4, 10.477]}
+      />
+
       <Float>
         <pointLight
           name="PointLight"
@@ -98,7 +93,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           rotation={[-0.136, 0.657, -0.393]}
           scale={0.02}
           castShadow
-          receiveShadow
         />
         <mesh
           name="233814d130-material"
@@ -108,7 +102,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           rotation={[0, 0.606, -0.65]}
           scale={0.02}
           castShadow
-          receiveShadow
         />
         <mesh
           name="243626d154-material"
@@ -118,7 +111,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           rotation={[-0.443, -0.06, -0.522]}
           scale={0.02}
           castShadow
-          receiveShadow
         />
         <mesh
           name="44-material"
@@ -128,7 +120,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           rotation={[-0.928, -0.713, -2.288]}
           scale={0.02}
           castShadow
-          receiveShadow
         />
       </Float>
 
@@ -217,6 +208,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
         castShadow
+        receiveShadow
       />
       <mesh
         name="Box040_Sofa_Dark_0"
@@ -225,7 +217,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         position={[1.687, 0.125, -1.014]}
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
-        castShadow
         receiveShadow
       />
       <mesh
@@ -236,6 +227,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
         castShadow
+        receiveShadow
       />
       <mesh
         name="defaultMaterial_1"
@@ -245,6 +237,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         rotation={[-0.977, -0.397, 0.328]}
         scale={0.5}
         castShadow
+        receiveShadow
       />
     </group>
   );
