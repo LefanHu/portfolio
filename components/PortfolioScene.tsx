@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useGraph } from "@react-three/fiber";
 import {
   Float,
@@ -9,6 +9,7 @@ import {
   useVideoTexture,
 } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
+import { set } from "lodash";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -51,10 +52,18 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes, materials } = useGraph(clone) as GLTFResult;
 
+  const [displayHidden, setDisplayMode] = useState<Boolean>(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDisplayMode(false);
+    }, 1000);
+  }, []);
+
   // video material
-  const texture = useVideoTexture(
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-  );
+  // const texture = useVideoTexture(
+  //   "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+  // );
   return (
     <group {...props} dispose={null}>
       <directionalLight
@@ -62,6 +71,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         decay={2}
         position={[-1.449, 11.4, 10.477]}
         target={nodes.DirectionalLight.target}
+        color={0xf5ad64}
       >
         <primitive
           object={nodes.DirectionalLight.target}
@@ -134,14 +144,21 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         castShadow
       />
       <mesh position={[-1.812, 0.626, 0]} rotation={[0, Math.PI / 6, 0]}>
-        <planeGeometry args={[1.95, 1.1]} />
+        {/* <planeGeometry args={[1.95, 1.1]} /> */}
         <Suspense fallback={null}>
           {/* <meshBasicMaterial map={texture} toneMapped={false} /> */}
           <Html
             transform
             rotation={[0, 0, 0]}
             distanceFactor={0.615}
-            position={[0, 0, 0]}
+            position={[0, 0, 0.01]}
+            occlude={"blending"}
+            onOcclude={setDisplayMode}
+            style={{
+              transition: "all 0.2s",
+              opacity: displayHidden ? 0 : 1,
+              transform: `fade(${displayHidden ? 0 : 1})`,
+            }}
           >
             <iframe
               src="https://lefan.ca"
