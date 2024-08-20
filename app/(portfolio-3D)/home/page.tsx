@@ -9,6 +9,8 @@ import {
   Bvh,
   BakeShadows,
   Stars,
+  Html,
+  SpotLight,
 } from "@react-three/drei";
 import {
   EffectComposer,
@@ -17,6 +19,7 @@ import {
 } from "@react-three/postprocessing";
 import { Suspense, useCallback, useState } from "react";
 import { PortfolioScene } from "@/components/PortfolioScene";
+import NextUICard from "@/components/NextUICard";
 
 function CameraSetup() {
   const { camera } = useThree();
@@ -34,13 +37,13 @@ export default function Home3DPage() {
       <Canvas
         shadows
         className="bg-white"
-        camera={{ position: [0.5, 0, 3], fov: 50 }}
+        camera={{ position: [0.5, 0, 5], fov: 50 }}
       >
         <CameraSetup />
         <Suspense fallback={null} />
         <AccumulativeShadows
           position={[0, -0.5, 0]}
-          temporal
+          temporal={false}
           frames={100}
           alphaTest={0.75}
           opacity={0.9}
@@ -66,6 +69,15 @@ export default function Home3DPage() {
         </Bvh>
         */}
 
+        <Html
+          transform
+          position={[20, 0, -20]}
+          occlude={"blending"}
+          rotation={[0, -Math.PI / 6, 0]}
+        >
+          <NextUICard></NextUICard>
+        </Html>
+
         <OrbitControls
           enablePan={false}
           enableZoom={true}
@@ -75,7 +87,7 @@ export default function Home3DPage() {
           minAzimuthAngle={-Math.PI / 3}
           minDistance={1}
           maxDistance={5}
-          target={[0, 0.5, 1]}
+          target={[1, 0.5, 1]}
         />
         <Environment preset="city" />
 
