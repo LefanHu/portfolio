@@ -68,7 +68,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
     <group {...props} dispose={null}>
       <directionalLight
         intensity={4}
-        decay={2}
         position={[-1.449, 11.4, 10.477]}
         target={nodes.DirectionalLight.target}
         color={0xf5ad64}
