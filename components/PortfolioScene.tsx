@@ -1,7 +1,13 @@
 import * as THREE from "three";
 import React, { Suspense } from "react";
 import { useGraph } from "@react-three/fiber";
-import { useGLTF, useVideoTexture } from "@react-three/drei";
+import {
+  Float,
+  Html,
+  ScreenSizer,
+  useGLTF,
+  useVideoTexture,
+} from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 
 type GLTFResult = GLTF & {
@@ -62,58 +68,60 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           position={[0, 0, -1]}
         />
       </directionalLight>
-      <pointLight
-        name="PointLight"
-        intensity={1}
-        decay={2}
-        position={[-2.931, 1.049, 0.555]}
-      />
-      <pointLight
-        name="PointLight_2"
-        intensity={1}
-        decay={2}
-        position={[-4.326, 2.36, 1.583]}
-      />
-      <mesh
-        name="23-material"
-        geometry={nodes["23-material"].geometry}
-        material={materials.PaletteMaterial001}
-        position={[-3.385, 1.855, 0.771]}
-        rotation={[-0.136, 0.657, -0.393]}
-        scale={0.02}
-        castShadow
-        receiveShadow
-      />
-      <mesh
-        name="233814d130-material"
-        geometry={nodes["233814d130-material"].geometry}
-        material={materials["233814d130"]}
-        position={[-4.076, 1.821, 0.705]}
-        rotation={[0, 0.606, -0.65]}
-        scale={0.02}
-        castShadow
-        receiveShadow
-      />
-      <mesh
-        name="243626d154-material"
-        geometry={nodes["243626d154-material"].geometry}
-        material={materials["243626d154"]}
-        position={[-3.577, 2.047, 0.607]}
-        rotation={[-0.443, -0.06, -0.522]}
-        scale={0.02}
-        castShadow
-        receiveShadow
-      />
-      <mesh
-        name="44-material"
-        geometry={nodes["44-material"].geometry}
-        material={materials.PaletteMaterial002}
-        position={[-4.379, 2.306, 1.434]}
-        rotation={[-0.928, -0.713, -2.288]}
-        scale={0.02}
-        castShadow
-        receiveShadow
-      />
+      <Float>
+        <pointLight
+          name="PointLight"
+          intensity={1}
+          decay={2}
+          position={[-2.931, 1.049, 0.555]}
+        />
+        <pointLight
+          name="PointLight_2"
+          intensity={1}
+          decay={2}
+          position={[-4.326, 2.36, 1.583]}
+        />
+        <mesh
+          name="23-material"
+          geometry={nodes["23-material"].geometry}
+          material={materials.PaletteMaterial001}
+          position={[-3.385, 1.855, 0.771]}
+          rotation={[-0.136, 0.657, -0.393]}
+          scale={0.02}
+          castShadow
+          receiveShadow
+        />
+        <mesh
+          name="233814d130-material"
+          geometry={nodes["233814d130-material"].geometry}
+          material={materials["233814d130"]}
+          position={[-4.076, 1.821, 0.705]}
+          rotation={[0, 0.606, -0.65]}
+          scale={0.02}
+          castShadow
+          receiveShadow
+        />
+        <mesh
+          name="243626d154-material"
+          geometry={nodes["243626d154-material"].geometry}
+          material={materials["243626d154"]}
+          position={[-3.577, 2.047, 0.607]}
+          rotation={[-0.443, -0.06, -0.522]}
+          scale={0.02}
+          castShadow
+          receiveShadow
+        />
+        <mesh
+          name="44-material"
+          geometry={nodes["44-material"].geometry}
+          material={materials.PaletteMaterial002}
+          position={[-4.379, 2.306, 1.434]}
+          rotation={[-0.928, -0.713, -2.288]}
+          scale={0.02}
+          castShadow
+          receiveShadow
+        />
+      </Float>
 
       {/* tv */}
       <mesh
@@ -128,7 +136,18 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
       <mesh position={[-1.812, 0.626, 0]} rotation={[0, Math.PI / 6, 0]}>
         <planeGeometry args={[1.95, 1.1]} />
         <Suspense fallback={null}>
-          <meshBasicMaterial map={texture} toneMapped={false} />
+          {/* <meshBasicMaterial map={texture} toneMapped={false} /> */}
+          <Html
+            transform
+            rotation={[0, 0, 0]}
+            distanceFactor={0.615}
+            position={[0, 0, 0]}
+          >
+            <iframe
+              src="https://lefan.ca"
+              className="w-[1280px] h-[720px] select-none"
+            />
+          </Html>
         </Suspense>
       </mesh>
 

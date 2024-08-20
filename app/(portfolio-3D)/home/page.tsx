@@ -7,8 +7,14 @@ import {
   AccumulativeShadows,
   RandomizedLight,
   Bvh,
+  BakeShadows,
+  Stars,
 } from "@react-three/drei";
-import { EffectComposer, Selection, Outline } from "@react-three/postprocessing";
+import {
+  EffectComposer,
+  Selection,
+  Outline,
+} from "@react-three/postprocessing";
 import { Suspense, useCallback, useState } from "react";
 import { PortfolioScene } from "@/components/PortfolioScene";
 
@@ -25,11 +31,13 @@ export default function Home3DPage() {
 
   return (
     <div className="w-screen h-screen">
-      <Canvas shadows className="bg-white" camera={{ position: [0.5, 0, 3], fov: 50 }}>
+      <Canvas
+        shadows
+        className="bg-white"
+        camera={{ position: [0.5, 0, 3], fov: 50 }}
+      >
         <CameraSetup />
         <Suspense fallback={null} />
-        <pointLight color={0xff8800} position={[10, 10, 10]} decay={0} intensity={Math.PI} castShadow />
-        <hemisphereLight intensity={0.3} groundColor={0x00ff00} color={0x0000ff} castShadow />
         <AccumulativeShadows
           position={[0, -0.5, 0]}
           temporal
@@ -37,9 +45,15 @@ export default function Home3DPage() {
           alphaTest={0.75}
           opacity={0.9}
         >
-          <RandomizedLight radius={6} position={[5, 5, 10]} bias={0.001} castShadow/>
+          <RandomizedLight
+            radius={6}
+            position={[5, 5, 10]}
+            bias={0.001}
+            castShadow
+          />
         </AccumulativeShadows>
-        <PortfolioScene position={[1, -0.5, 0]} castShadow />
+
+        <PortfolioScene position={[1, -0.5, 0]} />
 
         {/*  
         <Bvh firstHitOnly>
@@ -53,8 +67,7 @@ export default function Home3DPage() {
         */}
 
         <OrbitControls
-          // enablePan={false}
-          enablePan={true}
+          enablePan={false}
           enableZoom={true}
           minPolarAngle={Math.PI / 8}
           maxPolarAngle={Math.PI / 2}
@@ -65,6 +78,7 @@ export default function Home3DPage() {
           target={[0, 0.5, 1]}
         />
         <Environment preset="city" />
+
         <Suspense />
       </Canvas>
     </div>
