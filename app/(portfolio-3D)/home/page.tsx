@@ -9,15 +9,10 @@ import {
   AccumulativeShadows,
   RandomizedLight,
   Bvh,
-  BakeShadows,
-  Stars,
   Html,
-  SpotLight,
   MotionPathControls,
-  CubicBezierLine,
-  Box,
-  useMotion,
   PerspectiveCamera,
+  useHelper,
 } from "@react-three/drei";
 import {
   EffectComposer,
@@ -38,7 +33,7 @@ const startCameraPosition: [number, number, number] = [0.5, 0, 5];
 const viewCameraPosition: [number, number, number] = [0.5, 1, 5];
 
 function Camera() {
-  const cameraRef = useRef(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const { targetPosition, targetRotation } = useCameraStore();
 
   useFrame((state, delta) => {
@@ -75,39 +70,30 @@ function Camera() {
   );
 }
 
-function Camera2() {
-  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-  const motion = useMotion();
-
-  useFrame((state, delta) => {
-    motion.current += delta;
-    motion.object.current.lookAt(motion.next);
-  });
-
-  return <PerspectiveCamera makeDefault ref={cameraRef} />;
+function CameraDebugger(props: JSX.IntrinsicElements["cameraHelper"]) {
+  const camera = new THREE.PerspectiveCamera(50, 1, 1, 3);
+  return (
+    <group position={[0.5, 0, 5]}>
+      <mesh>
+        <cameraHelper args={[camera]} />
+      </mesh>
+    </group>
+  );
 }
 
 export default function Home3DPage() {
-  const { setCameraLookat: setCameraLookat, setCameraPosition } =
-    useCameraStore();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCameraPosition(viewCameraPosition);
-      setCameraLookat([20, 1, -20]);
-    }, 4000); // 2 seconds
-
-    return () => clearTimeout(timer); // Cleanup the timer on unmount
-  }, [setCameraPosition, setCameraLookat]);
-
+  const cameraDebuggerRef = useRef<THREE.CameraHelper>(null);
+  const boxRef = useRef<THREE.Mesh>(null);
   return (
     <div className="w-screen h-screen">
       <Canvas
         shadows
         className="bg-white"
-        camera={{ position: [0.5, 0, 5], fov: 50 }}
+        camera={{ position: [0.5, 0, 5 + 2], fov: 50 }}
       >
-        <Camera />
+        {/* <Camera /> */}
+        {/* <Box args={[1, 1, 1]} position={[0, 0, 0]} ref={boxRef} /> */}
+        {/* <CameraDebugger ref={cameraDebuggerRef} /> */}
         <Suspense fallback={null} />
         <AccumulativeShadows
           position={[0, -0.5, 0]}
@@ -124,41 +110,32 @@ export default function Home3DPage() {
           />
         </AccumulativeShadows>
 
-        <PortfolioScene position={[1, -0.5, 0]} />
+        {/* <MotionPathControls
+          offset={0}
+          damping={0.2}
+          curves={[
+            new THREE.CubicBezierCurve3(
+              new THREE.Vector3(-5, -5, 0),
+              new THREE.Vector3(-10, 0, 0),
+              new THREE.Vector3(0, 3, 0),
+              new THREE.Vector3(6, 3, 0)
+            ),
+            new THREE.CubicBezierCurve3(
+              new THREE.Vector3(6, 3, 0),
+              new THREE.Vector3(10, 5, 5),
+              new THREE.Vector3(5, 3, 5),
+              new THREE.Vector3(5, 5, 5)
+            ),
+          ]}
+          attach
+        ></MotionPathControls> */}
 
-        {/* <group>
-          <MotionPathControls
-            offset={0}
-            damping={0.2}
-            curves={[
-              new THREE.CubicBezierCurve3(
-                new THREE.Vector3(-5, -5, 0),
-                new THREE.Vector3(-10, 0, 0),
-                new THREE.Vector3(0, 3, 0),
-                new THREE.Vector3(6, 3, 0)
-              ),
-              new THREE.CubicBezierCurve3(
-                new THREE.Vector3(6, 3, 0),
-                new THREE.Vector3(10, 5, 5),
-                new THREE.Vector3(5, 3, 5),
-                new THREE.Vector3(5, 5, 5)
-              ),
-            ]}
-          >
-            <Camera2 />
-          </MotionPathControls>
-        </group> */}
-
-        {/*  
         <Bvh firstHitOnly>
           <Selection>
+            <PortfolioScene position={[1, -0.5, 0]} />
             <Effects />
-            <FlatScreenTVModel position={[-1, 0.1, 0]} rotation={[0, Math.PI / 9, 0]} />
-            <GuitarModel position={[-2, 0.3, 0]} rotation={[Math.PI/7, Math.PI/1.5, Math.PI/4]} scale={0.02} />
-            <RobotModel position={[0.1, -0.5, 0]} rotation={[0, 0, 0]} scale={0.02} />
           </Selection>
         </Bvh>
-        */}
 
         {/* <Html
           transform
@@ -169,7 +146,7 @@ export default function Home3DPage() {
           <NextUICard></NextUICard>
         </Html> */}
 
-        {/* <OrbitControls
+        <OrbitControls
           enablePan={false}
           enableZoom={true}
           minPolarAngle={Math.PI / 8}
@@ -177,8 +154,8 @@ export default function Home3DPage() {
           maxAzimuthAngle={Math.PI / 3}
           minAzimuthAngle={-Math.PI / 3}
           minDistance={1}
-          maxDistance={5}
-        /> */}
+          maxDistance={8}
+        />
         <Environment preset="city" />
 
         <Suspense />
