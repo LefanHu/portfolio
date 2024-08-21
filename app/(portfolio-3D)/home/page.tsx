@@ -14,11 +14,7 @@ import {
   PerspectiveCamera,
   useHelper,
 } from "@react-three/drei";
-import {
-  EffectComposer,
-  Selection,
-  Outline,
-} from "@react-three/postprocessing";
+import { EffectComposer, Selection, Outline } from "@react-three/postprocessing";
 
 import { Suspense, use, useCallback, useEffect, useRef, useState } from "react";
 import { PortfolioScene } from "@/components/PortfolioScene";
@@ -41,33 +37,23 @@ function Camera() {
 
     // Animate position
     // easing.damp3(camera.position, targetPosition, 5, delta);
-    camera.position.lerp(
-      new THREE.Vector3(...targetPosition),
-      0.05 * delta * 10
-    );
+    camera.position.lerp(new THREE.Vector3(...targetPosition), 0.05 * delta * 10);
 
     // Get current camera rotation
     const target = new THREE.Vector3(...targetRotation);
 
     // Calculate the new quaternion for smooth rotation
     const quaternion = new THREE.Quaternion();
-    const direction = new THREE.Vector3()
-      .subVectors(target, camera.position)
-      .normalize();
+    const direction = new THREE.Vector3().subVectors(target, camera.position).normalize();
 
     // Set the new rotation quaternion to smoothly rotate towards target
-    quaternion.setFromUnitVectors(
-      camera.getWorldDirection(new THREE.Vector3()),
-      direction
-    );
+    quaternion.setFromUnitVectors(camera.getWorldDirection(new THREE.Vector3()), direction);
     camera.quaternion.slerp(quaternion, 0.05 * delta * 10); // Smoothly rotate with slerp
 
     // camera.lookAt(target);
   });
 
-  return (
-    <PerspectiveCamera makeDefault ref={cameraRef} position={[0.5, 0, 5]} />
-  );
+  return <PerspectiveCamera makeDefault ref={cameraRef} position={[0.5, 0, 5]} />;
 }
 
 function CameraDebugger(props: JSX.IntrinsicElements["cameraHelper"]) {
@@ -86,11 +72,7 @@ export default function Home3DPage() {
   const boxRef = useRef<THREE.Mesh>(null);
   return (
     <div className="w-screen h-screen">
-      <Canvas
-        shadows
-        className="bg-white"
-        camera={{ position: [0.5, 0, 5 + 2], fov: 50 }}
-      >
+      <Canvas shadows className="bg-white" camera={{ position: [0.5, 0, 5 + 2], fov: 50 }}>
         {/* <Camera /> */}
         {/* <Box args={[1, 1, 1]} position={[0, 0, 0]} ref={boxRef} /> */}
         {/* <CameraDebugger ref={cameraDebuggerRef} /> */}
@@ -102,12 +84,7 @@ export default function Home3DPage() {
           alphaTest={0.75}
           opacity={0.9}
         >
-          <RandomizedLight
-            radius={6}
-            position={[5, 5, 10]}
-            bias={0.001}
-            castShadow
-          />
+          <RandomizedLight radius={6} position={[5, 5, 10]} bias={0.001} castShadow />
         </AccumulativeShadows>
 
         {/* <MotionPathControls
@@ -130,12 +107,10 @@ export default function Home3DPage() {
           attach
         ></MotionPathControls> */}
 
-        <Bvh firstHitOnly>
-          <Selection>
-            <PortfolioScene position={[1, -0.5, 0]} />
-            <Effects />
-          </Selection>
-        </Bvh>
+        <Selection>
+          <PortfolioScene position={[1, -0.5, 0]} />
+          <Effects />
+        </Selection>
 
         {/* <Html
           transform

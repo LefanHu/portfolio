@@ -45,15 +45,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
   const { scene } = useGLTF("/PortfolioScene-transformed.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes, materials } = useGraph(clone) as GLTFResult;
-
-  const [displayHidden, setDisplayMode] = useState<Boolean>(true);
   const [hovered, setHovered] = useState<string>("");
-
-  useEffect(() => {
-    setTimeout(() => {
-      setDisplayMode(false);
-    }, 500);
-  }, []);
 
   // video material
   // const texture = useVideoTexture(
@@ -61,11 +53,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
   // );
   return (
     <group {...props} dispose={null}>
-      <directionalLight
-        intensity={4}
-        color={0xf5ad64}
-        position={[-1.449, 11.4, 10.477]}
-      />
+      <directionalLight intensity={4} color={0xf5ad64} position={[-1.449, 11.4, 10.477]} />
 
       <Float floatingRange={[0.05, 0.1]}>
         {/* lego spaceship */}
@@ -74,11 +62,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           onPointerEnter={() => setHovered("SPACESHIP")}
           onPointerOut={() => setHovered("")}
         >
-          <group
-            scale={0.2}
-            position={[1.8, 0.5, 1]}
-            rotation={[0, -Math.PI / 3, Math.PI / 6]}
-          >
+          <group scale={0.2} position={[1.8, 0.5, 1]} rotation={[0, -Math.PI / 3, Math.PI / 6]}>
             <pointLight
               name="PointLight"
               intensity={1 / 10}
@@ -132,11 +116,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
       </Float>
 
       {/* tv */}
-      {/* <Select
-        enabled={hovered === "TV"}
-        onPointerOver={() => setHovered("TV")}
-        onPointerOut={() => setHovered("")}
-      > */}
       <group>
         <mesh
           name="defaultMaterial"
@@ -147,7 +126,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           scale={0.995}
           castShadow
         />
-
         {/* iframe */}
         <mesh position={[-1.812, 0.626, 0]} rotation={[0, Math.PI / 6, 0]}>
           <Suspense fallback={null}>
@@ -158,22 +136,12 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
               distanceFactor={0.615}
               position={[0, 0, 0.01]}
               occlude={"blending"}
-              onOcclude={setDisplayMode}
-              style={{
-                transition: "all 0.2s",
-                opacity: displayHidden ? 0 : 1,
-                transform: `fade(${displayHidden ? 0 : 1})`,
-              }}
             >
-              <iframe
-                src="https://lefan.ca"
-                className="w-[1280px] h-[720px] select-none"
-              />
+              <iframe src="https://lefan.ca" className="w-[1280px] h-[720px] select-none" />
             </Html>
           </Suspense>
         </mesh>
       </group>
-      {/* </Select> */}
 
       <Select
         enabled={hovered === "GUITAR"}
