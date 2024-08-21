@@ -116,6 +116,9 @@ importers:
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
+      zustand:
+        specifier: ^4.5.5
+        version: 4.5.5(@types/react@18.3.3)(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.16.1
@@ -5656,7 +5659,7 @@ snapshots:
       '@internationalized/number': 3.5.3
       '@internationalized/string': 3.2.3
       '@react-aria/ssr': 3.9.5(react@18.3.1)
-      '@react-aria/utils': 3.24.1(react@18.3.1)
+      '@react-aria/utils': 3.25.2(react@18.3.1)
       '@react-types/shared': 3.24.1(react@18.3.1)
       '@swc/helpers': 0.5.5
       react: 18.3.1
@@ -5683,7 +5686,7 @@ snapshots:
       '@react-aria/i18n': 3.11.1(react@18.3.1)
       '@react-aria/interactions': 3.22.2(react@18.3.1)
       '@react-aria/ssr': 3.9.5(react@18.3.1)
-      '@react-aria/utils': 3.24.1(react@18.3.1)
+      '@react-aria/utils': 3.25.2(react@18.3.1)
       '@react-aria/visually-hidden': 3.8.15(react@18.3.1)
       '@react-stately/overlays': 3.6.10(react@18.3.1)
       '@react-types/button': 3.9.6(react@18.3.1)

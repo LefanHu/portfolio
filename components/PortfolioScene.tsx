@@ -1,15 +1,8 @@
 import * as THREE from "three";
 import React, { Suspense, useEffect, useState } from "react";
 import { useGraph } from "@react-three/fiber";
-import {
-  Float,
-  Html,
-  ScreenSizer,
-  useGLTF,
-  useVideoTexture,
-} from "@react-three/drei";
+import { Float, Html, useGLTF } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
-import { set } from "lodash";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -217,7 +210,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         position={[1.687, 0.125, -1.014]}
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
-        receiveShadow
       />
       <mesh
         name="Cube003_Material005_0"
