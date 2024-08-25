@@ -4,6 +4,7 @@ import { useGraph } from "@react-three/fiber";
 import { Float, Html, Plane, useGLTF } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { Select } from "@react-three/postprocessing";
+import { SceneLabels } from "./three/PortfolioLabels";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -249,6 +250,8 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
         />
       </Select>
+
+      {hovered && <SceneLabels position={[0, 2, -2]} rotation={[0, 0, 0]} sceneProps={{ selected: hovered }} />}
     </group>
   );
 }

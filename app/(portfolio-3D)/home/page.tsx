@@ -72,7 +72,7 @@ export default function Home3DPage() {
   const boxRef = useRef<THREE.Mesh>(null);
   return (
     <div className="w-screen h-screen">
-      <Canvas shadows className="bg-white" camera={{ position: [0.5, 0, 5 + 2], fov: 50 }}>
+      <Canvas shadows className="bg-white" camera={{ position: [0.5, 0, 5], fov: 55 }}>
         {/* <Camera /> */}
         {/* <Box args={[1, 1, 1]} position={[0, 0, 0]} ref={boxRef} /> */}
         {/* <CameraDebugger ref={cameraDebuggerRef} /> */}
