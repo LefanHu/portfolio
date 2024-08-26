@@ -5,6 +5,12 @@ import { Float, Html, Plane, useGLTF } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { Select } from "@react-three/postprocessing";
 import { SceneLabels } from "./three/PortfolioLabels";
+import {
+  CodeBracketSquareIcon,
+  DocumentTextIcon,
+  HeartIcon,
+  PresentationChartLineIcon,
+} from "@heroicons/react/24/outline";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -133,12 +139,12 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
             {/* <meshBasicMaterial map={texture} toneMapped={false} /> */}
             <Html
               transform
-              rotation={[0, 0, 0]}
-              distanceFactor={0.615}
-              position={[0, 0, 0.01]}
+              position={[0, 0, -0.001]}
               occlude={"blending"}
+              scale={0.092}
+              onPointerDown={(e) => e.stopPropagation()}
             >
-              <iframe src="https://lefan.ca" className="w-[1280px] h-[720px] select-none" />
+              <iframe src="https://lefan.ca" className="w-[854px] h-[480px]" />
             </Html>
           </Suspense>
         </mesh>
@@ -251,7 +257,58 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         />
       </Select>
 
-      {hovered && <SceneLabels position={[0, 2, -2]} rotation={[0, 0, 0]} sceneProps={{ selected: hovered }} />}
+      {hovered && (
+        <SceneLabels
+          position={[0, 2, -2]}
+          rotation={[0, 0, 0]}
+          sceneProps={{ selected: hovered }}
+        />
+      )}
+
+      {/* tv controls */}
+      <group position={[-1.812, 0.593, 0]} rotation={[0, Math.PI / 6, 0]}>
+        <Html
+          transform
+          className="text-red-500 border-4 rounded-md w-[700px] h-[100px] border-gray-400 select-none"
+          position={[0, -0.48, 0.8]}
+          rotation={[-Math.PI / 6, 0, 0]}
+          scale={0.1}
+          // distanceFactor={0.7}
+        >
+          <div className="absolute bg-white bg-opacity-50 h-full w-full blur-md">test</div>
+          <div className="flex flex-row items-center justify-around h-full w-full">
+            <div className="text-black z-10 text-center">
+              <CodeBracketSquareIcon
+                className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
+                height={60}
+              />
+              Projects
+            </div>
+            <div className="text-black z-10 text-center flex flex-col">
+              <PresentationChartLineIcon
+                className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
+                height={60}
+              />
+              Experiences
+            </div>
+            <div className="text-black z-10 text-center flex flex-col">
+              <HeartIcon
+                className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
+                height={60}
+              />
+              Taylor Swift
+            </div>
+
+            <div className="text-black z-10 text-center">
+              <DocumentTextIcon
+                className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
+                height={60}
+              />
+              Resume
+            </div>
+          </div>
+        </Html>
+      </group>
     </group>
   );
 }
