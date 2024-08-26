@@ -60,7 +60,11 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
   // );
   return (
     <group {...props} dispose={null}>
-      <directionalLight intensity={4} color={0xf5ad64} position={[-1.449, 11.4, 10.477]} />
+      <directionalLight
+        intensity={4}
+        color={0xf5ad64}
+        position={[-1.449, 11.4, 10.477]}
+      />
 
       <Float floatingRange={[0.05, 0.1]}>
         {/* lego spaceship */}
@@ -69,7 +73,11 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           onPointerEnter={() => setHovered("SPACESHIP")}
           onPointerOut={() => setHovered("")}
         >
-          <group scale={0.2} position={[1.8, 0.5, 1]} rotation={[0, -Math.PI / 3, Math.PI / 6]}>
+          <group
+            scale={0.2}
+            position={[1.8, 0.5, 1]}
+            rotation={[0, -Math.PI / 3, Math.PI / 6]}
+          >
             <pointLight
               name="PointLight"
               intensity={1 / 10}
@@ -144,7 +152,10 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
               scale={0.092}
               onPointerDown={(e) => e.stopPropagation()}
             >
-              <iframe src="https://lefan.ca" className="w-[854px] h-[480px]" />
+              <iframe
+                src="https://lefan.ca"
+                className="w-[854px] h-[480px] select-none"
+              />
             </Html>
           </Suspense>
         </mesh>
@@ -273,10 +284,9 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           position={[0, -0.48, 0.8]}
           rotation={[-Math.PI / 6, 0, 0]}
           scale={0.1}
-          // distanceFactor={0.7}
+          onPointerDown={(e) => e.stopPropagation()}
         >
-          <div className="absolute bg-white bg-opacity-50 h-full w-full blur-md">test</div>
-          <div className="flex flex-row items-center justify-around h-full w-full">
+          <div className="flex flex-row items-center justify-around h-full w-full select-none">
             <div className="text-black z-10 text-center">
               <CodeBracketSquareIcon
                 className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
