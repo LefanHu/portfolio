@@ -24,8 +24,7 @@ export function Geometries(props: JSX.IntrinsicElements["group"]) {
   );
   return randProps.map((prop) => {
     return (
-      <group {...props}>
-        <Float>
+        <Float {...props} key={prop.geometry.id}>
           <mesh
             scale={THREE.MathUtils.randFloat(0.25, 0.5)}
             position={[
@@ -37,7 +36,6 @@ export function Geometries(props: JSX.IntrinsicElements["group"]) {
             material={material}
           />
         </Float>
-      </group>
     );
   });
 }
