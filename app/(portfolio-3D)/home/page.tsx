@@ -13,6 +13,7 @@ import {
   MotionPathControls,
   PerspectiveCamera,
   useHelper,
+  ContactShadows,
 } from "@react-three/drei";
 import { EffectComposer, Selection, Outline } from "@react-three/postprocessing";
 
@@ -22,6 +23,7 @@ import NextUICard from "@/components/NextUICard";
 
 import { useCameraStore } from "@/lib/store";
 import { easeIn } from "framer-motion";
+import { Geometries } from "@/components/three/Geometries";
 
 const startCameraPosition: [number, number, number] = [0.5, 0, 5];
 // const viewCameraPosition: [number, number, number] = [2, 0.5, 1.5];
@@ -109,8 +111,11 @@ export default function Home3DPage() {
 
         <Selection>
           <PortfolioScene position={[1, -0.5, 0]} />
-          <Effects />
+          {/* <Effects /> */}
         </Selection>
+
+        <Geometries />
+        {/* <ContactShadows position={[0, -9, -10]} opacity={0.7} scale={40} blur={1} /> */}
 
         {/* <Html
           transform
