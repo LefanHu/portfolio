@@ -3,13 +3,21 @@ import HoverTiltCard from "@/components/hoverTiltCard";
 import ParticlesBackground from "@/components/particlesbackground";
 
 const features = [
-  { name: 'Origin', description: 'Designed by Good Goods, Inc.' },
-  { name: 'Material', description: 'Solid walnut base with rare earth magnets and powder coated steel card cover' },
-  { name: 'Dimensions', description: '6.25" x 3.55" x 1.15"' },
-  { name: 'Finish', description: 'Hand sanded and finished with natural oil' },
-  { name: 'Includes', description: 'Wood card tray and 3 refill packs' },
-  { name: 'Considerations', description: 'Made from natural materials. Grain and color vary with each item.' },
-]
+  { name: "Origin", description: "Designed by Good Goods, Inc." },
+  {
+    name: "Material",
+    description:
+      "Solid walnut base with rare earth magnets and powder coated steel card cover",
+  },
+  { name: "Dimensions", description: '6.25" x 3.55" x 1.15"' },
+  { name: "Finish", description: "Hand sanded and finished with natural oil" },
+  { name: "Includes", description: "Wood card tray and 3 refill packs" },
+  {
+    name: "Considerations",
+    description:
+      "Made from natural materials. Grain and color vary with each item.",
+  },
+];
 
 export default function Home() {
   return (
@@ -60,12 +68,11 @@ export default function Home() {
           <h2 className="pt-10 text-center text-6xl font-bold md:text-7xl flex items-center justify-center bg-gradient-to-l from-purple-500 via-violet-800 to-pink-400 bg-clip-text text-transparent">
             Lefan&apos;s Portfolio
           </h2>
-          <Highlights></Highlights>
+          {/* <Highlights></Highlights> */}
         </div>
       </div>
       <ParticlesBackground />
       {/* </main> */}
     </div>
-
-  )
+  );
 }
