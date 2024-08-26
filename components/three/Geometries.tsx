@@ -1,8 +1,7 @@
 import * as THREE from "three";
-import React, { useMemo} from "react";
-import { Float} from "@react-three/drei";
+import React, { useMemo } from "react";
+import { Float } from "@react-three/drei";
 
-const material = new THREE.MeshStandardMaterial();
 const geometries = [
   { geometry: new THREE.TetrahedronGeometry(2) },
   { geometry: new THREE.CylinderGeometry(0.8, 0.8, 2, 32) },
@@ -22,20 +21,28 @@ export function Geometries(props: JSX.IntrinsicElements["group"]) {
       Array.from({ length: n }, () => geometries[Math.floor(Math.random() * geometries.length)]),
     []
   );
+
+  const getRandomPastelColor = () => {
+    const r = Math.floor(Math.random() * 127 + 127);
+    const g = Math.floor(Math.random() * 127 + 127);
+    const b = Math.floor(Math.random() * 127 + 127);
+    return `rgb(${r}, ${g}, ${b})`;
+  };
+
   return randProps.map((prop) => {
     return (
-        <Float {...props} key={prop.geometry.id}>
-          <mesh
-            scale={THREE.MathUtils.randFloat(0.25, 0.5)}
-            position={[
-              THREE.MathUtils.randFloat(-26, 26),
-              THREE.MathUtils.randFloat(0, 6),
-              THREE.MathUtils.randFloat(-16, -8),
-            ]}
-            geometry={prop.geometry}
-            material={material}
-          />
-        </Float>
+      <Float {...props} key={prop.geometry.id}>
+        <mesh
+          scale={THREE.MathUtils.randFloat(0.25, 0.5)}
+          position={[
+            THREE.MathUtils.randFloat(-26, 26),
+            THREE.MathUtils.randFloat(0, 6),
+            THREE.MathUtils.randFloat(-16, -8),
+          ]}
+          geometry={prop.geometry}
+          material={new THREE.MeshStandardMaterial({color: getRandomPastelColor()})}
+        />
+      </Float>
     );
   });
 }
