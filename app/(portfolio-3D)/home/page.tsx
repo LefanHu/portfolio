@@ -9,13 +9,8 @@ import {
   RandomizedLight,
   PerspectiveCamera,
 } from "@react-three/drei";
-import {
-  EffectComposer,
-  Selection,
-  Outline,
-} from "@react-three/postprocessing";
 
-import { Suspense, use, useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { PortfolioScene } from "@/components/PortfolioScene";
 
 import { useCameraStore } from "@/lib/store";
@@ -109,10 +104,7 @@ export default function Home3DPage() {
           />
         </AccumulativeShadows>
 
-        <Selection>
-          <PortfolioScene position={[1, -0.5, 0]} />
-          {/* <Effects /> */}
-        </Selection>
+        <PortfolioScene position={[1, -0.5, 0]} />
 
         {/* <Geometries /> */}
 
@@ -140,23 +132,5 @@ export default function Home3DPage() {
         <Suspense />
       </Canvas>
     </div>
-  );
-}
-
-function Effects() {
-  const { size } = useThree();
-  // useFrame((state, delta) => {
-  //
-  // });
-  return (
-    <EffectComposer stencilBuffer autoClear={false} multisampling={4}>
-      <Outline
-        visibleEdgeColor={0x42d4f5}
-        hiddenEdgeColor={0}
-        blur
-        width={size.width * 1.25}
-        edgeStrength={10}
-      />
-    </EffectComposer>
   );
 }
