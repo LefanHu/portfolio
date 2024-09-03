@@ -1,4 +1,4 @@
-import { useCameraStore } from "./store";
+import { useActiveViewState, useCameraStore } from "./store";
 
 export const setViewPosition = (positionName: string) => {
   switch (positionName) {
@@ -14,4 +14,6 @@ export const setViewPosition = (positionName: string) => {
       useCameraStore.setState({ targetPosition: [0.5, 0, 5] });
       useCameraStore.setState({ targetLookat: [1, 0.5, 1] });
   }
+
+  useActiveViewState.setState({ activeView: positionName });
 };

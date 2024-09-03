@@ -27,3 +27,16 @@ export const useCameraStore = create<CameraState>()((set) => ({
       targetLookat: newRotation, // target rotation for animation
     })),
 }));
+
+interface ActiveViewState {
+  activeView: string;
+  setActiveView: (newView: string) => void;
+}
+
+export const useActiveViewState = create<ActiveViewState>((set) => ({
+  activeView: "default",
+  setActiveView: (newView) =>
+    set(() => ({
+      activeView: newView,
+    })),
+}));

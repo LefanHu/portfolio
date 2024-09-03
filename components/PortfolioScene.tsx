@@ -7,7 +7,7 @@ import { EffectComposer } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { Select, ToneMapping } from "@react-three/postprocessing";
 import { SceneLabels } from "./three/PortfolioLabels";
-import { TVControls } from "./three/TVControls";
+import { TVControls } from "./three/TVControlPanel";
 
 type GLTFResult = GLTF & {
   nodes: {

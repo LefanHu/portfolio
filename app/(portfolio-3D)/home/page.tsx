@@ -10,11 +10,12 @@ import {
   AdaptiveDpr,
 } from "@react-three/drei";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useRef } from "react";
 import { PortfolioScene } from "@/components/PortfolioScene";
 
-import { useCameraStore } from "@/lib/store";
-import { Box } from "@/components/Box";
+import { useActiveViewState, useCameraStore } from "@/lib/store";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { setViewPosition } from "@/lib/threeSceneViewHelpers";
 
 function Camera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -46,6 +47,24 @@ function Camera() {
 
   return (
     <PerspectiveCamera makeDefault ref={cameraRef} position={[0.5, 0, 4]} />
+  );
+}
+
+function ResetViewButton() {
+  const { activeView } = useActiveViewState();
+
+  return (
+    <div>
+      <ArrowLeftIcon
+        className={
+          "absolute w-10 h-10 left-0 top-0 text-black border-2 border-black rounded-lg m-2 p-1 hover:bg-blue-800 hover:text-white transition-all duration-200 cursor-pointer" +
+          (activeView === "default" ? " invisible" : "")
+        }
+        onClick={() => {
+          setViewPosition("default");
+        }}
+      />
+    </div>
   );
 }
 
@@ -81,6 +100,7 @@ export default function Home3DPage() {
         <AdaptiveDpr pixelated />
         <Suspense />
       </Canvas>
+      <ResetViewButton />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Html } from "@react-three/drei";
-import { useCameraStore } from "@/lib/store";
 
 import {
   CodeBracketSquareIcon,
@@ -10,13 +9,13 @@ import {
   TvIcon,
 } from "@heroicons/react/24/outline";
 import { setViewPosition } from "@/lib/threeSceneViewHelpers";
+import { useActiveViewState } from "@/lib/store";
 
 export function TVControls() {
-  const [viewing, setViewing] = useState<string>("default");
+  const { activeView } = useActiveViewState();
 
   const setView = (positionName: string) => {
     setViewPosition(positionName);
-    setViewing(positionName);
   };
 
   // Escape key to reset camera position
@@ -43,7 +42,7 @@ export function TVControls() {
         className={
           "text-red-500 border-4 rounded-md w-[700px] h-[100px] border-gray-400 select-none bg-gray-300 bg-opacity-50" +
           " " +
-          (!(viewing === "default" || viewing === "TV") ? "hidden" : "")
+          (!(activeView === "default" || activeView === "TV") ? "hidden" : "")
         }
         position={[0, -0.48, 0.8]}
         rotation={[-Math.PI / 6, 0, 0]}
