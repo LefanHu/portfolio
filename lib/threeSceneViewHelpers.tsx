@@ -3,8 +3,8 @@ import { useCameraStore } from "./store";
 export const setViewPosition = (positionName: string) => {
   switch (positionName) {
     case "TV":
-      useCameraStore.setState({ targetPosition: [0.5, 0, 5] });
-      useCameraStore.setState({ targetLookat: [0, 1, 0] });
+      useCameraStore.setState({ targetPosition: [0.2, 0.2, 2.5] });
+      useCameraStore.setState({ targetLookat: [-0.6, 0.2, 0] });
       break;
     case "Projects":
       useCameraStore.setState({ targetPosition: [4, 0.8, -2.3] });
@@ -12,6 +12,6 @@ export const setViewPosition = (positionName: string) => {
       break;
     default:
       useCameraStore.setState({ targetPosition: [0.5, 0, 5] });
-      useCameraStore.setState({ targetLookat: [0, 1, 0] });
+      useCameraStore.setState({ targetLookat: [1, 0.5, 1] });
   }
 };
