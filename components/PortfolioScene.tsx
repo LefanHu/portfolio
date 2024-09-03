@@ -1,16 +1,13 @@
 import * as THREE from "three";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useGraph } from "@react-three/fiber";
-import { Float, Html, Plane, useGLTF } from "@react-three/drei";
+import { Float, Html, useGLTF } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
-import { Select } from "@react-three/postprocessing";
+import { EffectComposer } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
+import { Select, ToneMapping } from "@react-three/postprocessing";
 import { SceneLabels } from "./three/PortfolioLabels";
-import {
-  CodeBracketSquareIcon,
-  DocumentTextIcon,
-  HeartIcon,
-  PresentationChartLineIcon,
-} from "@heroicons/react/24/outline";
+import { TVControls } from "./three/TVControls";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -54,17 +51,37 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGraph(clone) as GLTFResult;
   const [hovered, setHovered] = useState<string>("");
 
-  // video material
-  // const texture = useVideoTexture(
-  //   "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-  // );
+  // const { middleGrey, maxLuminance } = useControls({
+  //   middleGrey: {
+  //     min: 0,
+  //     max: 1,
+  //     value: 0.6,
+  //     step: 0.1,
+  //   },
+  //   maxLuminance: {
+  //     min: 0,
+  //     max: 64,
+  //     value: 16,
+  //     step: 1,
+  //   },
+  // });
+
   return (
     <group {...props} dispose={null}>
-      <directionalLight
-        intensity={4}
-        color={0xf5ad64}
-        position={[-1.449, 11.4, 10.477]}
-      />
+      <hemisphereLight intensity={1.5} color={0xed2f00} />
+      <EffectComposer>
+        <ToneMapping
+          blendFunction={BlendFunction.NORMAL} // blend mode
+          adaptive={true} // toggle adaptive luminance map usage
+          resolution={256} // texture resolution of the luminance map
+          // middleGrey={0.6} // middle grey factor
+          // maxLuminance={19.0} // maximum luminance
+          averageLuminance={1.0} // average luminance
+          adaptationRate={1.0} // luminance adaptation rate
+          middleGrey={0.5}
+          maxLuminance={8}
+        />
+      </EffectComposer>
 
       <Float floatingRange={[0.05, 0.1]}>
         {/* lego spaceship */}
@@ -219,6 +236,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
         castShadow
+        receiveShadow
       />
       <mesh
         name="Box040_Material_0"
@@ -228,7 +246,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
         castShadow
-        // receiveShadow
+        receiveShadow
       />
       <mesh
         name="Box040_Sofa_Dark_0"
@@ -237,6 +255,8 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         position={[1.687, 0.125, -1.014]}
         rotation={[-Math.PI / 2, 0, -0.548]}
         scale={0.5}
+        castShadow
+        receiveShadow
       />
       <mesh
         name="Cube003_Material005_0"
@@ -277,48 +297,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
       )}
 
       {/* tv controls */}
-      <group position={[-1.812, 0.593, 0]} rotation={[0, Math.PI / 6, 0]}>
-        <Html
-          transform
-          className="text-red-500 border-4 rounded-md w-[700px] h-[100px] border-gray-400 select-none"
-          position={[0, -0.48, 0.8]}
-          rotation={[-Math.PI / 6, 0, 0]}
-          scale={0.1}
-          onPointerDown={(e) => e.stopPropagation()}
-        >
-          <div className="flex flex-row items-center justify-around h-full w-full select-none">
-            <div className="text-black z-10 text-center">
-              <CodeBracketSquareIcon
-                className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
-                height={60}
-              />
-              Projects
-            </div>
-            <div className="text-black z-10 text-center flex flex-col">
-              <PresentationChartLineIcon
-                className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
-                height={60}
-              />
-              Experiences
-            </div>
-            <div className="text-black z-10 text-center flex flex-col">
-              <HeartIcon
-                className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
-                height={60}
-              />
-              Taylor Swift
-            </div>
-
-            <div className="text-black z-10 text-center">
-              <DocumentTextIcon
-                className="text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
-                height={60}
-              />
-              Resume
-            </div>
-          </div>
-        </Html>
-      </group>
+      <TVControls />
     </group>
   );
 }

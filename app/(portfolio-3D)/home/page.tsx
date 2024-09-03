@@ -1,13 +1,13 @@
 "use client";
 
 import * as THREE from "three";
-import { Canvas, useThree, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import {
   Environment,
-  OrbitControls,
   AccumulativeShadows,
   RandomizedLight,
   PerspectiveCamera,
+  AdaptiveDpr,
 } from "@react-three/drei";
 
 import { Suspense, useEffect, useRef, useState } from "react";
@@ -15,11 +15,6 @@ import { PortfolioScene } from "@/components/PortfolioScene";
 
 import { useCameraStore } from "@/lib/store";
 import { Box } from "@/components/Box";
-
-const startCameraPosition: [number, number, number] = [0.5, 0, 5];
-// const viewCameraPosition: [number, number, number] = [2, 0.5, 1.5];
-
-const viewCameraPosition: [number, number, number] = [5, 1, -3];
 
 function Camera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -50,45 +45,20 @@ function Camera() {
   });
 
   return (
-    <PerspectiveCamera makeDefault ref={cameraRef} position={[0.5, 0, 5]} />
-  );
-}
-
-function CameraDebugger(props: JSX.IntrinsicElements["cameraHelper"]) {
-  const camera = new THREE.PerspectiveCamera(50, 1, 1, 3);
-  return (
-    <group position={[0.5, 0, 5]}>
-      <mesh>
-        <cameraHelper args={[camera]} />
-      </mesh>
-    </group>
+    <PerspectiveCamera makeDefault ref={cameraRef} position={[0.5, 0, 4]} />
   );
 }
 
 export default function Home3DPage() {
-  // const cameraDebuggerRef = useRef<THREE.CameraHelper>(null);
-  // const boxRef = useRef<THREE.Mesh>(null);
-
-  useEffect(() => {
-    // delay 1 second then move camera
-    setTimeout(() => {
-      useCameraStore.setState({ targetPosition: viewCameraPosition });
-      useCameraStore.setState({ targetLookat: [-1, 1, 8] });
-    }, 2000);
-  }, []);
-
   return (
     <div className="w-screen h-screen">
       <Canvas
         shadows
-        className="bg-white"
+        className="bg-[#fffdf9]"
         // camera={{ position: [0.5, 0, 5], fov: 55 }}
       >
-        <Box position={[-3, 1, 14]} />
-        <Camera />
-        {/* <Box args={[1, 1, 1]} position={[0, 0, 0]} ref={boxRef} /> */}
-        {/* <CameraDebugger ref={cameraDebuggerRef} /> */}
         <Suspense fallback={null} />
+        <Camera />
         <AccumulativeShadows
           position={[0, -0.5, 0]}
           temporal={false}
@@ -104,31 +74,11 @@ export default function Home3DPage() {
           />
         </AccumulativeShadows>
 
+        {/* main scene */}
         <PortfolioScene position={[1, -0.5, 0]} />
 
-        {/* <Geometries /> */}
-
-        {/* <Html
-          transform
-          position={[20, 0, -20]}
-          occlude={"blending"}
-          rotation={[0, -Math.PI / 6, 0]}
-        >
-          <NextUICard></NextUICard>
-        </Html> */}
-
-        {/* <OrbitControls
-          enablePan={false}
-          enableZoom={true}
-          minPolarAngle={Math.PI / 8}
-          maxPolarAngle={Math.PI / 2}
-          maxAzimuthAngle={Math.PI / 3}
-          minAzimuthAngle={-Math.PI / 3}
-          minDistance={1}
-          maxDistance={8}
-        /> */}
-        <Environment preset="city" />
-
+        <Environment preset="city" environmentIntensity={1} />
+        <AdaptiveDpr pixelated />
         <Suspense />
       </Canvas>
     </div>
