@@ -166,12 +166,12 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
               transform
               position={[0, 0, -0.001]}
               occlude={"blending"}
-              scale={0.092}
               onPointerDown={(e) => e.stopPropagation()}
+              distanceFactor={1}
             >
               <iframe
                 src="https://lefan.ca"
-                className="w-[854px] h-[480px] select-none"
+                className="w-[792px] h-[450px] select-none"
               />
             </Html>
           </Suspense>
@@ -288,13 +288,13 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         />
       </Select>
 
-      {hovered && (
+      {/* {hovered && (
         <SceneLabels
           position={[0, 2, -2]}
           rotation={[0, 0, 0]}
           sceneProps={{ selected: hovered }}
         />
-      )}
+      )} */}
 
       {/* tv controls */}
       <TVControls />
