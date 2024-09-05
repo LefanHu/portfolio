@@ -42,7 +42,7 @@ export function TVControls() {
         className={
           "text-red-500 border-4 rounded-md w-[700px] h-[100px] border-gray-400 select-none bg-gray-300 bg-opacity-50" +
           " " +
-          (!(activeView === "default" || activeView === "TV") ? "hidden" : "")
+          (!(activeView === "default") ? "hidden" : "")
         }
         position={[0, -0.48, 0.8]}
         rotation={[-Math.PI / 6, 0, 0]}
