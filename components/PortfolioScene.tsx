@@ -165,7 +165,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
             <Html
               transform
               position={[0, 0, -0.001]}
-              occlude={"blending"}
+              // occlude={"blending"}
               onPointerDown={(e) => e.stopPropagation()}
               distanceFactor={1}
             >
@@ -271,7 +271,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
 
       {/* kanata */}
 
-      <Select
+      {/* <Select
         enabled={hovered === "KATANA"}
         onPointerOver={() => setHovered("KATANA")}
         onPointerOut={() => setHovered("")}
@@ -286,7 +286,7 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
           castShadow
           receiveShadow
         />
-      </Select>
+      </Select> */}
 
       {/* {hovered && (
         <SceneLabels
