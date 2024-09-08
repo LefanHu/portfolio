@@ -8,18 +8,28 @@ import {
   RandomizedLight,
   PerspectiveCamera,
   AdaptiveDpr,
+  Preload,
+  Loader,
+  useProgress,
 } from "@react-three/drei";
 
-import { Suspense, useRef } from "react";
+import { Suspense, use, useEffect, useRef, useState } from "react";
 import { PortfolioScene } from "@/components/PortfolioScene";
 
 import { useActiveViewState, useCameraStore } from "@/lib/store";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { setViewPosition } from "@/lib/threeSceneViewHelpers";
+import { LoaderScreen } from "@/components/three/LoaderSceen";
 
 function Camera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const { targetPosition, targetLookat } = useCameraStore();
+  const { progress } = useProgress();
+
+  useEffect(() => {
+    if (progress === 100) {
+    }
+  }, []);
 
   useFrame((state, delta) => {
     const camera = cameraRef.current;
@@ -46,7 +56,12 @@ function Camera() {
   });
 
   return (
-    <PerspectiveCamera makeDefault ref={cameraRef} position={[0.5, 0, 4]} />
+    <PerspectiveCamera
+      makeDefault
+      ref={cameraRef}
+      position={[0.5, 15, 40]}
+      // fov={55}
+    />
   );
 }
 
@@ -70,12 +85,8 @@ function ResetViewButton() {
 
 export default function Home3DPage() {
   return (
-    <div className="w-screen h-screen">
-      <Canvas
-        shadows
-        className="bg-[#fffdf9]"
-        // camera={{ position: [0.5, 0, 5], fov: 55 }}
-      >
+    <div className="w-screen h-screen relative">
+      <Canvas shadows className="bg-[#fffdf9] z-0">
         <Suspense fallback={null} />
         <Camera />
         <AccumulativeShadows
@@ -95,12 +106,14 @@ export default function Home3DPage() {
 
         {/* main scene */}
         <PortfolioScene position={[1, -0.5, 0]} />
-
-        <Environment preset="city" environmentIntensity={1} />
+        <Environment preset="sunset" environmentIntensity={1} />
         <AdaptiveDpr pixelated />
+
+        <Preload all />
         <Suspense />
       </Canvas>
       <ResetViewButton />
+      <LoaderScreen />
     </div>
   );
 }
