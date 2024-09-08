@@ -14,8 +14,8 @@ export function LoaderScreen() {
   return (
     <div
       className={
-        "absolute w-screen h-full bottom-0 left-0 bg-black transition-all duration-1000 z-50 " +
-        (isLoading ? "" : "bg-transparent invisible")
+        "absolute w-screen h-full bottom-0 left-0 bg-black transition-all duration-[2s] z-50 " +
+        (isLoading ? "" : "bg-transparent")
       }
     ></div>
   );
