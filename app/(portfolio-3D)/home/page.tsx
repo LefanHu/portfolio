@@ -9,8 +9,6 @@ import {
   PerspectiveCamera,
   AdaptiveDpr,
   Preload,
-  Loader,
-  useProgress,
 } from "@react-three/drei";
 
 import { Suspense, use, useEffect, useRef, useState } from "react";
@@ -24,12 +22,6 @@ import { LoaderScreen } from "@/components/three/LoaderSceen";
 function Camera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const { targetPosition, targetLookat } = useCameraStore();
-  const { progress } = useProgress();
-
-  useEffect(() => {
-    if (progress === 100) {
-    }
-  }, []);
 
   useFrame((state, delta) => {
     const camera = cameraRef.current;
