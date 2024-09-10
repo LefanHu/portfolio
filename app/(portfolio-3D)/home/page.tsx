@@ -22,10 +22,31 @@ import { LoaderScreen } from "@/components/three/LoaderSceen";
 function Camera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const { targetPosition, targetLookat } = useCameraStore();
+  const [isFocused, setIsFocused] = useState(true);
+
+  useEffect(() => {
+    window.addEventListener("blur", () => {
+      setIsFocused(false);
+    });
+
+    window.addEventListener("focus", () => {
+      setIsFocused(true);
+    });
+
+    return () => {
+      window.removeEventListener("blur", () => {
+        setIsFocused(false);
+      });
+
+      window.removeEventListener("focus", () => {
+        setIsFocused(true);
+      });
+    };
+  }, []);
 
   useFrame((state, delta) => {
     const camera = cameraRef.current;
-    if (!camera) return;
+    if (!camera || !isFocused) return;
 
     // Animate position
     // easing.damp3(camera.position, targetPosition, 5, delta);
