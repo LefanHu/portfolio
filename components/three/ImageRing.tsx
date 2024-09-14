@@ -53,7 +53,7 @@ export function ImageRing(props: { imagePaths: string[] }) {
     <>
       {/* <ScrollControls pages={4} infinite>
         <Rig> */}
-      <BentPlane radius={1} width={1} height={1} />
+      {/* <BentPlane radius={1} width={1} height={1} /> */}
       {/* </Rig>
       </ScrollControls> */}
     </>
