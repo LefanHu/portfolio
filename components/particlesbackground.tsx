@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
@@ -14,8 +14,6 @@ import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, i
 import { loadImageShape } from "@tsparticles/shape-image";
 // import { loadSlim } from "@tsparticles/slim"; // if you are going to use `loadSlim`, install the "@tsparticles/slim" package too.
 // import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`, install the "@tsparticles/basic" package too.
-
-
 
 export default function ParticlesBackground() {
   const [init, setInit] = useState(false);
@@ -112,13 +110,13 @@ export default function ParticlesBackground() {
       },
       detectRetina: true,
     }),
-    [],
+    []
   );
 
   if (init) {
     return (
       <Particles
-        className="z-0"
+        className="absolute z-0"
         id="tsparticles"
         particlesLoaded={particlesLoaded}
         options={options}
@@ -127,4 +125,4 @@ export default function ParticlesBackground() {
   }
 
   return <></>;
-};
+}
