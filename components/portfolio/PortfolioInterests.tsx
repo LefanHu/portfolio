@@ -26,7 +26,11 @@ const features = [
     description:
       "Due to my interest for servers & infrastructure, I've always been the one to set up game / streaming servers for my friends.",
   },
-  { name: "", description: "" },
+  {
+    name: "Gym",
+    description:
+      "Working out and staying healthy is also a passion of mine :) Goodlife fitness saunas are quite nice.",
+  },
 ];
 
 export default function Interests() {

@@ -18,7 +18,7 @@ export default function SlidingCards(props: { cards: CardData[] }) {
   };
 
   return (
-    <div className="bg-gray-800 bg-opacity-50 p-5 flex flex-row justify-center items-center">
+    <div className="flex flex-row justify-center items-center">
       <div className="h-[400px] flex flex-nowrap">
         {props.cards.map((card: CardData, index: number) => (
           <div key={index}>
@@ -31,7 +31,7 @@ export default function SlidingCards(props: { cards: CardData[] }) {
               onChange={() => {}}
             />
             <label
-              className={styles.card}
+              className={styles.card + " bg-gray-800 bg-opacity-40"}
               htmlFor={"c" + (index + 1)}
               onMouseEnter={() => handleMouseEnter(index)}
             >

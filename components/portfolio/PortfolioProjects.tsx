@@ -1,66 +1,55 @@
-import Image from "next/image";
 import SlidingCards from "../SlidingCards";
 
 const projects = [
   {
-    name: "Sneak Attac",
+    name: "Stable Diffusion",
     imgSrc: "/images/swift-beach.jpg",
-    description: "test description",
-  },
-  {
-    name: "Sneak Attac",
-    imgSrc: "/images/swift-beach.jpg",
-    description: "test description",
-  },
-  {
-    name: "Sneak Attac",
-    imgSrc: "/images/swift-beach.jpg",
-    description: "test description",
-  },
-  {
-    name: "Sneak Attac",
-    imgSrc: "/images/swift-beach.jpg",
-    description: "test description",
+    description:
+      "Taylor swift image generator. Trained LORA adapter for stablediffusion-XL using AWS GPU instance",
   },
   {
     name: "Drone",
     imgSrc: "/images/drone.jpg",
-    description: "test description",
+    description:
+      "Custom FPV drone with, GPS, Compass... custom firmware in progress!",
+  },
+  {
+    name: "Plex, Sonarr, Jackett - Stack",
+    imgSrc: "/images/plex.png",
+    description:
+      "Home media server stack built using docker, authelia, nginx proxy",
+  },
+  {
+    name: "HIVE-HQ",
+    imgSrc: "/images/hivehq.png",
+    description: "2022 HTN submission. AI powered Covid safety planner",
+  },
+  {
+    name: "Drawbot",
+    imgSrc: "/images/drawbot-logo.png",
+    description: "2023 HTN submission. AI powered drawing robot",
+  },
+  {
+    name: "Interqu",
+    imgSrc: "/images/interqu.svg",
+    description: "AI interview platform built using AWS SAM",
   },
 ];
 
 export default function FavProjects() {
   return (
-    <>
-      <div className="relative isolate px-6 pt-14 lg:px-8">
-        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Data to enrich your online business
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-              lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
-              fugiat aliqua.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a
-                href="#"
-                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Get started
-              </a>
-              <a
-                href="#"
-                className="text-sm font-semibold leading-6 text-gray-900"
-              >
-                Learn more <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
+    <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-12 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
+      <div>
+        <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
+          Favorite Projects
+        </h2>
+        <p className="mt-4 text-gray-300 mb-5">
+          Below are some of my personal interests that I enjoy doing in my free
+          time. Although not everything is listed here, but it does highlight
+          some of my personal favorites.
+        </p>
+        <SlidingCards cards={projects} />
       </div>
-      <SlidingCards cards={projects} />
-    </>
+    </div>
   );
 }
