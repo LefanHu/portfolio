@@ -18,9 +18,6 @@ import { useActiveViewStore, useCameraStore } from "@/lib/store";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { setViewPosition } from "@/lib/threeSceneViewHelpers";
 import { LoaderScreen } from "@/components/three/LoaderSceen";
-import { ProjectShowcase } from "@/components/three/ProjectShowcase";
-import BentPlaneGeometry from "@/lib/three/geometries/bentPlane";
-import { BoxBlendGeometry } from "@/lib/three/geometries/boxBlendGeometry";
 import { BoxBlend } from "@/lib/three/shapes/boxBlend";
 
 function Camera() {
@@ -126,7 +123,7 @@ export default function Home3DPage() {
         <PortfolioScene position={[1, -0.5, 0]} />
         {/* <ProjectShowcase /> */}
         {/* <BentPlaneGeometry position={[0, 1, 0]} /> */}
-        <BoxBlend position={[1, 1, 1]} width={0.5} height={0.2} radius={0.1} />
+        {/* <BoxBlend position={[1, 1, 1]} width={0.5} height={0.2} radius={0.1} /> */}
 
         <Environment preset="dawn" environmentIntensity={1} />
         <AdaptiveDpr pixelated />
