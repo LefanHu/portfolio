@@ -49,12 +49,12 @@ export default function ParticlesBackground() {
       fpsLimit: 120,
       interactivity: {
         events: {
-          onClick: {
-            enable: true,
-            mode: "push",
-          },
+          // onClick: {
+          //   enable: true,
+          //   mode: "push",
+          // },
           onHover: {
-            enable: false,
+            enable: true,
             mode: "repulse",
           },
         },
@@ -116,7 +116,7 @@ export default function ParticlesBackground() {
   if (init) {
     return (
       <Particles
-        className="absolute z-0"
+        className="absolute z-[-10]"
         id="tsparticles"
         particlesLoaded={particlesLoaded}
         options={options}
