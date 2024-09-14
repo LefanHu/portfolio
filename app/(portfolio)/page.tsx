@@ -5,8 +5,7 @@ import Interests from "@/components/portfolio/PortfolioInterests";
 
 export default function Home() {
   return (
-    <div className="flex-1 overflow-auto">
-      <Interests />
+    <div className="flex-1 overflow-auto no-scrollbar">
       {/* <main className="h-lvh"> */}
       <div className="h-full flex items-center justify-center">
         <div className="w-full">
@@ -16,8 +15,8 @@ export default function Home() {
           {/* <Highlights></Highlights> */}
         </div>
       </div>
+      <Interests />
       <ParticlesBackground />
-      {/* </main> */}
     </div>
   );
 }
