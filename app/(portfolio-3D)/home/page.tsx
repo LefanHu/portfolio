@@ -14,16 +14,21 @@ import {
 import { Suspense, use, useEffect, useRef, useState } from "react";
 import { PortfolioScene } from "@/components/PortfolioScene";
 
-import { useActiveViewState, useCameraStore } from "@/lib/store";
+import { useActiveViewStore, useCameraStore } from "@/lib/store";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { setViewPosition } from "@/lib/threeSceneViewHelpers";
 import { LoaderScreen } from "@/components/three/LoaderSceen";
+import { ProjectShowcase } from "@/components/three/ProjectShowcase";
+import BentPlaneGeometry from "@/lib/three/geometries/bentPlane";
+import { BoxBlendGeometry } from "@/lib/three/geometries/boxBlendGeometry";
+import { BoxBlend } from "@/lib/three/shapes/boxBlend";
 
 function Camera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const { targetPosition, targetLookat } = useCameraStore();
   const [isFocused, setIsFocused] = useState(true);
 
+  // stop camera motion while not focused
   useEffect(() => {
     window.addEventListener("blur", () => {
       setIsFocused(false);
@@ -79,7 +84,7 @@ function Camera() {
 }
 
 function ResetViewButton() {
-  const { activeView } = useActiveViewState();
+  const { activeView } = useActiveViewStore();
 
   return (
     <div>
@@ -119,7 +124,11 @@ export default function Home3DPage() {
 
         {/* main scene */}
         <PortfolioScene position={[1, -0.5, 0]} />
-        <Environment preset="sunset" environmentIntensity={1} />
+        {/* <ProjectShowcase /> */}
+        {/* <BentPlaneGeometry position={[0, 1, 0]} /> */}
+        <BoxBlend position={[1, 1, 1]} width={0.5} height={0.2} radius={0.1} />
+
+        <Environment preset="dawn" environmentIntensity={1} />
         <AdaptiveDpr pixelated />
 
         <Preload all />

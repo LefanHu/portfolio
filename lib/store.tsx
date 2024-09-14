@@ -33,7 +33,7 @@ interface ActiveViewState {
   setActiveView: (newView: string) => void;
 }
 
-export const useActiveViewState = create<ActiveViewState>((set) => ({
+export const useActiveViewStore = create<ActiveViewState>((set) => ({
   activeView: "default",
   setActiveView: (newView) =>
     set(() => ({

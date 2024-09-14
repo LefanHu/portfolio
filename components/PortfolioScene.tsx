@@ -160,21 +160,19 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
         />
         {/* iframe */}
         <mesh position={[-1.812, 0.626, 0]} rotation={[0, Math.PI / 6, 0]}>
-          <Suspense fallback={null}>
-            {/* <meshBasicMaterial map={texture} toneMapped={false} /> */}
-            <Html
-              transform
-              position={[0, 0, -0.001]}
-              // occlude={"blending"}
-              onPointerDown={(e) => e.stopPropagation()}
-              distanceFactor={1}
-            >
-              <iframe
-                src="https://lefan.ca"
-                className="w-[792px] h-[450px] select-none"
-              />
-            </Html>
-          </Suspense>
+          <meshBasicMaterial />
+          <Html
+            transform
+            position={[0, 0, -0.001]}
+            // occlude={"blending"}
+            onPointerDown={(e) => e.stopPropagation()}
+            distanceFactor={1}
+          >
+            <iframe
+              src="https://lefan.ca"
+              className="w-[792px] h-[450px] select-none"
+            />
+          </Html>
         </mesh>
       </group>
 

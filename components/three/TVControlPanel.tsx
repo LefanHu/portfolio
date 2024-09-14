@@ -9,10 +9,10 @@ import {
   TvIcon,
 } from "@heroicons/react/24/outline";
 import { setViewPosition } from "@/lib/threeSceneViewHelpers";
-import { useActiveViewState } from "@/lib/store";
+import { useActiveViewStore } from "@/lib/store";
 
 export function TVControls() {
-  const { activeView } = useActiveViewState();
+  const { activeView } = useActiveViewStore();
 
   const setView = (positionName: string) => {
     setViewPosition(positionName);
