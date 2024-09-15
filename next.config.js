@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // experimental: {
-  //   esmExternals: "loose",
-  //   serverComponentsExternalPackages: ["mongoose"]
-  // },
+  experimental: {
+    // esmExternals: "loose",
+    // serverComponentsExternalPackages: ["mongoose"]
+    optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+  },
   output: "standalone",
   images: {
     remotePatterns: [
