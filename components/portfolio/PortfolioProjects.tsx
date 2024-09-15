@@ -25,6 +25,11 @@ const projects = [
     description: "2022 HTN submission. AI powered Covid safety planner",
   },
   {
+    name: "Auto Trader - Arbitrage",
+    imgSrc: "/images/stonks.jpg",
+    description: "Arbitration bot for the Oanda API",
+  },
+  {
     name: "Drawbot",
     imgSrc: "/images/drawbot-logo.png",
     description: "2023 HTN submission. AI powered drawing robot",
