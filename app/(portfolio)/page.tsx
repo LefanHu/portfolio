@@ -2,6 +2,7 @@ import ContactForm from "@/components/ContactForm";
 import Highlights from "@/components/highlights";
 import HoverTiltCard from "@/components/hoverTiltCard";
 import ParticlesBackground from "@/components/particlesbackground";
+import Experiences from "@/components/portfolio/PortfolioExperiences";
 import Interests from "@/components/portfolio/PortfolioInterests";
 import FavProjects from "@/components/portfolio/PortfolioProjects";
 import SlidingCards from "@/components/SlidingCards";
@@ -20,6 +21,7 @@ export default function Home() {
       </div>
       <FavProjects />
       <Interests />
+      <Experiences />
       <ParticlesBackground />
       <ContactForm />
     </div>
