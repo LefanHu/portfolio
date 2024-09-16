@@ -3,7 +3,7 @@
 import { LTProfileResponse } from "@/lib/types/stats/lt";
 import { useEffect, useState } from "react";
 import AnimatedCounter from "../AnimatedCounter";
-import { Badge, Skeleton } from "@mantine/core";
+import { Badge, SemiCircleProgress, Skeleton } from "@mantine/core";
 import Image from "next/image";
 
 export default function LeetcodeStats() {
@@ -15,6 +15,7 @@ export default function LeetcodeStats() {
     "text-orange-400",
     "text-red-600",
   ];
+  const progressCircleColors = ["none", "green", "yellow", "red"];
 
   // fetch stats
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function LeetcodeStats() {
         if (!res.ok) {
           throw new Error(res.status.toString());
         }
-        // console.log(results);
+        console.log(results);
         setProfileStats(results);
       } catch (error) {
         console.log(`failed to fetch leetcode profile: ${error}`);
@@ -86,14 +87,43 @@ export default function LeetcodeStats() {
           <div className="grid w-full grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-y-8 bg-gray-600 bg-opacity-45 p-3 rounded-2xl">
             {profileStats?.data.matchedUser.submitStatsGlobal.acSubmissionNum.map(
               (questionType, index) => (
-                <div className="flex flex-col items-center" key={index}>
-                  <h3 className="text-5xl font-extrabold leading-tight text-center text-gray-200">
-                    {<AnimatedCounter from={0} to={questionType.count} />}
-                  </h3>
+                <div
+                  className="flex flex-col items-center justify-end"
+                  key={index}
+                >
+                  {index !== 0 ? (
+                    <SemiCircleProgress
+                      fillDirection="left-to-right"
+                      orientation="up"
+                      filledSegmentColor={progressCircleColors[index]}
+                      size={200}
+                      thickness={12}
+                      value={
+                        profileStats.data.matchedUser.problemsSolvedBeatsStats[
+                          index - 1
+                        ].percentage
+                      }
+                      label={
+                        <h3 className="text-5xl font-extrabold leading-tight text-center text-gray-200">
+                          {<AnimatedCounter from={0} to={questionType.count} />}
+                        </h3>
+                      }
+                    />
+                  ) : (
+                    <h3 className="text-5xl font-extrabold leading-tight text-center text-gray-200">
+                      {<AnimatedCounter from={0} to={questionType.count} />}
+                    </h3>
+                  )}
                   <p
                     className={`text-base font-medium leading-7 text-center ${problemColors[index]}`}
                   >
                     {questionType.difficulty}
+                    {index !== 0
+                      ? ` - beats ${
+                          profileStats.data.matchedUser
+                            .problemsSolvedBeatsStats[index - 1].percentage
+                        }%`
+                      : ""}
                   </p>
                 </div>
               )
