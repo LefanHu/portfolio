@@ -43,18 +43,16 @@ const projects = [
 
 export default function FavProjects() {
   return (
-    <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-12 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
-          Favorite Projects
-        </h2>
-        <p className="mt-4 text-gray-300 mb-5">
-          Below are some of my personal interests that I enjoy doing in my free
-          time. Although not everything is listed here, but it does highlight
-          some of my personal favorites.
-        </p>
-        <SlidingCards cards={projects} />
-      </div>
+    <div className="mx-auto grid max-w-2xl grid-cols-1 items-center px-4 py-12 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
+      <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
+        Favorite Projects
+      </h2>
+      <p className="mt-4 text-gray-300 mb-5">
+        Below are some of my personal interests that I enjoy doing in my free
+        time. Although not everything is listed here, but it does highlight some
+        of my personal favorites.
+      </p>
+      <SlidingCards cards={projects} />
     </div>
   );
 }

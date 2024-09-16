@@ -43,7 +43,7 @@ export default function ParticlesBackground() {
     () => ({
       background: {
         color: {
-          value: "transparent",
+          value: "#000000",
         },
       },
       fpsLimit: 120,

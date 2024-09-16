@@ -1,8 +1,9 @@
 export async function GET(req: Request) {
   try {
     const endpoint = "https://leetcode.com/graphql";
+    const currYear = new Date().getFullYear();
     const query = `
-      query getUserProfile($username: String!) {
+      query getUserProfile($username: String!, $year: Int!) {
         allQuestionsCount {
           difficulty
           count
@@ -16,6 +17,45 @@ export async function GET(req: Request) {
             ranking
           }
           submissionCalendar
+          tagProblemCounts {
+            advanced {
+              tagName
+              tagSlug
+              problemsSolved
+            }
+            intermediate {
+              tagName
+              tagSlug
+              problemsSolved
+            }
+            fundamental {
+              tagName
+              tagSlug
+              problemsSolved
+            }
+          }
+          problemsSolvedBeatsStats {
+            difficulty
+            percentage
+          }
+          submitStatsGlobal {
+            acSubmissionNum {
+              difficulty
+              count
+            }
+          }
+          userCalendar(year: $year) {
+            activeYears
+            streak
+            totalActiveDays
+            dccBadges {
+              timestamp
+              badge {
+                name
+                icon
+              }
+            }
+          }
           submitStats {
             acSubmissionNum {
               difficulty
@@ -37,23 +77,6 @@ export async function GET(req: Request) {
           lang
           __typename
         }
-        matchedUserStats: matchedUser(username: $username) {
-          submitStats: submitStatsGlobal {
-            acSubmissionNum {
-              difficulty
-              count
-              submissions
-              __typename
-            }
-            totalSubmissionNum {
-              difficulty
-              count
-              submissions
-              __typename
-            }
-            __typename
-          }
-        }
       }`;
 
     const content = await fetch(endpoint, {
@@ -65,7 +88,10 @@ export async function GET(req: Request) {
       },
       body: JSON.stringify({
         query: query,
-        variables: { username: process.env.LEETCODE_USERNAME },
+        variables: {
+          username: process.env.LEETCODE_USERNAME,
+          year: currYear,
+        },
       }),
     });
 
