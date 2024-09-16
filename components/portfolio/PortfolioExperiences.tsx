@@ -37,6 +37,7 @@ const skillBadge = (skill: string) => {
       size="md"
       variant="gradient"
       gradient={{ from: "yellow", to: "orange", deg: 185 }}
+      key={skill}
     >
       {skill}
     </Badge>
@@ -74,8 +75,7 @@ export default function Experiences() {
       company: "KSKC Kumon",
       position: "Assistant Instructor/Grader",
       date: "2016 - 2018",
-      caption:
-        "Rock climbing is my go-to activity for stress relief as well as physical exercise... Nothing quite like the feeling of hard rocks in your hand.",
+      caption: "",
       responsibilities: [
         "Built script for automated tracking of virtual attendance during COVID-19",
         "Assistant instructor / grader",
@@ -87,8 +87,7 @@ export default function Experiences() {
       company: "Hackthon Organizer",
       position: "Hackathon Organizer (Volunteer)",
       date: "2016 - 2018",
-      caption:
-        "Building fpv drones and flying them either autonomously or in fpv mode. Ardupilot, Betaflight, iNav, etc, are all really cool open source projects.",
+      caption: "",
       responsibilities: [
         "Organized 2-day hackathon",
         "Gave ML workshop to 50+ participants from various countries",
@@ -107,8 +106,7 @@ export default function Experiences() {
       company: "TELUS Corporation",
       position: "Software Developer Co-Op",
       date: "May 2023 - August 2023",
-      caption:
-        "Generative AI has always been an interest of mine in the sense that machines can have such a thing as 'creativity'",
+      caption: "",
       responsibilities: [
         "Contributed to auto-callout system (ACMP) for field technicians and improved the reliability of response times in times of need",
         "Developed a Google Chat internal tool for use across the TELUS Reliability Center of Excellence team",
@@ -128,8 +126,7 @@ export default function Experiences() {
       company: "Ciena Corporation",
       position: "Software Developer Co-Op",
       date: "January 2024 - April 2024",
-      caption:
-        "As someone who grew up with a potato computer, I've always liked the idea of IaaS... AWS, AZURE, GCP, etc.",
+      caption: "",
       responsibilities: [
         "Created Splunk queries to generate search queries for well-known signatures of recognizable errors",
         "Utilized AWS for audio sentiment analysis with PyTorch",

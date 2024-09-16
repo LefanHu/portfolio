@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Fragment } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   AcademicCapIcon,
   Bars3Icon,
@@ -12,10 +12,10 @@ import {
   RocketLaunchIcon,
   StarIcon,
   WindowIcon,
-  XMarkIcon
-} from '@heroicons/react/24/outline'
-import FlyoutMenu from './flyoutmenu'
-import Image from 'next/image'
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import FlyoutMenu from "./flyoutmenu";
+import Image from "next/image";
 
 const nav = [
   {
@@ -25,14 +25,15 @@ const nav = [
         name: "About Me (Home Page)",
         description: "Who am I?",
         href: "/",
-        icon: AcademicCapIcon
-      }, {
+        icon: AcademicCapIcon,
+      },
+      {
         name: "Resume",
         description: "Current resume",
         href: "/resume-page",
-        icon: DocumentTextIcon
+        icon: DocumentTextIcon,
       },
-    ]
+    ],
   },
   {
     title: "Projects",
@@ -41,21 +42,15 @@ const nav = [
         name: "On-going",
         description: "Some on-going projects",
         href: "/project-gallery",
-        icon: RocketLaunchIcon
+        icon: RocketLaunchIcon,
       },
       {
         name: "Completed",
         description: "Some of my completed projects (including hackathons)",
         href: "#",
-        icon: StarIcon
+        icon: StarIcon,
       },
-      {
-        name: "Dropped",
-        description: "Projects that were unfeasible / uninteresting",
-        href: "#",
-        icon: XMarkIcon
-      },
-    ]
+    ],
   },
   {
     title: "Fun Stuff",
@@ -64,28 +59,28 @@ const nav = [
         name: "Algorithm Gallery",
         description: "some description",
         href: "/algo",
-        icon: PuzzlePieceIcon
+        icon: PuzzlePieceIcon,
       },
       {
         name: "JS Canvas",
-        description: "A collection of weird and playful experiments with JS canvas",
+        description:
+          "A collection of weird and playful experiments with JS canvas",
         href: "/js",
-        icon: LightBulbIcon
+        icon: LightBulbIcon,
       },
       {
         name: "CSS",
         description: "A collection of react components that I've written",
         href: "/in-complete",
-        icon: WindowIcon
+        icon: WindowIcon,
       },
-    ]
+    ],
   },
-]
+];
 
 function classNames(...classes: (string | undefined)[]): string {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 }
-
 
 export default function Navbar() {
   return (
@@ -108,7 +103,7 @@ export default function Navbar() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <RocketLaunchIcon className='h-8 w-auto' />
+                  <RocketLaunchIcon className="h-8 w-auto" />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
@@ -163,7 +158,10 @@ export default function Navbar() {
                         {({ active }) => (
                           <a
                             href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
                           >
                             Contact Me
                           </a>
@@ -176,8 +174,7 @@ export default function Navbar() {
             </div>
           </div>
         </>
-      )
-      }
-    </Disclosure >
-  )
+      )}
+    </Disclosure>
+  );
 }
