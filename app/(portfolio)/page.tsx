@@ -1,5 +1,6 @@
 import ContactForm from "@/components/ContactForm";
 import ParticlesBackground from "@/components/particlesbackground";
+import LeetcodeStats from "@/components/portfolio/LeetcodeStats";
 import Experiences from "@/components/portfolio/PortfolioExperiences";
 import Interests from "@/components/portfolio/PortfolioInterests";
 import FavProjects from "@/components/portfolio/PortfolioProjects";
@@ -14,6 +15,7 @@ export default function Home() {
       </div>
       <Experiences />
       <FavProjects />
+      <LeetcodeStats />
       <Interests />
       <ParticlesBackground />
       <ContactForm />
