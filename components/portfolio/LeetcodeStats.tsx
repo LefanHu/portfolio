@@ -76,14 +76,14 @@ export default function LeetcodeStats() {
   > = ["fundamental", "intermediate", "advanced"];
 
   return (
-    <div className="mx-auto grid max-w-2xl grid-cols-1 items-center px-4 py-12 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
+    <div className="grid grid-cols-1 items-center">
       <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl my-3">
         (Live!) Leetcode Statistics
       </h2>
 
       {/* leetcode stats */}
       <div className="bg-gray-900 bg-opacity-90 rounded-2xl p-4">
-        <div className="flex flex-col gap-4 mx-auto my-4">
+        <div className="flex flex-col gap-4 mx-auto">
           <div className="grid w-full grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-y-8 bg-gray-600 bg-opacity-45 p-3 rounded-2xl">
             {profileStats?.data.matchedUser.submitStatsGlobal.acSubmissionNum.map(
               (questionType, index) => (

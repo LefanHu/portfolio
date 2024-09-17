@@ -148,55 +148,56 @@ export default function Experiences() {
     },
   ];
   reverse(experiences);
-
   return (
-    <div className="flex flex-col mx-auto max-w-2xl gap-x-8 gap-y-8 px-4 py-8 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8 bg-gray-900 bg-opacity-90 rounded-2xl">
+    <div className="flex flex-col gap-y-8 w-full bg-gray-900 rounded-2xl bg-opacity-90 px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
       <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
         Experiences
       </h2>
-      <div className="flex flex-row justify-center items-center">
-        <Timeline
-          radius="xl"
-          lineWidth={3}
-          bulletSize={badgeSize + 4}
-          active={experiences.length}
-          color="rgba(172, 48, 176, 1)"
-        >
-          {experiences.map((experience, index) => (
-            <Timeline.Item
-              key={"experience" + index}
-              title={
-                <h3 className="bg-gradient-to-r from-sky-200 via-orange-100 to-purple-400 bg-clip-text text-transparent text-2xl font-extrabold">
-                  {experience.company}
-                </h3>
-              }
-              bullet={experience.bullet}
-            >
-              <div className="flex flex-row flex-nowrap gap-2">
-                {positionBadge(experience.position)}
-                {dateBadge(experience.date)}
-              </div>
-              <div className="my-2 flex flex-col max-w-2xl">
-                <Text size="sm">{experience.caption}</Text>
-                {experience.responsibilities.length > 0 && (
-                  <div className="m-2 p-4 bg-slate-700 bg-opacity-30 rounded-xl">
-                    <List size="sm" listStyleType="disc">
-                      {experience.responsibilities.map((resp) => (
-                        <List.Item key={resp} className="w-[95%]">
-                          <p>{resp}</p>
-                        </List.Item>
-                      ))}
-                    </List>
-                  </div>
-                )}
-
-                <div className="flex flex-row flex-wrap gap-2">
-                  {experience.tags.map((tag) => skillBadge(tag))}
+      <div className="mx-auto gap-x-8 gap-y-8 px-4 py-8 sm:px-6 bg-gray-600 bg-opacity-50 rounded-2xl">
+        <div className="flex flex-row justify-center items-center">
+          <Timeline
+            radius="xl"
+            lineWidth={3}
+            bulletSize={badgeSize + 4}
+            active={experiences.length}
+            color="rgba(172, 48, 176, 1)"
+          >
+            {experiences.map((experience, index) => (
+              <Timeline.Item
+                key={"experience" + index}
+                title={
+                  <h3 className="bg-gradient-to-r from-sky-200 via-orange-100 to-purple-400 bg-clip-text text-transparent text-2xl font-extrabold">
+                    {experience.company}
+                  </h3>
+                }
+                bullet={experience.bullet}
+              >
+                <div className="flex flex-row flex-nowrap gap-2">
+                  {positionBadge(experience.position)}
+                  {dateBadge(experience.date)}
                 </div>
-              </div>
-            </Timeline.Item>
-          ))}
-        </Timeline>
+                <div className="my-2 flex flex-col max-w-2xl">
+                  <Text size="sm">{experience.caption}</Text>
+                  {experience.responsibilities.length > 0 && (
+                    <div className="m-2 p-4 bg-slate-700 bg-opacity-30 rounded-xl">
+                      <List size="sm" listStyleType="disc">
+                        {experience.responsibilities.map((resp) => (
+                          <List.Item key={resp} className="w-[95%]">
+                            <p>{resp}</p>
+                          </List.Item>
+                        ))}
+                      </List>
+                    </div>
+                  )}
+
+                  <div className="flex flex-row flex-wrap gap-2">
+                    {experience.tags.map((tag) => skillBadge(tag))}
+                  </div>
+                </div>
+              </Timeline.Item>
+            ))}
+          </Timeline>
+        </div>
       </div>
     </div>
   );

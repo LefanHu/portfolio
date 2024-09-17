@@ -33,9 +33,28 @@ const features = [
   },
 ];
 
+const interestImages = [
+  {
+    src: "/images/rock-climbing.jpg",
+    alt: "rock climbing gym",
+  },
+  {
+    src: "/images/drone.jpg",
+    alt: "fpv drone",
+  },
+  {
+    src: "/images/swift-beach.jpg",
+    alt: "taylor swift on the beach",
+  },
+  {
+    src: "/images/drone.jpg",
+    alt: "fpv drone",
+  },
+];
+
 export default function Interests() {
   return (
-    <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-24 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+    <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-8 sm:px-6 lg:max-w-7xl lg:grid-cols-2 lg:px-8 bg-gray-600 bg-opacity-50 rounded-2xl">
       <div>
         <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
           Personal Interests
@@ -61,34 +80,16 @@ export default function Interests() {
         </dl>
       </div>
       <div className="grid grid-cols-2 grid-rows-2 gap-4 sm:gap-6 lg:gap-8">
-        <Image
-          src="/images/rock-climbing.jpg"
-          alt="Walnut card tray with white powder coated steel divider and 3 punchout holes."
-          width={500}
-          height={500}
-          className="rounded-lg bg-gray-100 aspect-square object-cover"
-        />
-        <Image
-          src="/images/drone.jpg"
-          alt="Top down view of walnut card tray with embedded magnets and card groove."
-          width={500}
-          height={500}
-          className="rounded-lg bg-gray-100 aspect-square object-cover"
-        />
-        <Image
-          src="/images/swift-beach.jpg"
-          alt="Side of walnut card tray with card groove and recessed card area."
-          width={500}
-          height={500}
-          className="rounded-lg bg-gray-100 aspect-square object-cover"
-        />
-        <Image
-          src="/images/drone.jpg"
-          alt="Walnut card tray filled with cards and card angled in dedicated groove."
-          width={500}
-          height={500}
-          className="rounded-lg bg-gray-100 aspect-square object-cover"
-        />
+        {interestImages.map((image, index) => (
+          <Image
+            src={image.src}
+            alt={image.alt}
+            width={500}
+            height={500}
+            className="rounded-lg bg-gray-100 object-cover h-full w-auto"
+            key={index}
+          />
+        ))}
       </div>
     </div>
   );

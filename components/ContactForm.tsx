@@ -1,6 +1,6 @@
 export default function ContactForm() {
   return (
-    <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-24 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+    <div className="flex flex-row max-w-2xl grid-cols-1 gap-x-8 gap-y-16 px-4 py-8 sm:px-6 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
       <div>
         <h1 className="text-white text-3xl font-extrabold">Contact Me</h1>
         <p className="text-sm text-gray-500 mt-4">

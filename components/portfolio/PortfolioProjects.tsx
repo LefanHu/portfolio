@@ -29,11 +29,11 @@ const projects = [
     imgSrc: "/images/stonks.jpg",
     description: "Arbitration bot for the Oanda API",
   },
-  {
-    name: "Drawbot",
-    imgSrc: "/images/drawbot-logo.png",
-    description: "2023 HTN submission. AI powered drawing robot",
-  },
+  // {
+  //   name: "Drawbot",
+  //   imgSrc: "/images/drawbot-logo.png",
+  //   description: "2023 HTN submission. AI powered drawing robot",
+  // },
   {
     name: "Interqu",
     imgSrc: "/images/interqu.svg",
@@ -43,15 +43,18 @@ const projects = [
 
 export default function FavProjects() {
   return (
-    <div className="mx-auto grid max-w-2xl grid-cols-1 items-center px-4 py-12 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
-      <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
-        Favorite Projects
-      </h2>
-      <p className="mt-4 text-gray-300 mb-5">
-        Below are some of my personal interests that I enjoy doing in my free
-        time. Although not everything is listed here, but it does highlight some
-        of my personal favorites.
-      </p>
+    <div className="flex flex-col gap-4 p-8 overflow-hidden bg-gray-800 bg-opacity-50 rounded-2xl">
+      <div>
+        <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
+          Favorite Projects
+        </h2>
+        <p className="mt-4 text-gray-300 mb-5">
+          Below are some of my personal interests that I enjoy doing in my free
+          time. Although not everything is listed here, but it does highlight
+          some of my personal favorites.
+        </p>
+        <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
+      </div>
       <SlidingCards cards={projects} />
     </div>
   );

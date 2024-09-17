@@ -35,7 +35,7 @@ export default function SlidingCards(props: { cards: CardData[] }) {
               htmlFor={"c" + (index + 1)}
               onMouseEnter={() => handleMouseEnter(index)}
             >
-              <div className={styles.row}>
+              <div className={styles.row + " z-[3]"}>
                 <div className={styles.icon}>{index + 1}</div>
                 <div className={styles.description}>
                   <h4 className={styles.h4}>{card.name}</h4>
@@ -47,7 +47,7 @@ export default function SlidingCards(props: { cards: CardData[] }) {
                 alt={card.name}
                 width={900}
                 height={600}
-                className="absolute object-cover h-full w-full z-[-1]"
+                className="absolute object-cover h-full w-full bg-gray-800"
               />
             </label>
           </div>
