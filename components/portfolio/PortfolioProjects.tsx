@@ -43,7 +43,7 @@ const projects = [
 
 export default function FavProjects() {
   return (
-    <div className="flex flex-col gap-4 p-8 overflow-hidden bg-gray-800 bg-opacity-50 rounded-2xl">
+    <div className="flex flex-col gap-4 p-8">
       <div>
         <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
           Favorite Projects

@@ -47,7 +47,7 @@ const interestImages = [
     alt: "taylor swift on the beach",
   },
   {
-    src: "/images/drone.jpg",
+    src: "/images/drone2.jpg",
     alt: "fpv drone",
   },
 ];
@@ -59,6 +59,7 @@ export default function Interests() {
         <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
           Personal Interests
         </h2>
+        <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
         <p className="mt-4 text-gray-300">
           Below are some of my personal interests that I enjoy doing in my free
           time. These are not all that I do in my free time, but highlights
@@ -86,7 +87,7 @@ export default function Interests() {
             alt={image.alt}
             width={500}
             height={500}
-            className="rounded-lg bg-gray-100 object-cover h-full w-auto"
+            className="rounded-lg border-2 border-gray-200 bg-gray-100 object-cover h-full w-auto"
             key={index}
           />
         ))}
