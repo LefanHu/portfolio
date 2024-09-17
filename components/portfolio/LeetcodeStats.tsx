@@ -47,8 +47,8 @@ export default function LeetcodeStats() {
   // TODO: do skeleton placeholder here
   if (!profileStats) {
     return (
-      <div className="mx-auto grid max-w-2xl grid-cols-1 items-center px-4 py-12 sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8 bg-gray-600 bg-opacity-50 rounded-2xl">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl my-3">
+      <div className="flex flex-col">
+        <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl my-4">
           (Live!) Leetcode Statistics
         </h2>
 

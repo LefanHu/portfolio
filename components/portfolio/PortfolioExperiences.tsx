@@ -108,7 +108,8 @@ export default function Experiences() {
       date: "May 2023 - August 2023",
       caption: "",
       responsibilities: [
-        "Contributed to auto-callout system (ACMP) for field technicians and improved the reliability of response times in times of need",
+        "Contributed to the development of the auto-call system (ACMP) - a tool for field technicians that brought down average time for response to outages from hours to just 3 minutes",
+        "Development for ACMP included building docker images and deploying them to production swarms",
         "Developed a Google Chat internal tool for use across the TELUS Reliability Center of Excellence team",
       ],
       tags: [
@@ -116,6 +117,8 @@ export default function Experiences() {
         "Jinja2",
         "Docker",
         "Docker Swarm",
+        "GCP",
+        "Java",
         "Sequelize",
         "Nginx",
         "LDAP",
@@ -149,8 +152,8 @@ export default function Experiences() {
   ];
   reverse(experiences);
   return (
-    <div className="flex flex-col gap-y-8 w-full bg-gray-900 rounded-2xl bg-opacity-90 px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
-      <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
+    <div className="flex flex-col items-center gap-y-8 w-full bg-gray-900 rounded-2xl bg-opacity-90 px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
+      <h2 className="text-3xl font-extrabold tracking-tight text-gray-200 sm:text-4xl md:text-6xl bg-gradient-to-r from-gray-200 to-slate-300 bg-clip-text text-transparent">
         Experiences
       </h2>
       <div className="mx-auto gap-x-8 gap-y-8 px-4 py-8 sm:px-6 bg-gray-600 bg-opacity-50 rounded-2xl">
@@ -179,7 +182,7 @@ export default function Experiences() {
                 <div className="my-2 flex flex-col max-w-2xl">
                   <Text size="sm">{experience.caption}</Text>
                   {experience.responsibilities.length > 0 && (
-                    <div className="m-2 p-4 bg-slate-700 bg-opacity-30 rounded-xl">
+                    <div className="m-2 p-4 bg-slate-600 bg-opacity-70 rounded-xl">
                       <List size="sm" listStyleType="disc">
                         {experience.responsibilities.map((resp) => (
                           <List.Item key={resp} className="w-[95%]">
