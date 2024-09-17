@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/Navbar";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { createTheme, MantineProvider, ColorSchemeScript } from "@mantine/core";

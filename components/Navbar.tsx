@@ -35,47 +35,47 @@ const nav = [
       },
     ],
   },
-  {
-    title: "Projects",
-    entries: [
-      {
-        name: "On-going",
-        description: "Some on-going projects",
-        href: "/project-gallery",
-        icon: RocketLaunchIcon,
-      },
-      {
-        name: "Completed",
-        description: "Some of my completed projects (including hackathons)",
-        href: "#",
-        icon: StarIcon,
-      },
-    ],
-  },
-  {
-    title: "Fun Stuff",
-    entries: [
-      {
-        name: "Algorithm Gallery",
-        description: "some description",
-        href: "/algo",
-        icon: PuzzlePieceIcon,
-      },
-      {
-        name: "JS Canvas",
-        description:
-          "A collection of weird and playful experiments with JS canvas",
-        href: "/js",
-        icon: LightBulbIcon,
-      },
-      {
-        name: "CSS",
-        description: "A collection of react components that I've written",
-        href: "/in-complete",
-        icon: WindowIcon,
-      },
-    ],
-  },
+  // {
+  //   title: "Projects",
+  //   entries: [
+  //     {
+  //       name: "On-going",
+  //       description: "Some on-going projects",
+  //       href: "/project-gallery",
+  //       icon: RocketLaunchIcon,
+  //     },
+  //     {
+  //       name: "Completed",
+  //       description: "Some of my completed projects (including hackathons)",
+  //       href: "#",
+  //       icon: StarIcon,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Fun Stuff",
+  //   entries: [
+  //     {
+  //       name: "Algorithm Gallery",
+  //       description: "some description",
+  //       href: "/algo",
+  //       icon: PuzzlePieceIcon,
+  //     },
+  //     {
+  //       name: "JS Canvas",
+  //       description:
+  //         "A collection of weird and playful experiments with JS canvas",
+  //       href: "/js",
+  //       icon: LightBulbIcon,
+  //     },
+  //     {
+  //       name: "CSS",
+  //       description: "A collection of react components that I've written",
+  //       href: "/in-complete",
+  //       icon: WindowIcon,
+  //     },
+  //   ],
+  // },
 ];
 
 function classNames(...classes: (string | undefined)[]): string {
@@ -157,7 +157,7 @@ export default function Navbar() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="mailto:lefanhu1@gmail.com"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"

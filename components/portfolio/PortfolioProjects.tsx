@@ -56,6 +56,7 @@ export default function FavProjects() {
         <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
       </div>
       <SlidingCards cards={projects} />
+      <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
     </div>
   );
 }
