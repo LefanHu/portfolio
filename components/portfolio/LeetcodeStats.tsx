@@ -190,6 +190,7 @@ export default function LeetcodeStats() {
             </div>
             <LTActivityCalendar
               calendarstring={profileStats.data.matchedUser.submissionCalendar}
+              className="flex w-full justify-center"
             />
           </div>
         </div>
