@@ -13,7 +13,7 @@ interface ImageData {
   height: number;
 }
 
-interface ImageSliderProps {
+interface CarouselProps {
   className?: string;
   imageList?: ImageData[];
 }
@@ -40,7 +40,7 @@ export default function Carousel({
       height: 1024,
     },
   ],
-}: ImageSliderProps) {
+}: CarouselProps) {
   const settings = {
     dots: false,
     infinite: true,

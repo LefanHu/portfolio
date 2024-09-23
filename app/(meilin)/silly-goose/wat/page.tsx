@@ -1,6 +1,6 @@
 "use client";
 
-import ImageSlider from "@/components/imageSlider";
+import Carousel from "@/components/Carousel";
 import {
   ArchiveBoxArrowDownIcon,
   CakeIcon,
@@ -61,7 +61,9 @@ export default function SwiftGallery() {
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
           <div className="lg:pr-8 lg:pt-4">
             <div className="lg:max-w-lg">
-              <h2 className="text-base font-semibold leading-7 text-indigo-600">Hey Melon...</h2>
+              <h2 className="text-base font-semibold leading-7 text-indigo-600">
+                Hey Melon...
+              </h2>
               <div className="flex">
                 <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                   Happy Birthday!
@@ -69,8 +71,9 @@ export default function SwiftGallery() {
                 <CakeIcon className="ml-5 mt-1 w-8 text-black" />
               </div>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                It&apos;s your birthday today... I started working on this in Februrary, and now
-                it&apos;s done... This is your birthday gift from me :)
+                It&apos;s your birthday today... I started working on this in
+                Februrary, and now it&apos;s done... This is your birthday gift
+                from me :)
               </p>
               <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
                 <div className="relative pl-9">
@@ -79,9 +82,9 @@ export default function SwiftGallery() {
                     Taylor Swift Generator.
                   </dt>
                   <dd className="">
-                    This website will generate taylor swift images for you... For example on the
-                    right you can see taylor swift in a bucket...swimming in sand... and even in a
-                    selfie with you
+                    This website will generate taylor swift images for you...
+                    For example on the right you can see taylor swift in a
+                    bucket...swimming in sand... and even in a selfie with you
                   </dd>
                 </div>
                 <div className="relative pl-9">
@@ -90,8 +93,8 @@ export default function SwiftGallery() {
                     Be persistent with the images.
                   </dt>
                   <dd className="">
-                    It generates a lot of taylor swift images... if the image comes out weird...
-                    just try again :D
+                    It generates a lot of taylor swift images... if the image
+                    comes out weird... just try again :D
                   </dd>
                 </div>
                 <div className="relative pl-9">
@@ -100,14 +103,18 @@ export default function SwiftGallery() {
                     Database backups.
                   </dt>
                   <dd className="">
-                    Generated images don&apos;t disappear, they get saved in the image gallery.
-                    Click on an image to copy the prompt used (and to open it)
+                    Generated images don&apos;t disappear, they get saved in the
+                    image gallery. Click on an image to copy the prompt used
+                    (and to open it)
                   </dd>
                 </div>
               </dl>
             </div>
           </div>
-          <ImageSlider className="rounded-lg mt-14" imageList={carouselList}></ImageSlider>
+          <Carousel
+            className="rounded-lg mt-14"
+            imageList={carouselList}
+          ></Carousel>
         </div>
       </div>
     </div>
