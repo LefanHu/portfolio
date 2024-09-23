@@ -38,7 +38,7 @@ export default function SlidingCards(props: { cards: CardData[] }) {
               <div className={styles.row + " z-[3]"}>
                 <div className={styles.icon}>{index + 1}</div>
                 <div className={styles.description}>
-                  <h4 className={styles.h4}>{card.name}</h4>
+                  <h4>{card.name}</h4>
                   <p>{card.description}</p>
                 </div>
               </div>

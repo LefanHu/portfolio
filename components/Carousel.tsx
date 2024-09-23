@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 interface ImageData {
   src: string;
   alt: string;
+  label?: string;
+  description?: string;
   width: number;
   height: number;
 }
@@ -16,7 +18,7 @@ interface ImageSliderProps {
   imageList?: ImageData[];
 }
 
-export default function ImageSlider({
+export default function Carousel({
   className = "",
   imageList = [
     {
@@ -40,7 +42,7 @@ export default function ImageSlider({
   ],
 }: ImageSliderProps) {
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 800,
     slidesToShow: 1,
@@ -52,9 +54,19 @@ export default function ImageSlider({
     <div className={className}>
       <Slider {...settings}>
         {imageList.map((entry) => (
-          <div key={entry.alt}>
+          <div key={entry.alt} className="relative">
+            {entry.label && (
+              <h3 className="absolute top-0 left-0 z-10 p-2 text-white bg-black bg-opacity-50">
+                {entry.label}
+              </h3>
+            )}
+            {entry.description && (
+              <p className="absolute bottom-0 left-0 z-10 p-2 text-white bg-black bg-opacity-50">
+                {entry.description}{" "}
+              </p>
+            )}
             <Image
-              className="rounded-lg"
+              className="rounded-lg aspect-square"
               src={entry.src}
               alt={entry.alt}
               width={entry.height}
