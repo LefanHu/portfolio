@@ -35,7 +35,7 @@ export default function LeetcodeStats() {
         if (!res.ok) {
           throw new Error(res.status.toString());
         }
-        console.log(results);
+        // console.log(results);
         setProfileStats(results);
       } catch (error) {
         console.log(`failed to fetch leetcode profile: ${error}`);
