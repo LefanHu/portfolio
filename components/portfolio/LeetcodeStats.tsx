@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import AnimatedCounter from "../AnimatedCounter";
 import { Badge, SemiCircleProgress, Skeleton } from "@mantine/core";
 import Image from "next/image";
+import LTActivityCalendar from "../LTActivityCalendar";
 
 export default function LeetcodeStats() {
   const [profileStats, setProfileStats] = useState<LTProfileResponse | null>();
@@ -62,7 +63,7 @@ export default function LeetcodeStats() {
   }
 
   // calculating meme face level
-  const memeFaceLevels = [5, 14, 30, 90, 100, 200, Number.MAX_SAFE_INTEGER];
+  const memeFaceLevels = [5, 7, 15, 30, 60, 100, Number.MAX_SAFE_INTEGER];
   var memeFaceLevel = 0;
   while (
     memeFaceLevels[memeFaceLevel] <=
@@ -104,15 +105,15 @@ export default function LeetcodeStats() {
                         ].percentage
                       }
                       label={
-                        <h3 className="text-5xl font-extrabold leading-tight text-center text-gray-200">
+                        <span className="text-5xl font-extrabold leading-tight text-center text-gray-200">
                           {<AnimatedCounter from={0} to={questionType.count} />}
-                        </h3>
+                        </span>
                       }
                     />
                   ) : (
-                    <h3 className="text-5xl font-extrabold leading-tight text-center text-gray-200">
+                    <span className="text-5xl font-extrabold leading-tight text-center text-gray-200">
                       {<AnimatedCounter from={0} to={questionType.count} />}
-                    </h3>
+                    </span>
                   )}
                   <p
                     className={`text-base font-medium leading-7 text-center ${problemColors[index]}`}
@@ -179,6 +180,17 @@ export default function LeetcodeStats() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2 w-full items-center p-4 bg-gray-600 bg-opacity-45 rounded-2xl">
+            <div className="w-full justify-start">
+              <h3 className="text-3xl font-extrabold leading-tight text-gray-200">
+                Submission Calendar
+              </h3>
+            </div>
+            <LTActivityCalendar
+              calendarstring={profileStats.data.matchedUser.submissionCalendar}
+            />
           </div>
         </div>
       </div>
