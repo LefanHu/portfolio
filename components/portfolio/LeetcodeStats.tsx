@@ -158,8 +158,10 @@ export default function LeetcodeStats() {
             <div className="col-span-1 md:col-span-3 p-4 bg-gray-600 bg-opacity-45 rounded-2xl row-auto">
               {skillCategories.map((skillCategory, skillIndx) => (
                 <div key={skillIndx}>
-                  <dt className="inline-block text-2xl font-bold tracking-tight bg-gradient-to-r from-yellow-300 to-red-500 bg-clip-text text-transparent">
-                    {skillCategory.toUpperCase()}
+                  <dt className="inline-block text-2xl font-bold Skills">
+                    {skillCategory.charAt(0).toUpperCase() +
+                      skillCategory.substring(1) +
+                      " Skills"}
                   </dt>
                   <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
                   <dd
@@ -170,7 +172,7 @@ export default function LeetcodeStats() {
                       skillCategory
                     ].map((level, badgeIndx) => (
                       <Badge size="sm" color="blue" key={badgeIndx}>
-                        {level.tagSlug} x{" "}
+                        {level.tagSlug} <span className="text-gray-800">x</span>{" "}
                         <span className="text-orange-500 font-bold">
                           {level.problemsSolved}
                         </span>

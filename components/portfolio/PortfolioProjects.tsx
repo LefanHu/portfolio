@@ -65,7 +65,7 @@ export default function FavProjects() {
   }, []);
 
   var displayedComponent = <SlidingCards cards={projects} />;
-  if (windowSize < 900) {
+  if (windowSize < 1100) {
     displayedComponent = (
       <Carousel
         imageList={projects.map((project) => ({
