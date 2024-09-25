@@ -87,7 +87,7 @@ export default function Interests() {
             alt={image.alt}
             width={500}
             height={500}
-            className="rounded-lg border-2 border-gray-200 bg-gray-100 object-cover h-full w-auto"
+            className="rounded-lg border-2 border-gray-200 object-cover w-full h-full"
             key={index}
           />
         ))}
