@@ -54,8 +54,8 @@ const interestImages = [
 
 export default function Interests() {
   return (
-    <div className="mx-auto grid grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-8 sm:px-6 lg:grid-cols-2 lg:px-8 bg-gray-600 bg-opacity-50 rounded-2xl">
-      <div>
+    <div className="mx-auto grid grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-4 sm:px-6 lg:grid-cols-2 bg-gray-900 bg-opacity-90 rounded-2xl">
+      <div className="bg-gray-600 bg-opacity-50 rounded-xl p-4">
         <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
           Personal Interests
         </h2>
@@ -80,7 +80,7 @@ export default function Interests() {
           ))}
         </dl>
       </div>
-      <div className="grid grid-cols-2 grid-rows-2 gap-4 sm:gap-6 lg:gap-8">
+      <div className="grid grid-cols-2 grid-rows-2 gap-4">
         {interestImages.map((image, index) => (
           <Image
             src={image.src}
