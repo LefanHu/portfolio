@@ -1,28 +1,11 @@
 "use client";
 
-import { LinkIcon } from "@heroicons/react/24/outline";
-import { Badge, List } from "@mantine/core";
+import TechnologyBadge from "@/components/portfolio/TechnologyBadge";
+import { List } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
 
-const technologyBadge = (tech: string) => {
-  return (
-    <Badge
-      size="md"
-      variant="gradient"
-      gradient={{
-        from: "rgba(186, 186, 186, 1)",
-        to: "rgba(145, 145, 145, 1)",
-        deg: 123,
-      }}
-      key={tech}
-    >
-      {tech}
-    </Badge>
-  );
-};
-
-export default function TaylorGeneratorPage() {
+export default function TaylorGeneratorProjectPage() {
   const technologies = [
     "React",
     "NextJS",
@@ -107,7 +90,7 @@ export default function TaylorGeneratorPage() {
           <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
           {/* technologies */}
           <div className="flex flex-row gap-2 pt-2">
-            {technologies.map((tech) => technologyBadge(tech))}
+            {technologies.map((tech) => TechnologyBadge(tech))}
           </div>
           <p className="mt-4 text-gray-300 mb-5">
             Stable diffusion image generator. Originally inspired by someone who

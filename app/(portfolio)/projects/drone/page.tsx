@@ -1,26 +1,8 @@
 "use client";
 
-import { LinkIcon } from "@heroicons/react/24/outline";
-import { Badge, List } from "@mantine/core";
+import TechnologyBadge from "@/components/portfolio/TechnologyBadge";
+import { List } from "@mantine/core";
 import Image from "next/image";
-import Link from "next/link";
-
-const technologyBadge = (tech: string) => {
-  return (
-    <Badge
-      size="md"
-      variant="gradient"
-      gradient={{
-        from: "rgba(186, 186, 186, 1)",
-        to: "rgba(145, 145, 145, 1)",
-        deg: 123,
-      }}
-      key={tech}
-    >
-      {tech}
-    </Badge>
-  );
-};
 
 export default function FPVDroneProjectPage() {
   const technologies = [
@@ -32,8 +14,9 @@ export default function FPVDroneProjectPage() {
   ];
 
   const overviewPoints = [
-    "custom firmware in progrses for autonomous flight",
+    "custom firmware in progress for autonomous flight",
     "SpeedyBeef405 Flight Controller",
+    "Max speed: 200+km/h",
   ];
 
   const numImages = 8;
@@ -48,7 +31,7 @@ export default function FPVDroneProjectPage() {
           <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
           {/* technologies */}
           <div className="flex flex-row gap-2 pt-2">
-            {technologies.map((tech) => technologyBadge(tech))}
+            {technologies.map((tech) => TechnologyBadge(tech))}
           </div>
           <p className="mt-4 text-gray-300 mb-5">
             An interesting drone project.
@@ -84,21 +67,15 @@ export default function FPVDroneProjectPage() {
                 ))}
               </div>
             </div>
+            <div className="p-5 gap-y-2 rounded-xl bg-gray-700">
+              <h3 className="text-2xl text-white font-bold">
+                Sample Drone Footage
+              </h3>
+              <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
+              Coming soon!
+            </div>
           </div>
         </div>
-        {/* <div>
-          <h3 className="text-2xl font-bold">Other Notes</h3>
-          <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
-          <p className="mt-4 text-gray-300 mb-5">
-            Please consider visiting the project{" "}
-            <Link
-              href=""
-              className="text-blue-400 hover:text-blue-500"
-            >
-              here
-            </Link>
-          </p>
-        </div> */}
       </div>
     </div>
   );
