@@ -3,10 +3,12 @@
 import Image from "next/image";
 import styles from "./SlidingCards.module.css";
 import { useState } from "react";
+import Link from "next/link";
 
 interface CardData {
   name: string;
   imgSrc: string;
+  href?: string;
   description: string;
 }
 
@@ -42,13 +44,18 @@ export default function SlidingCards(props: { cards: CardData[] }) {
                   <p>{card.description}</p>
                 </div>
               </div>
-              <Image
-                src={card.imgSrc}
-                alt={card.name}
-                width={900}
-                height={600}
-                className="absolute object-cover h-full w-full bg-gray-800"
-              />
+              <Link
+                href={card.href ? card.href : ""}
+                className="absolute object-cover h-full w-full"
+              >
+                <Image
+                  src={card.imgSrc}
+                  alt={card.name}
+                  width={900}
+                  height={600}
+                  className="h-full w-full object-cover"
+                />
+              </Link>
             </label>
           </div>
         ))}

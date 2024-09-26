@@ -3,11 +3,13 @@ import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Link from "next/link";
 
 interface ImageData {
   src: string;
   alt: string;
   label?: string;
+  href?: string;
   description?: string;
   width: number;
   height: number;
@@ -65,13 +67,15 @@ export default function Carousel({
                 {entry.description}{" "}
               </p>
             )}
-            <Image
-              className="rounded-lg aspect-square"
-              src={entry.src}
-              alt={entry.alt}
-              width={entry.height}
-              height={entry.width}
-            />
+            <Link href={entry.href ? entry.href : ""}>
+              <Image
+                className="rounded-lg aspect-square"
+                src={entry.src}
+                alt={entry.alt}
+                width={entry.height}
+                height={entry.width}
+              />
+            </Link>
           </div>
         ))}
       </Slider>

@@ -10,38 +10,45 @@ const projects = [
     imgSrc: "/images/swift-beach.jpg",
     description:
       "Taylor swift image generator. Trained LORA adapter for stablediffusion-XL using AWS GPU instance",
+    href: "/projects/stable-diffusion",
   },
   {
     name: "Drone",
     imgSrc: "/images/drone.jpg",
     description:
       "Custom FPV drone with, GPS, Compass... custom firmware in progress!",
+    href: "/projects/drone",
   },
   {
     name: "Plex, Sonarr, Jackett - Stack",
     imgSrc: "/images/plex.png",
     description:
       "Home media server stack built using docker, authelia, nginx proxy",
+    href: "/projects/media-stack",
   },
   {
     name: "HIVE-HQ",
     imgSrc: "/images/hivehq.png",
     description: "2022 HTN submission. AI powered Covid safety planner",
+    href: "https://devpost.com/software/hive-hq",
   },
   {
     name: "Auto Trader - Arbitrage",
     imgSrc: "/images/stonks.jpg",
     description: "Arbitration bot for the Oanda API",
+    href: "#",
   },
   // {
   //   name: "Drawbot",
   //   imgSrc: "/images/drawbot-logo.png",
   //   description: "2023 HTN submission. AI powered drawing robot",
+  //   href: "/projects/stable-diffusion",
   // },
   {
     name: "Interqu",
     imgSrc: "/images/interqu.svg",
     description: "AI interview platform built using AWS SAM",
+    href: "https://github.com/Interqu/interqu-sam",
   },
 ];
 
@@ -72,6 +79,7 @@ export default function FavProjects() {
           src: project.imgSrc,
           alt: project.name,
           label: project.name,
+          href: project.href,
           description: project.description,
           width: 1024,
           height: 1024,

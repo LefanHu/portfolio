@@ -50,7 +50,7 @@ const nav = [
       },
       {
         name: "Home Media Stack",
-        description: "Sonarr, Jackeet, Plex Stack",
+        description: "Sonarr, Jackett, Plex Stack",
         href: "/projects/media-stack",
         icon: TvIcon,
       },
