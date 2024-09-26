@@ -1,37 +1,35 @@
-import React, { Fragment } from 'react'
-import { Popover, Transition } from '@headlessui/react'
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
+import React, { Fragment } from "react";
+import { Popover, Transition } from "@headlessui/react";
+import {
+  ChevronDownIcon,
+  PhoneIcon,
+  PlayCircleIcon,
+} from "@heroicons/react/20/solid";
 import {
   ArrowPathIcon,
   ChartPieIcon,
   CursorArrowRaysIcon,
   FingerPrintIcon,
   SquaresPlusIcon,
-} from '@heroicons/react/24/outline'
+} from "@heroicons/react/24/outline";
+import Link from "next/link";
 
-const solutions = [
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
-  { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
-  { name: 'Security', description: "Your customers' data will be safe and secure", href: '#', icon: FingerPrintIcon },
-  { name: 'Integrations', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
-  { name: 'Automations', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
-]
 const callsToAction = [
-  { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
-  { name: 'Contact sales', href: '#', icon: PhoneIcon },
-]
+  { name: "Watch demo", href: "#", icon: PlayCircleIcon },
+  { name: "Contact sales", href: "#", icon: PhoneIcon },
+];
 
 interface FlyoutMenuEntry {
-  name: string,
-  description: string,
-  href: string,
-  icon: React.ElementType
+  name: string;
+  description: string;
+  href: string;
+  icon: React.ElementType;
 }
 
 interface FlyoutMenuProps {
   title: string; // '?' makes the prop optional
   className?: string;
-  entries: FlyoutMenuEntry[]
+  entries: FlyoutMenuEntry[];
 }
 
 export default function FlyoutMenu(props: FlyoutMenuProps) {
@@ -55,15 +53,24 @@ export default function FlyoutMenu(props: FlyoutMenuProps) {
           <div className="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
             <div className="p-4">
               {props.entries.map((item) => (
-                <div key={item.name} className="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-100">
+                <div
+                  key={item.name}
+                  className="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-100"
+                >
                   <div className="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-white group-hover:bg-white">
-                    <item.icon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
+                    <item.icon
+                      className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div>
-                    <a href={item.href} className="font-semibold text-gray-900">
+                    <Link
+                      href={item.href}
+                      className="font-semibold text-gray-900"
+                    >
                       {item.name}
                       <span className="absolute inset-0" />
-                    </a>
+                    </Link>
                     <p className="mt-1 text-gray-600">{item.description}</p>
                   </div>
                 </div>
@@ -85,5 +92,5 @@ export default function FlyoutMenu(props: FlyoutMenuProps) {
         </Popover.Panel>
       </Transition>
     </Popover>
-  )
+  );
 }

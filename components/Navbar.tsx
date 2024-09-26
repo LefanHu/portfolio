@@ -7,11 +7,7 @@ import {
   Bars3Icon,
   BellIcon,
   DocumentTextIcon,
-  LightBulbIcon,
-  PuzzlePieceIcon,
   RocketLaunchIcon,
-  StarIcon,
-  WindowIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import FlyoutMenu from "./flyoutmenu";
