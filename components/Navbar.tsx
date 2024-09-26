@@ -7,7 +7,9 @@ import {
   Bars3Icon,
   BellIcon,
   DocumentTextIcon,
+  HeartIcon,
   RocketLaunchIcon,
+  TvIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import FlyoutMenu from "./flyoutmenu";
@@ -31,23 +33,29 @@ const nav = [
       },
     ],
   },
-  // {
-  //   title: "Projects",
-  //   entries: [
-  //     {
-  //       name: "On-going",
-  //       description: "Some on-going projects",
-  //       href: "/project-gallery",
-  //       icon: RocketLaunchIcon,
-  //     },
-  //     {
-  //       name: "Completed",
-  //       description: "Some of my completed projects (including hackathons)",
-  //       href: "#",
-  //       icon: StarIcon,
-  //     },
-  //   ],
-  // },
+  {
+    title: "Projects",
+    entries: [
+      {
+        name: "Stable Diffusion Image Generator",
+        description: "Generates images of Taylor Swift",
+        href: "/projects/stable-diffusion",
+        icon: HeartIcon,
+      },
+      {
+        name: "Custom Drone",
+        description: "Custom FPV drone built from scratch",
+        href: "/projects/drone",
+        icon: RocketLaunchIcon,
+      },
+      {
+        name: "Home Media Stack",
+        description: "Sonarr, Jackeet, Plex Stack",
+        href: "/projects/media-stack",
+        icon: TvIcon,
+      },
+    ],
+  },
   // {
   //   title: "Fun Stuff",
   //   entries: [
