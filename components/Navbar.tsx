@@ -56,6 +56,17 @@ const nav = [
       },
     ],
   },
+  {
+    title: "Three.js",
+    entries: [
+      {
+        name: "Alternate Portfolio",
+        description: "An alternate portfolio using Three.js",
+        href: "/projects/threejs",
+        icon: HeartIcon,
+      },
+    ],
+  },
   // {
   //   title: "Fun Stuff",
   //   entries: [

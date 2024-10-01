@@ -217,6 +217,10 @@ networks:
           <div className="p-5 gap-y-2 rounded-xl bg-gray-700">
             <h3 className="text-2xl text-white font-bold">My Configurations</h3>
             <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
+            <p>
+              Full network configuration details are not shared for obvious
+              reasons :&#41;
+            </p>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
               {composeFiles.map((file, indx) => (
                 <div key={indx} className="rounded-md p-2 gap-2 items-start">
