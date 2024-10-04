@@ -6,11 +6,6 @@ import AnimatedCounter from "../AnimatedCounter";
 import { Badge, SemiCircleProgress, Skeleton } from "@mantine/core";
 import LTActivityCalendar from "../LTActivityCalendar";
 
-function getDate(timestamp: number) {
-  const date = new Date(timestamp);
-  return date.toLocaleString();
-}
-
 export default function LeetcodeStats() {
   const [profileStats, setProfileStats] = useState<LTProfileResponse | null>();
 
@@ -152,7 +147,7 @@ export default function LeetcodeStats() {
                           </Badge>
                           <Badge size="sm" color="blue">
                             {new Date(
-                              Number(submission.timestamp)
+                              Number(submission.timestamp) * 1000
                             ).toLocaleString()}
                           </Badge>
                         </div>
