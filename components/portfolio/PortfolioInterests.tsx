@@ -54,8 +54,8 @@ const interestImages = [
 
 export default function Interests() {
   return (
-    <div className="mx-auto grid grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-4 sm:px-6 lg:grid-cols-2 bg-gray-900 bg-opacity-90 rounded-2xl">
-      <div className="bg-gray-600 bg-opacity-50 rounded-xl p-4">
+    <div className="mx-auto grid grid-cols-1 items-center gap-4 px-4 py-4 lg:grid-cols-2 bg-gray-900 bg-opacity-90 rounded-2xl">
+      <div className="h-full bg-gray-600 bg-opacity-50 rounded-xl p-4">
         <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
           Personal Interests
         </h2>
