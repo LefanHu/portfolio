@@ -4,8 +4,12 @@ import { LTProfileResponse } from "@/lib/types/stats/lt";
 import { useEffect, useState } from "react";
 import AnimatedCounter from "../AnimatedCounter";
 import { Badge, SemiCircleProgress, Skeleton } from "@mantine/core";
-import Image from "next/image";
 import LTActivityCalendar from "../LTActivityCalendar";
+
+function getDate(timestamp: number) {
+  const date = new Date(timestamp);
+  return date.toLocaleString();
+}
 
 export default function LeetcodeStats() {
   const [profileStats, setProfileStats] = useState<LTProfileResponse | null>();
@@ -35,7 +39,7 @@ export default function LeetcodeStats() {
         if (!res.ok) {
           throw new Error(res.status.toString());
         }
-        // console.log(results);
+        console.log(results);
         setProfileStats(results);
       } catch (error) {
         console.log(`failed to fetch leetcode profile: ${error}`);
@@ -60,16 +64,6 @@ export default function LeetcodeStats() {
         </div>
       </div>
     );
-  }
-
-  // calculating meme face level
-  const memeFaceLevels = [5, 7, 15, 30, 60, 100, Number.MAX_SAFE_INTEGER];
-  var memeFaceLevel = 0;
-  while (
-    memeFaceLevels[memeFaceLevel] <=
-    profileStats.data.matchedUser.userCalendar.streak
-  ) {
-    memeFaceLevel++;
   }
 
   const skillCategories: Array<
@@ -133,29 +127,52 @@ export default function LeetcodeStats() {
 
           {/* section 2 */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
-            <div className="flex flex-col gap-2 items-center p-4 bg-gray-600 bg-opacity-45 rounded-2xl">
-              <div>
-                <h3 className="text-5xl font-extrabold leading-tight text-center text-gray-200">
-                  <AnimatedCounter
-                    from={0}
-                    to={profileStats?.data.matchedUser.userCalendar.streak}
-                  />
+            <div className="flex flex-col md:col-span-2 gap-2 items-center p-4 bg-gray-600 bg-opacity-45 rounded-2xl">
+              <div className="w-full">
+                <h3 className="text-2xl font-extrabold leading-tight text-gray-200">
+                  Recent AC
                 </h3>
-                <p className="text-base font-medium leading-7 text-center text-dark-grey-600">
-                  Current Streak!
-                </p>
+                <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/5" />
               </div>
-
-              {/* image */}
-              <Image
-                src={`/images/incredibles/phase${memeFaceLevel + 1}.webp`}
-                width={300}
-                height={300}
-                alt="meme face based on streak counter"
-                className="rounded-xl border-4 aspect-square object-cover w-full h-auto"
-              />
+              <ul className="w-full flex flex-col gap-2">
+                {profileStats.data.recentSubmissionList
+                  .slice(0, 6)
+                  .map((submission, index) => (
+                    <li
+                      key={index}
+                      className="w-full bg-gray-500 bg-opacity-80 rounded-lg p-2"
+                    >
+                      <h4 className="text-white font-bold overflow-clip">
+                        {submission.title}
+                      </h4>
+                      <div className="mt-2 grid grid-cols-2 justify-items-start">
+                        <div className="flex flex-row gap-2">
+                          <Badge size="sm" color="blue">
+                            {submission.lang}
+                          </Badge>
+                          <Badge size="sm" color="blue">
+                            {new Date(
+                              Number(submission.timestamp)
+                            ).toLocaleString()}
+                          </Badge>
+                        </div>
+                        <Badge
+                          size="sm"
+                          color={
+                            submission.statusDisplay === "Accepted"
+                              ? "green"
+                              : "orange"
+                          }
+                          className="justify-self-end"
+                        >
+                          {submission.statusDisplay}
+                        </Badge>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
             </div>
-            <div className="col-span-1 md:col-span-3 p-4 bg-gray-600 bg-opacity-45 rounded-2xl row-auto">
+            <div className="col-span-1 md:col-span-2 p-4 bg-gray-600 bg-opacity-45 rounded-2xl row-auto">
               {skillCategories.map((skillCategory, skillIndx) => (
                 <div key={skillIndx}>
                   <dt className="inline-block text-2xl font-bold Skills">
