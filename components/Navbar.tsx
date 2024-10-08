@@ -154,7 +154,7 @@ export default function Navbar() {
                         className="h-8 w-8 rounded-full"
                         width={50}
                         height={50}
-                        src="/images/profilepic.jpeg"
+                        src="/images/chibi_cry.png"
                         alt=""
                       />
                     </Menu.Button>
