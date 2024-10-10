@@ -84,8 +84,8 @@ export default function Experiences() {
       bullet: bulletIcon("/images/kumon_logo.png", badgeSize),
     },
     {
-      company: "Hackthon Organizer",
-      position: "Hackathon Organizer (Volunteer)",
+      company: "Hackthon Organizer (Volunteer)",
+      position: "Hackathon Organizer",
       date: "2016 - 2018",
       caption: "",
       responsibilities: [
@@ -108,9 +108,10 @@ export default function Experiences() {
       date: "May 2023 - August 2023",
       caption: "",
       responsibilities: [
-        "Contributed to the development of the auto-call system (ACMP) - a tool for field technicians that brought down average time for response to outages from hours to just 3 minutes",
-        "Development for ACMP included building docker images and deploying them to production swarms",
-        "Developed a Google Chat internal tool for use across the TELUS Reliability Center of Excellence team",
+        "Contributed to the development of the auto-call system (ACMP) - a tool for hundreds of field technicians that decreased average time for response to service outages from hours to just 30 seconds",
+        "Development for ACMP included building production images and deploying them to production Docker swarms",
+        "Developed a Google Chat POC internal tool for use across the TELUS Reliability Center of Excellence team",
+        "POC tool demo-ed to VP of TELUS",
       ],
       tags: [
         "Python",
@@ -131,10 +132,11 @@ export default function Experiences() {
       date: "January 2024 - April 2024",
       caption: "",
       responsibilities: [
-        "Created Splunk queries to generate search queries for well-known signatures of recognizable errors",
-        "Utilized AWS for audio sentiment analysis with PyTorch",
+        "Developed major releases of the extract logs application used by over 100 engineers",
+        "Created Splunk queries to generate search queries for well-known signatures of recognizable errors on infrastructure",
+        // "Utilized AWS for audio sentiment analysis with PyTorch",
         "Extensively used Python and JupyterLab for scripting, automation, and parsing of complex log files",
-        "Employed the Scrapy Python framework for web crawling data",
+        "Built database for audio sentiment analysis by a combination of scripting, parsing, and web scraping from various sources",
       ],
       tags: ["Splunk", "AWS", "PyTorch", "Python", "JupyterLab", "Scrapy"],
       bullet: bulletIcon("/images/ciena_logo.png", badgeSize),
