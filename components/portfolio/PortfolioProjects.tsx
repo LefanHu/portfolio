@@ -36,7 +36,7 @@ const projects = [
     name: "Auto Trader - Arbitrage",
     imgSrc: "/images/stonks.jpg",
     description: "Arbitration bot for the Oanda API",
-    href: "#",
+    href: "https://github.com/LefanHu/OARB",
   },
   // {
   //   name: "Drawbot",
