@@ -13,6 +13,12 @@ const projects = [
     href: "/projects/stable-diffusion",
   },
   {
+    name: "HIVE-HQ",
+    imgSrc: "/images/hivehq.png",
+    description: "2022 HTN submission. AI powered Covid safety planner",
+    href: "https://devpost.com/software/hive-hq",
+  },
+  {
     name: "Drone",
     imgSrc: "/images/drone.jpg",
     description:
@@ -25,12 +31,6 @@ const projects = [
     description:
       "Home media server stack built using docker, authelia, nginx proxy",
     href: "/projects/media-stack",
-  },
-  {
-    name: "HIVE-HQ",
-    imgSrc: "/images/hivehq.png",
-    description: "2022 HTN submission. AI powered Covid safety planner",
-    href: "https://devpost.com/software/hive-hq",
   },
   {
     name: "Auto Trader - Arbitrage",

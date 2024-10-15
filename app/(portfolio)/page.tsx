@@ -14,9 +14,9 @@ export default function Home() {
         </h1>
       </div> */}
       <div className="mx-auto grid max-w-4xl grid-cols-1 items-center py-12 gap-y-24 sm:py-16 lg:max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Experiences />
-        <FavProjects />
         <LeetcodeStats />
+        <FavProjects />
+        <Experiences />
         <Interests />
         <ParticlesBackground />
         <ContactForm />
