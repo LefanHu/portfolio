@@ -17,7 +17,7 @@ export default function Home() {
         <LeetcodeStats />
         <FavProjects />
         <Experiences />
-        <Interests />
+        {/* <Interests /> */}
         <ParticlesBackground />
         <ContactForm />
       </div>
