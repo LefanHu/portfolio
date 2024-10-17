@@ -14,7 +14,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Lefan's Website",
-  description: "Portfolio website showcasing various projects & algorithms",
+  description:
+    "Portfolio website showcasing various projects, experiences, and interests.",
 };
 
 const theme = createTheme({});
