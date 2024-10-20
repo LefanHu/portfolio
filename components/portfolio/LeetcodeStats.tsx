@@ -74,6 +74,7 @@ export default function LeetcodeStats() {
               <ul className="w-full flex flex-col gap-2">
                 {profileStats
                   ? profileStats.data.recentSubmissionList
+                      .filter(sub => sub.statusDisplay === "Accepted")
                       .slice(0, 6)
                       .map((submission, indx) => (
                         <RecentAC sub={submission} key={indx} />
