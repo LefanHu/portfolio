@@ -74,7 +74,7 @@ export default function LeetcodeStats() {
               <ul className="w-full flex flex-col gap-2">
                 {profileStats
                   ? profileStats.data.recentSubmissionList
-                      .filter(sub => sub.statusDisplay === "Accepted")
+                      .filter((sub) => sub.statusDisplay === "Accepted")
                       .slice(0, 6)
                       .map((submission, indx) => (
                         <RecentAC sub={submission} key={indx} />
@@ -129,6 +129,15 @@ export default function LeetcodeStats() {
           </div>
         </div>
       </div>
+      <p className="text-xl text-white mt-1">
+        View some of my favorite problems{" "}
+        <a
+          href="https://github.com/LefanHu/leetcode/tree/main/cpp"
+          className="font-bold text-blue-600 underline"
+        >
+          here
+        </a>
+      </p>
     </div>
   );
 }
