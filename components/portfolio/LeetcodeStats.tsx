@@ -132,7 +132,7 @@ export default function LeetcodeStats() {
       <p className="text-xl text-white mt-1">
         View some of my favorite problems{" "}
         <a
-          href="https://github.com/LefanHu/leetcode/tree/main/cpp"
+          href="https://github.com/LefanHu/leetcode/tree/main"
           className="font-bold text-blue-600 underline"
         >
           here
