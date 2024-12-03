@@ -109,9 +109,9 @@ export default function Experiences() {
       caption: "",
       responsibilities: [
         "Contributed to the development of the auto-call system (ACMP) - a tool for hundreds of field technicians that decreased average time for response to service outages from hours to just 30 seconds",
-        "Development for ACMP included building production images and deploying them to production Docker swarms",
-        "Developed a Google Chat POC internal tool for use across the TELUS Reliability Center of Excellence team",
-        "POC tool demo-ed to VP of TELUS",
+        "Built, tested, and deployed production Docker images of ACMP service to production Docker swarms",
+        "Developed POC Google Chat service for internal database lookup without compromising security by adopting the publisher-subscriber model for secure communication between networks",
+        "Used serverless architecture and Spring Boot for chat service, reducing server cost by 20 times compared to other internal services while maintaining sub-second response times",
       ],
       tags: [
         "Python",
@@ -133,10 +133,9 @@ export default function Experiences() {
       caption: "",
       responsibilities: [
         "Developed major releases of the extract logs application used by over 100 engineers",
-        "Created Splunk queries to generate search queries for well-known signatures of recognizable errors on infrastructure",
+        "Created Splunk search queries for well known signatures of known and recognizable errors on hardware devices, increasing debug efficiency by >30% for common errors",
         // "Utilized AWS for audio sentiment analysis with PyTorch",
-        "Extensively used Python and JupyterLab for scripting, automation, and parsing of complex log files",
-        "Built database for audio sentiment analysis by a combination of scripting, parsing, and web scraping from various sources",
+        "Used Python and JupyterLab extensively for general automation and parsing of complex log archives, creating a comprehensive suite of scripts for aiding log analyzer engineers",
       ],
       tags: ["Splunk", "AWS", "PyTorch", "Python", "JupyterLab", "Scrapy"],
       bullet: bulletIcon("/images/ciena_logo.png", badgeSize),
@@ -153,6 +152,7 @@ export default function Experiences() {
     },
   ];
   reverse(experiences);
+
   return (
     <div className="flex flex-col items-center gap-y-8 w-full bg-gray-900 rounded-2xl bg-opacity-90 px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
       <h2 className="text-3xl font-extrabold tracking-tight text-gray-200 sm:text-4xl md:text-6xl bg-gradient-to-r from-gray-200 to-slate-300 bg-clip-text text-transparent">
