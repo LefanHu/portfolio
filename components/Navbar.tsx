@@ -33,29 +33,29 @@ const nav = [
       },
     ],
   },
-  {
-    title: "Projects",
-    entries: [
-      {
-        name: "Stable Diffusion Image Generator",
-        description: "Generates images of Taylor Swift",
-        href: "/projects/stable-diffusion",
-        icon: HeartIcon,
-      },
-      {
-        name: "Custom Drone",
-        description: "Custom FPV drone built from scratch",
-        href: "/projects/drone",
-        icon: RocketLaunchIcon,
-      },
-      {
-        name: "Home Media Stack",
-        description: "Sonarr, Jackett, Plex Stack",
-        href: "/projects/media-stack",
-        icon: TvIcon,
-      },
-    ],
-  },
+  // {
+  //   title: "Projects",
+  //   entries: [
+  //     {
+  //       name: "Stable Diffusion Image Generator",
+  //       description: "Generates images of Taylor Swift",
+  //       href: "/projects/stable-diffusion",
+  //       icon: HeartIcon,
+  //     },
+  //     {
+  //       name: "Custom Drone",
+  //       description: "Custom FPV drone built from scratch",
+  //       href: "/projects/drone",
+  //       icon: RocketLaunchIcon,
+  //     },
+  //     {
+  //       name: "Home Media Stack",
+  //       description: "Sonarr, Jackett, Plex Stack",
+  //       href: "/projects/media-stack",
+  //       icon: TvIcon,
+  //     },
+  //   ],
+  // },
   {
     title: "Three.js",
     entries: [
