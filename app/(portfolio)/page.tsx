@@ -14,8 +14,8 @@ export default function Home() {
             Lefan&apos;s Portfolio
           </h1>
         </div>
-        <LeetcodeStats />
         <FavProjects />
+        <LeetcodeStats />
         {/* <Experiences /> */}
         {/* <Interests /> */}
         <ParticlesBackground />
