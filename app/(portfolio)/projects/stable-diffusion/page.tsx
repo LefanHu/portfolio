@@ -3,7 +3,6 @@
 import TechnologyBadge from "@/components/portfolio/TechnologyBadge";
 import { List } from "@mantine/core";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function TaylorGeneratorProjectPage() {
   const technologies = [
@@ -14,7 +13,6 @@ export default function TaylorGeneratorProjectPage() {
     "Hugging Face",
     "Python",
     "AWS",
-    "MongoDB",
     "Docker",
     "Scrapy",
   ];
@@ -24,7 +22,6 @@ export default function TaylorGeneratorProjectPage() {
     "Prompt is passed to Hugging Face serverless inference for image generation.",
     "Custom tuned LORA adapter trained on AWS GPU instance and using Huggingface",
     "S3 bucket for hosting images",
-    "MongoDB for storing image metadata",
     "Scrapy for obtaining dataset of Taylor Swift images",
     "NextJS frontend for user interaction",
   ];
@@ -133,13 +130,8 @@ export default function TaylorGeneratorProjectPage() {
           <h3 className="text-2xl font-bold">Other Notes</h3>
           <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
           <p className="mt-4 text-gray-300 mb-5">
-            Please consider visiting the project{" "}
-            <Link
-              href="/silly-goose/image-gallery"
-              className="text-blue-400 hover:text-blue-500"
-            >
-              here
-            </Link>
+            The original interactive generator has been retired. This page now
+            serves as an archival overview with sample outputs.
           </p>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -10,7 +9,6 @@ import "@mantine/core/styles.css";
 
 config.autoAddCss = false;
 
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Lefan's Website",
@@ -35,7 +33,7 @@ export default function RootLayout({
           defaultColorScheme="dark"
         />
       </head>
-      <body className={inter.className}>
+      <body className="font-sans">
         <div className="flex flex-col h-screen box-border">
           <Navbar />
           <MantineProvider theme={theme} defaultColorScheme="dark">
