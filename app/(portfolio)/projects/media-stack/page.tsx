@@ -180,7 +180,7 @@ networks:
             watch and manage everything.
           </p>
 
-          <div className="grid grid-cols-1 gap-4 p-4 bg-gray-800 bg-opacity-90 rounded-2xl">
+          <div className="grid grid-cols-1 gap-4 p-4 bg-gray-800/90 rounded-2xl">
             <div className="rounded-xl p-5 bg-gray-700">
               <h3 className="text-2xl text-white font-bold">
                 Project Overview
@@ -213,7 +213,7 @@ networks:
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 p-4 bg-gray-800 bg-opacity-90 rounded-2xl">
+        <div className="grid grid-cols-1 gap-4 p-4 bg-gray-800/90 rounded-2xl">
           <div className="p-5 gap-y-2 rounded-xl bg-gray-700">
             <h3 className="text-2xl text-white font-bold">My Configurations</h3>
             <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />

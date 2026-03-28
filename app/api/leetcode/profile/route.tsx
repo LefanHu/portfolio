@@ -1,4 +1,23 @@
+const CACHE_TTL_MS = 1000 * 60 * 15;
+
+let cachedProfile:
+  | {
+      expiresAt: number;
+      payload: string;
+    }
+  | undefined;
+
 export async function GET(req: Request) {
+  if (cachedProfile && cachedProfile.expiresAt > Date.now()) {
+    return new Response(cachedProfile.payload, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "X-Cache": "HIT",
+      },
+    });
+  }
+
   try {
     const endpoint = "https://leetcode.com/graphql";
     const currYear = new Date().getFullYear();
@@ -95,11 +114,31 @@ export async function GET(req: Request) {
       }),
     });
 
-    return new Response(JSON.stringify(await content.json()), {
+    const payload = JSON.stringify(await content.json());
+
+    cachedProfile = {
+      expiresAt: Date.now() + CACHE_TTL_MS,
+      payload,
+    };
+
+    return new Response(payload, {
       status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "X-Cache": "MISS",
+      },
     });
   } catch (error) {
-    // console.log(error);
+    if (cachedProfile) {
+      return new Response(cachedProfile.payload, {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "X-Cache": "STALE",
+        },
+      });
+    }
+
     return new Response(`something went wrong ${error}`, {
       status: 400,
     });

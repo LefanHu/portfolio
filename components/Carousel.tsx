@@ -58,12 +58,12 @@ export default function Carousel({
         {imageList.map((entry) => (
           <div key={entry.alt} className="relative">
             {entry.label && (
-              <h3 className="absolute top-0 left-0 z-10 p-2 text-white bg-black bg-opacity-50">
+              <h3 className="absolute top-0 left-0 z-10 p-2 text-white bg-black/50">
                 {entry.label}
               </h3>
             )}
             {entry.description && (
-              <p className="absolute bottom-0 left-0 z-10 p-2 text-white bg-black bg-opacity-50">
+              <p className="absolute bottom-0 left-0 z-10 p-2 text-white bg-black/50">
                 {entry.description}{" "}
               </p>
             )}

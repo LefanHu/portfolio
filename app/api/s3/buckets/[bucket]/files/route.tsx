@@ -4,15 +4,17 @@ const client = new S3Client({});
 
 export async function GET(
   req: Request,
-  { params }: { params: { bucket: string } }
+  { params }: { params: Promise<{ bucket: string }> }
 ) {
+  const { bucket } = await params;
+
   console.log(
     `sneak attacs requested!!! ${new Date().toString()} from ip ${req.headers.get(
       "cf-connecting-ip"
     )}`
   );
   const command = new ListObjectsV2Command({
-    Bucket: params.bucket,
+    Bucket: bucket,
   });
 
   try {

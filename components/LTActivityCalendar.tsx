@@ -1,15 +1,17 @@
 "use client";
-import ActivityCalendar from "react-activity-calendar";
+import { ActivityCalendar } from "react-activity-calendar";
+import "react-activity-calendar/tooltips.css";
+import type { ComponentPropsWithoutRef } from "react";
 
 export default function LTActivityCalendar(
-  props: JSX.IntrinsicElements["div"] & { calendarstring: string }
+  props: ComponentPropsWithoutRef<"div"> & { calendarstring: string }
 ) {
   // convert calendarString to list
   const calendarData: { [key: string]: number } = JSON.parse(
     props.calendarstring
   );
   const data = Object.entries(calendarData).map(([timestamp, count]) => {
-    const level = count >= 4 ? 4 : (count / 4) * 4;
+    const level = Math.max(0, Math.min(4, Math.ceil(count / 4)));
     const date = new Date(parseInt(timestamp, 10) * 1000)
       .toISOString()
       .split("T")[0];

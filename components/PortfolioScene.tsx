@@ -4,7 +4,6 @@ import { useGraph } from "@react-three/fiber";
 import { Float, Html, useGLTF } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { EffectComposer } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
 import { Select, ToneMapping } from "@react-three/postprocessing";
 import { SceneLabels } from "./three/PortfolioLabels";
 import { TVControls } from "./three/TVControlPanel";
@@ -48,7 +47,7 @@ type GLTFResult = GLTF & {
 export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
   const { scene } = useGLTF("/PortfolioScene-transformed.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
-  const { nodes, materials } = useGraph(clone) as GLTFResult;
+  const { nodes, materials } = useGraph(clone) as unknown as GLTFResult;
   const [hovered, setHovered] = useState<string>("");
 
   // const { middleGrey, maxLuminance } = useControls({
@@ -71,7 +70,6 @@ export function PortfolioScene(props: JSX.IntrinsicElements["group"]) {
       <hemisphereLight intensity={1.5} color={0xed2f00} />
       <EffectComposer>
         <ToneMapping
-          blendFunction={BlendFunction.NORMAL} // blend mode
           adaptive={true} // toggle adaptive luminance map usage
           resolution={256} // texture resolution of the luminance map
           // middleGrey={0.6} // middle grey factor

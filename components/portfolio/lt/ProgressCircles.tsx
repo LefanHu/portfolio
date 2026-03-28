@@ -39,7 +39,7 @@ export default function LTProgress(props: {
   const progressCircleColors = ["none", "green", "yellow", "red"];
 
   return (
-    <div className="grid w-full grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-y-8 bg-gray-600 bg-opacity-45 p-3 rounded-2xl">
+    <div className="grid w-full grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-y-8 bg-gray-600/45 p-3 rounded-2xl">
       {progress.map((questionType, index) => (
         <div className="flex flex-col items-center justify-end" key={index}>
           {index !== 0 ? (

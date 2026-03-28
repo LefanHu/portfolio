@@ -33,7 +33,7 @@ export default function SlidingCards(props: { cards: CardData[] }) {
               onChange={() => {}}
             />
             <label
-              className={styles.card + " bg-gray-800 bg-opacity-40"}
+              className={styles.card + " bg-gray-800/40"}
               htmlFor={"c" + (index + 1)}
               onMouseEnter={() => handleMouseEnter(index)}
             >

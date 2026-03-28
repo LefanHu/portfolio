@@ -37,7 +37,7 @@ export default function FPVDroneProjectPage() {
             An interesting drone project.
           </p>
 
-          <div className="grid grid-cols-1 gap-4 p-4 bg-gray-800 bg-opacity-90 rounded-2xl">
+          <div className="grid grid-cols-1 gap-4 p-4 bg-gray-800/90 rounded-2xl">
             <div className="rounded-xl p-5 bg-gray-700">
               <h3 className="text-2xl text-white font-bold">
                 Project Overview

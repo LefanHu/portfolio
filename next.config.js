@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    // esmExternals: "loose",
-    // serverComponentsExternalPackages: ["mongoose"]
-    optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.cache = {
+        type: "memory",
+      };
+    }
+
+    return config;
   },
   output: "standalone",
   images: {

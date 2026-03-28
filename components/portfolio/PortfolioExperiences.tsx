@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Text, Avatar, Timeline, Badge, List } from "@mantine/core";
 import { reverse } from "lodash";
 
@@ -10,7 +11,7 @@ interface Experience {
   caption: string;
   responsibilities: string[];
   tags: string[];
-  bullet: JSX.Element;
+  bullet: ReactNode;
 }
 
 const bulletIcon = (srcUrl: string, size: number) => {
@@ -154,11 +155,11 @@ export default function Experiences() {
   reverse(experiences);
 
   return (
-    <div className="flex flex-col items-center gap-y-8 w-full bg-gray-900 rounded-2xl bg-opacity-90 px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
+    <div className="flex flex-col items-center gap-y-8 w-full bg-gray-900/90 rounded-2xl px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
       <h2 className="text-3xl font-extrabold tracking-tight text-gray-200 sm:text-4xl md:text-6xl bg-gradient-to-r from-gray-200 to-slate-300 bg-clip-text text-transparent">
         Experiences
       </h2>
-      <div className="mx-auto gap-x-8 gap-y-8 px-4 py-8 sm:px-6 bg-gray-600 bg-opacity-50 rounded-2xl">
+      <div className="mx-auto gap-x-8 gap-y-8 px-4 py-8 sm:px-6 bg-gray-600/50 rounded-2xl">
         <div className="flex flex-row justify-center items-center">
           <Timeline
             radius="xl"
@@ -184,7 +185,7 @@ export default function Experiences() {
                 <div className="my-2 flex flex-col max-w-2xl">
                   <Text size="sm">{experience.caption}</Text>
                   {experience.responsibilities.length > 0 && (
-                    <div className="m-2 p-4 bg-slate-600 bg-opacity-70 rounded-xl">
+                    <div className="m-2 p-4 bg-slate-600/70 rounded-xl">
                       <List size="sm" listStyleType="disc">
                         {experience.responsibilities.map((resp) => (
                           <List.Item key={resp} className="w-[95%]">

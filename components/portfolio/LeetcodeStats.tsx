@@ -53,7 +53,7 @@ export default function LeetcodeStats() {
         ({profileStats ? "Live" : "...Loading"}!) Leetcode Statistics
       </h2>
 
-      <div className="bg-gray-900 bg-opacity-90 rounded-2xl p-4">
+      <div className="bg-gray-900/90 rounded-2xl p-4">
         <div className="flex flex-col gap-4 mx-auto">
           <ProgressCircles
             progress={
@@ -64,7 +64,7 @@ export default function LeetcodeStats() {
 
           {/* section 2 */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
-            <div className="flex flex-col md:col-span-2 gap-2 items-center p-4 bg-gray-600 bg-opacity-45 rounded-2xl">
+            <div className="flex flex-col md:col-span-2 gap-2 items-center p-4 bg-gray-600/45 rounded-2xl">
               <div className="w-full">
                 <h3 className="text-2xl font-extrabold leading-tight text-gray-200">
                   Recent AC
@@ -82,7 +82,7 @@ export default function LeetcodeStats() {
                   : range(6).map((indx) => <RecentAC key={indx} />)}
               </ul>
             </div>
-            <div className="col-span-1 md:col-span-2 p-4 bg-gray-600 bg-opacity-45 rounded-2xl row-auto">
+            <div className="col-span-1 md:col-span-2 p-4 bg-gray-600/45 rounded-2xl row-auto">
               {profileStats ? (
                 skillCategories.map((skillCategory, skillIndx) => (
                   <div key={skillIndx}>
@@ -110,7 +110,7 @@ export default function LeetcodeStats() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 w-full items-center p-4 bg-gray-600 bg-opacity-45 rounded-2xl">
+          <div className="flex flex-col gap-2 w-full items-center p-4 bg-gray-600/45 rounded-2xl">
             <div className="w-full justify-start">
               <h3 className="text-3xl font-extrabold leading-tight text-gray-200">
                 Submission Calendar

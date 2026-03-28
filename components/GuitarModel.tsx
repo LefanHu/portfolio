@@ -15,7 +15,9 @@ type GLTFResult = GLTF & {
 };
 
 export function GuitarModel(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF("/GuitarModel-transformed.glb") as GLTFResult;
+  const { nodes, materials } = useGLTF(
+    "/GuitarModel-transformed.glb"
+  ) as unknown as GLTFResult;
   const [hovered, setHovered] = useState<string>("");
 
   return (

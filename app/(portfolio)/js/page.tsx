@@ -2,7 +2,7 @@
 
 import JSCanvas from "@/components/jsCanvas";
 import { WindowIcon } from "@heroicons/react/24/outline";
-import React, { RefObject, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface AdListEntry {
   title: string,
@@ -30,7 +30,7 @@ const jsList: AdListEntry[] = [
 
 export default function JSPage() {
   const [script, setScriptSrc] = useState("ball.js");
-  const canvasComponentRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const canvasComponentRef = useRef<HTMLDivElement | null>(null);
 
   function changeScript(buttonLabel: string) {
     return (event: React.MouseEvent) => {
@@ -60,7 +60,7 @@ export default function JSPage() {
                   <button key={entry.title} onClick={changeScript(entry.title)} className="group flex items-center gap-x-5 rounded-md px-2.5 py-2 transition-all duration-75 hover:bg-green-100">
                     <div className="flex h-12 w-12 items-center rounded-lg bg-gray-200 text-black group-hover:bg-green-200">
                       <span className="tag w-full text-center text-2xl font-medium text-gray-700 group-hover:text-green-900">
-                        <entry.icon />
+                        {React.createElement(entry.icon)}
                       </span>
                     </div>
                     <div className="flex flex-col items-start justify-between font-light text-gray-600">

@@ -15,7 +15,9 @@ type GLTFResult = GLTF & {
 };
 
 export function FlatScreenTVModel(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF("/FlatScreen-transformed.glb") as GLTFResult;
+  const { nodes, materials } = useGLTF(
+    "/FlatScreen-transformed.glb"
+  ) as unknown as GLTFResult;
   const [hovered, setHovered] = useState<string>("");
 
   // video material

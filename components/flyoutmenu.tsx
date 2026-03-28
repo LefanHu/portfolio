@@ -58,10 +58,11 @@ export default function FlyoutMenu(props: FlyoutMenuProps) {
                   className="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-100"
                 >
                   <div className="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-white group-hover:bg-white">
-                    <item.icon
-                      className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
-                      aria-hidden="true"
-                    />
+                    {React.createElement(item.icon, {
+                      className:
+                        "h-6 w-6 text-gray-600 group-hover:text-indigo-600",
+                      "aria-hidden": true,
+                    })}
                   </div>
                   <div>
                     <Link

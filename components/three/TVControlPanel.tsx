@@ -3,7 +3,6 @@ import { Html } from "@react-three/drei";
 
 import {
   CodeBracketSquareIcon,
-  DocumentTextIcon,
   HeartIcon,
   PresentationChartLineIcon,
   TvIcon,
@@ -40,7 +39,7 @@ export function TVControls() {
       <Html
         transform
         className={
-          "text-red-500 border-4 rounded-md w-[700px] h-[100px] border-gray-400 select-none bg-gray-300 bg-opacity-50" +
+          "text-red-500 border-4 rounded-md w-[700px] h-[100px] border-gray-400 select-none bg-gray-300/50" +
           " " +
           (!(activeView === "default") ? "hidden" : "")
         }
@@ -83,15 +82,6 @@ export function TVControls() {
               onClick={() => setView("Projects")}
             />
             Taylor Swift
-          </div>
-
-          <div className="text-black z-10 text-center">
-            <DocumentTextIcon
-              className="cursor-pointer text-sky-400 transition-all duration-300 hover:scale-110 hover:text-red-500"
-              height={60}
-              onClick={() => setView("Projects")}
-            />
-            Resume
           </div>
         </div>
       </Html>

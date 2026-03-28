@@ -7,7 +7,7 @@ export function BoxBlendGeometry({
   radius = 0.2,
   depth = 1,
 }) {
-  const geometry = useRef<any>();
+  const geometry = useRef<THREE.ExtrudeGeometry | null>(null);
   const shape = useMemo(() => {
     const s = new THREE.Shape();
     s.moveTo(-width / 2, -height / 2 + radius);

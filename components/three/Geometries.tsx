@@ -14,7 +14,7 @@ const geometries = [
   { geometry: new THREE.BoxGeometry(2.5, 2.5, 2.5) },
 ];
 
-export function Geometries(props: JSX.IntrinsicElements["group"]) {
+export function Geometries(props: Omit<JSX.IntrinsicElements["group"], "ref">) {
   const n = 20;
   const randProps = useMemo(
     () =>

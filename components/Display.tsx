@@ -20,7 +20,7 @@ type GLTFResult = GLTF & {
 }
 
 export function DisplayModel(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF('/Display-transformed.glb') as GLTFResult
+  const { nodes, materials } = useGLTF('/Display-transformed.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>
       <mesh name="Box" geometry={nodes.Box.geometry} material={nodes.Box.material} position={[0, 2, 0]} />

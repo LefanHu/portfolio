@@ -6,7 +6,7 @@ import {
   useInView,
   useIsomorphicLayoutEffect,
 } from "framer-motion";
-import { useRef } from "react";
+import { ComponentPropsWithoutRef, useRef } from "react";
 
 type AnimatedCounterProps = {
   from: number;
@@ -19,7 +19,7 @@ const AnimatedCounter = ({
   to,
   animationOptions,
   props,
-}: AnimatedCounterProps & { props?: JSX.IntrinsicElements["span"] }) => {
+}: AnimatedCounterProps & { props?: ComponentPropsWithoutRef<"span"> }) => {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
 

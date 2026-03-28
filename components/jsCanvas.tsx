@@ -1,12 +1,11 @@
 'use client'
 
-import { RefObject, useEffect, useRef } from 'react';
-import Script from 'next/script.js';
+import { Ref, useEffect, useRef } from 'react';
 
 interface JSCanvasProps {
     scriptSrc: string
     className?: string
-    ref?: RefObject<HTMLDivElement>
+    ref?: Ref<HTMLDivElement>
 }
 
 export default function JSCanvas(props: JSCanvasProps) {

@@ -6,7 +6,6 @@ import {
   AcademicCapIcon,
   Bars3Icon,
   BellIcon,
-  DocumentTextIcon,
   HeartIcon,
   RocketLaunchIcon,
   TvIcon,
@@ -24,12 +23,6 @@ const nav = [
         description: "Who am I?",
         href: "/",
         icon: AcademicCapIcon,
-      },
-      {
-        name: "Resume",
-        description: "Current resume",
-        href: "/resume-page",
-        icon: DocumentTextIcon,
       },
     ],
   },
@@ -123,13 +116,13 @@ export default function Navbar() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {nav.map((entry) => (
-                      <a key={entry.title}>
+                      <div key={entry.title}>
                         <FlyoutMenu
                           title={entry.title}
                           className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                           entries={entry.entries}
                         />
-                      </a>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -168,7 +161,7 @@ export default function Navbar() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
                       <Menu.Item>
                         {({ active }) => (
                           <a

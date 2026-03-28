@@ -4,10 +4,11 @@ import { useActiveViewStore } from "@/lib/store";
 import { map } from "lodash";
 import * as THREE from "three";
 import { Box } from "../Box";
+import type { ReactNode } from "react";
 
 export function ProjectShowcase() {
   const { activeView } = useActiveViewStore();
-  const [content, setContent] = useState<JSX.Element | null>(null);
+  const [content, setContent] = useState<ReactNode>(null);
   const groupRef = useRef<THREE.Group>(null);
 
   useEffect(() => {

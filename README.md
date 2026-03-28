@@ -1,6 +1,6 @@
 # Lefan's Portfolio
 
-A personal portfolio site built with **Next.js 14** and **TypeScript** to showcase projects, technical interests, experiments, and interactive 3D work.
+A personal portfolio site built with **Next.js** and **TypeScript** to showcase projects, technical interests, experiments, and interactive 3D work.
 
 🌐 Live site: [https://lefan.ca](https://lefan.ca)
 
@@ -17,7 +17,7 @@ The app uses the Next.js App Router with route groups to separate different site
 
 ## Features
 
-- **Portfolio pages** for featured projects, resume content, and project gallery
+- **Portfolio pages** for featured projects and project gallery
 - **Project detail pages** (e.g., media stack, drone, Three.js work, stable diffusion)
 - **Interactive visuals** using React Three Fiber / Drei and custom components
 - **LeetCode stats API integration** via GraphQL
@@ -26,8 +26,8 @@ The app uses the Next.js App Router with route groups to separate different site
 
 ## Tech stack
 
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript + React 18
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript + React 19
 - **Styling/UI:** Tailwind CSS, Mantine, NextUI, Framer Motion
 - **3D/Graphics:** Three.js, @react-three/fiber, @react-three/drei
 - **Data/Auth:** MongoDB (Mongoose), NextAuth
@@ -44,7 +44,7 @@ app/
 components/            Reusable UI and 3D components
 lib/                   Shared utilities and Three.js helpers
 models/                Mongoose models
-public/                Static assets (images, models, PDFs)
+  public/                Static assets (images, models)
 ```
 
 ## Getting started
@@ -96,6 +96,20 @@ Open [http://localhost:3000](http://localhost:3000).
 - `pnpm build` — create production build
 - `pnpm start` — run production server
 - `pnpm lint` — run Next.js linting
+- `pnpm test` — run Vitest smoke tests
+
+## Testing
+
+The repository includes a small smoke-test suite using Vitest and Testing Library.
+
+- `tests/module-smoke.spec.ts` imports every page module and every component module to catch broken imports and dependency graph regressions.
+- `tests/render-smoke.spec.tsx` renders a stable subset of UI surfaces such as the root layout, navbar, contact form, and not-found page.
+
+Run the suite with:
+
+```bash
+pnpm test
+```
 
 ## API routes (high level)
 
@@ -107,7 +121,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Deployment
 
-This app is deployable on Vercel or any Node.js environment that supports Next.js 14.
+This app is deployable on Vercel or any Node.js environment that supports Next.js 16.
 
 Recommended production setup:
 
@@ -117,7 +131,7 @@ Recommended production setup:
 
 ## Roadmap ideas
 
-- Add automated tests for API routes and core components
+- Expand automated coverage for API routes and interactive 3D components
 - Improve content CMS workflow for project updates
 - Add analytics dashboard for portfolio interactions
 - Expand project case studies with architecture diagrams

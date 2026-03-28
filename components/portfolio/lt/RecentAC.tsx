@@ -10,7 +10,7 @@ interface Submission {
 
 export default function RecentAC(props: { sub?: Submission }) {
   return (
-    <li className="w-full bg-gray-500 bg-opacity-80 rounded-lg p-2">
+    <li className="w-full bg-gray-500/80 rounded-lg p-2">
       <h4 className="text-white font-bold overflow-clip">
         {props.sub ? (
           props.sub.title

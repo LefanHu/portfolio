@@ -18,7 +18,9 @@ type GLTFResult = GLTF & {
 };
 
 export function CapsuleModel(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF("/capsule-transformed.glb") as GLTFResult;
+  const { nodes, materials } = useGLTF(
+    "/capsule-transformed.glb"
+  ) as unknown as GLTFResult;
   return (
     <group {...props} dispose={null}>
       <pointLight intensity={500} decay={2} position={[10, 10, 10]} />

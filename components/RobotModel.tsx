@@ -29,7 +29,9 @@ type GLTFResult = GLTF & {
 };
 
 export function RobotModel(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF("/RobotModel-transformed.glb") as GLTFResult;
+  const { nodes, materials } = useGLTF(
+    "/RobotModel-transformed.glb"
+  ) as unknown as GLTFResult;
   const [hovered, setHovered] = useState<string>("");
   return (
     <group {...props} dispose={null}>

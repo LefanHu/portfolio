@@ -11,7 +11,7 @@ interface BoxState {
 }
 
 export function Box(props: any) {
-  const ref = useRef<BoxState & Mesh>();
+  const ref = useRef<(BoxState & Mesh) | null>(null);
   // Hold state for hovered and clicked events
   const [hovered, hover] = useState(false);
   const [clicked, click] = useState(false);

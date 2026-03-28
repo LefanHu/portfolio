@@ -23,13 +23,13 @@ function Card({ url }: { url: string }, ...props: any) {
   });
   return (
     <>
-      <planeBufferGeometry args={[1, 1]} />
+      <planeGeometry args={[1, 1]} />
     </>
   );
 }
 
 function Rig(props: JSX.IntrinsicElements["group"]) {
-  const ref = useRef<any>();
+  const ref = useRef<THREE.Group | null>(null);
   const scroll = useScroll();
   useFrame((state, delta) => {
     if (!ref.current) return;

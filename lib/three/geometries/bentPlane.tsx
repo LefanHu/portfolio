@@ -19,9 +19,8 @@ export default function BentPlaneGeometry(
       <bufferGeometry attach={"geometry"}>
         <bufferAttribute
           attach="attributes-position"
-          array={vertices}
-          itemSize={3}
-          count={6}
+          args={[vertices, 3]}
+          count={vertices.length / 3}
         />
       </bufferGeometry>
       <meshStandardMaterial color={"#ff0000"} />
