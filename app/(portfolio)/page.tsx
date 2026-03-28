@@ -14,8 +14,8 @@ export default function Home() {
           </h1>
         </div>
         <FavProjects />
+        <Experiences />
         <HomeDeferredSections />
-        {/* <Experiences /> */}
         {/* <Interests /> */}
         <ContactForm />
       </div>

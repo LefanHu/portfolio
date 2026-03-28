@@ -1,210 +1,267 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { Text, Avatar, Timeline, Badge, List } from "@mantine/core";
-import { reverse } from "lodash";
-
-interface Experience {
-  company: string;
-  position: string;
-  date: string;
-  caption: string;
-  responsibilities: string[];
+type ExperienceRole = {
+  id: string;
+  title: string;
+  subtitle: string;
+  period: string;
   tags: string[];
-  bullet: ReactNode;
+};
+
+type ExperienceBranch = {
+  id: string;
+  title: string;
+  subtitle: string;
+  period: string;
+  tags: string[];
+  roles: ExperienceRole[];
+};
+
+export const mockExperienceBranches: ExperienceBranch[] = [
+  {
+    id: "high-school",
+    title: "High School",
+    subtitle: "Early leadership, clubs, and first technical projects",
+    period: "2015 - 2019",
+    tags: ["STEM", "Clubs", "Foundations"],
+    roles: [
+      {
+        id: "robotics-team",
+        title: "Robotics Team",
+        subtitle: "Software Lead",
+        period: "2016 - 2018",
+        tags: ["Robotics", "Leadership", "Java"],
+      },
+      {
+        id: "student-web-club",
+        title: "Student Web Club",
+        subtitle: "Founder and Builder",
+        period: "2018 - 2019",
+        tags: ["HTML/CSS", "Mentoring", "Design"],
+      },
+    ],
+  },
+  {
+    id: "university",
+    title: "University",
+    subtitle: "Coursework, student leadership, and community building",
+    period: "2019 - 2025",
+    tags: ["Computer Science", "Hackathons", "Systems"],
+    roles: [
+      {
+        id: "campus-builder-community",
+        title: "Campus Builder Community",
+        subtitle: "Hackathon Organizer",
+        period: "2019 - 2022",
+        tags: ["Events", "Sponsorship", "Community"],
+      },
+      {
+        id: "interactive-systems-lab",
+        title: "Interactive Systems Lab",
+        subtitle: "Undergraduate Research Assistant",
+        period: "2021 - 2022",
+        tags: ["Research", "Data Viz", "Python"],
+      },
+    ],
+  },
+  {
+    id: "internships",
+    title: "Internships",
+    subtitle: "Hands-on engineering roles across product and platform teams",
+    period: "2020 - 2024",
+    tags: ["Industry", "Shipping", "Scale"],
+    roles: [
+      {
+        id: "studioforge",
+        title: "StudioForge",
+        subtitle: "Frontend Engineer Intern",
+        period: "Summer 2020",
+        tags: ["Next.js", "Animation", "A/B Testing"],
+      },
+      {
+        id: "latticeworks",
+        title: "LatticeWorks",
+        subtitle: "Software Engineering Intern",
+        period: "Winter 2021",
+        tags: ["TypeScript", "GraphQL", "Testing"],
+      },
+      {
+        id: "sparknote-labs",
+        title: "SparkNote Labs",
+        subtitle: "Product Engineer Intern",
+        period: "2021",
+        tags: ["React", "Node.js", "Analytics"],
+      },
+      {
+        id: "northstar-cloud",
+        title: "Northstar Cloud",
+        subtitle: "Software Engineer Intern",
+        period: "2021 - 2023",
+        tags: ["AWS", "Event-Driven", "Observability"],
+      },
+      {
+        id: "atlas-systems",
+        title: "Atlas Systems",
+        subtitle: "Platform Engineer Intern",
+        period: "2023 - 2024",
+        tags: ["Kubernetes", "CI/CD", "TypeScript"],
+      },
+      {
+        id: "pinecone-digital",
+        title: "Pinecone Digital",
+        subtitle: "Developer Tools Intern",
+        period: "Summer 2023",
+        tags: ["Developer Experience", "CLI", "Observability"],
+      },
+      {
+        id: "orbit-foundry",
+        title: "Orbit Foundry",
+        subtitle: "Technical Program Intern",
+        period: "Fall 2024",
+        tags: ["Program Delivery", "Stakeholders", "Automation"],
+      },
+    ],
+  },
+  {
+    id: "leadership",
+    title: "Leadership",
+    subtitle: "Owning larger scopes and mentoring across projects",
+    period: "2024 - Present",
+    tags: ["Strategy", "Mentorship", "Ownership"],
+    roles: [
+      {
+        id: "heliograph-ai",
+        title: "Heliograph AI",
+        subtitle: "Senior Product Engineer",
+        period: "2024 - Present",
+        tags: ["Tech Lead", "AI UX", "Mentoring"],
+      },
+    ],
+  },
+];
+
+function Tag({ tag, tone }: { tag: string; tone: "sky" | "amber" | "emerald" }) {
+  const styles =
+    tone === "amber"
+      ? "border-amber-300/25 bg-amber-300/10 text-amber-100"
+      : tone === "emerald"
+        ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"
+        : "border-sky-300/25 bg-sky-300/10 text-sky-100";
+
+  return (
+    <span className={`rounded-md border px-2.5 py-1 text-xs font-semibold ${styles}`}>
+      {tag}
+    </span>
+  );
 }
 
-const bulletIcon = (srcUrl: string, size: number) => {
+function BranchCard({ branch }: { branch: ExperienceBranch }) {
   return (
-    <Avatar
-      size={size}
-      radius="xl"
-      src={srcUrl}
-      alt="bullet icon"
-      styles={{
-        image: {
-          objectFit: "contain",
-          backgroundColor: "white",
-          padding: "0.1rem",
-        },
-      }}
-    />
-  );
-};
+    <article className="relative flex min-w-[280px] max-w-[360px] flex-1 flex-col rounded-[30px] border border-white/10 bg-slate-950/70 p-5 shadow-[0_25px_80px_rgba(2,6,23,0.45)] backdrop-blur">
+      <div className="absolute left-1/2 top-0 h-10 w-px -translate-y-10 bg-gradient-to-b from-cyan-300/80 to-white/0" />
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <p className="bg-gradient-to-r from-cyan-200 via-sky-100 to-indigo-200 bg-clip-text text-xs font-bold uppercase tracking-[0.28em] text-transparent">
+            Branch
+          </p>
+          <h3 className="mt-2 text-2xl font-black text-white">{branch.title}</h3>
+        </div>
+        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-200">
+          {branch.period}
+        </span>
+      </div>
 
-const skillBadge = (skill: string) => {
-  return (
-    <Badge
-      size="md"
-      variant="gradient"
-      gradient={{ from: "yellow", to: "orange", deg: 185 }}
-      key={skill}
-    >
-      {skill}
-    </Badge>
-  );
-};
+      <p className="text-sm leading-6 text-slate-300">{branch.subtitle}</p>
 
-const positionBadge = (position: string) => {
-  return (
-    <Badge
-      size="sm"
-      variant="gradient"
-      gradient={{ from: "rgba(204, 118, 118, 1)", to: "violet", deg: 135 }}
-    >
-      {position}
-    </Badge>
-  );
-};
+      <div className="mt-4 flex flex-wrap gap-2">
+        {branch.tags.map((tag) => (
+          <Tag key={tag} tag={tag} tone="sky" />
+        ))}
+      </div>
 
-const dateBadge = (date: string) => {
-  return (
-    <Badge
-      size="sm"
-      variant="gradient"
-      gradient={{ from: "rgba(219, 219, 219, 0.46)", to: "gray", deg: 194 }}
-    >
-      {date}
-    </Badge>
+      <div className="relative mt-8 flex flex-col gap-4 border-l border-white/10 pl-5">
+        {branch.roles.map((role, index) => (
+          <div key={role.id} className="relative">
+            <div className="absolute -left-[21px] top-6 h-px w-4 bg-white/20" />
+            <div className="absolute -left-[27px] top-[21px] h-3 w-3 rounded-full border border-slate-950 bg-emerald-300 shadow-[0_0_20px_rgba(52,211,153,0.75)]" />
+            <div className="rounded-2xl border border-emerald-300/15 bg-emerald-300/8 p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <h4 className="text-lg font-bold text-white">{role.title}</h4>
+                  <p className="text-sm text-emerald-100/90">{role.subtitle}</p>
+                </div>
+                <span className="rounded-full border border-white/10 bg-slate-900/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-200">
+                  {role.period}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {role.tags.map((tag) => (
+                  <Tag key={`${role.id}-${tag}`} tag={tag} tone="emerald" />
+                ))}
+              </div>
+            </div>
+            {index < branch.roles.length - 1 ? (
+              <div className="absolute -left-[21px] top-9 h-[calc(100%+0.75rem)] w-px bg-white/10" />
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </article>
   );
-};
+}
 
 export default function Experiences() {
-  const badgeSize = 64;
-  const experiences: Experience[] = [
-    {
-      company: "KSKC Kumon",
-      position: "Assistant Instructor/Grader",
-      date: "2016 - 2018",
-      caption: "",
-      responsibilities: [
-        "Built script for automated tracking of virtual attendance during COVID-19",
-        "Assistant instructor / grader",
-      ],
-      tags: ["Planning/Organization", "Spreadsheet", "Javascript"],
-      bullet: bulletIcon("/images/kumon_logo.png", badgeSize),
-    },
-    {
-      company: "Hackthon Organizer (Volunteer)",
-      position: "Hackathon Organizer",
-      date: "2016 - 2018",
-      caption: "",
-      responsibilities: [
-        "Organized 2-day hackathon",
-        "Gave ML workshop to 50+ participants from various countries",
-        "Helped gather $3000 in prizes",
-        "200 participants from over 50 different countries",
-      ],
-      tags: [
-        "Planning/Organization",
-        "Presentation",
-        "PyTorch",
-        "Machine Learning",
-      ],
-      bullet: bulletIcon("/images/infinihacks_logo.png", badgeSize),
-    },
-    {
-      company: "TELUS Corporation",
-      position: "Software Developer Co-Op",
-      date: "May 2023 - August 2023",
-      caption: "",
-      responsibilities: [
-        "Contributed to the development of the auto-call system (ACMP) - a tool for hundreds of field technicians that decreased average time for response to service outages from hours to just 30 seconds",
-        "Built, tested, and deployed production Docker images of ACMP service to production Docker swarms",
-        "Developed POC Google Chat service for internal database lookup without compromising security by adopting the publisher-subscriber model for secure communication between networks",
-        "Used serverless architecture and Spring Boot for chat service, reducing server cost by 20 times compared to other internal services while maintaining sub-second response times",
-      ],
-      tags: [
-        "Python",
-        "Jinja2",
-        "Docker",
-        "Docker Swarm",
-        "GCP",
-        "Java",
-        "Sequelize",
-        "Nginx",
-        "LDAP",
-      ],
-      bullet: bulletIcon("/images/telus_logo.png", badgeSize),
-    },
-    {
-      company: "Ciena Corporation",
-      position: "Software Developer Co-Op",
-      date: "January 2024 - April 2024",
-      caption: "",
-      responsibilities: [
-        "Developed major releases of the extract logs application used by over 100 engineers",
-        "Created Splunk search queries for well known signatures of known and recognizable errors on hardware devices, increasing debug efficiency by >30% for common errors",
-        // "Utilized AWS for audio sentiment analysis with PyTorch",
-        "Used Python and JupyterLab extensively for general automation and parsing of complex log archives, creating a comprehensive suite of scripts for aiding log analyzer engineers",
-      ],
-      tags: ["Splunk", "AWS", "PyTorch", "Python", "JupyterLab", "Scrapy"],
-      bullet: bulletIcon("/images/ciena_logo.png", badgeSize),
-    },
-    {
-      company: "???",
-      position: "so exciting! :D",
-      date: "Summer 2025 Co-Op",
-      caption:
-        "Looking for a Co-Op for summer 2025, please reach out if you have any opportunities and believe my experiences align with your development goals!",
-      responsibilities: [],
-      tags: [],
-      bullet: bulletIcon("/images/chibi_tilt.gif", badgeSize),
-    },
-  ];
-  reverse(experiences);
+  const totalRoles = mockExperienceBranches.reduce(
+    (count, branch) => count + branch.roles.length,
+    0
+  );
 
   return (
-    <div className="flex flex-col items-center gap-y-8 w-full bg-gray-900/90 rounded-2xl px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
-      <h2 className="text-3xl font-extrabold tracking-tight text-gray-200 sm:text-4xl md:text-6xl bg-gradient-to-r from-gray-200 to-slate-300 bg-clip-text text-transparent">
-        Experiences
-      </h2>
-      <div className="mx-auto gap-x-8 gap-y-8 px-4 py-8 sm:px-6 bg-gray-600/50 rounded-2xl">
-        <div className="flex flex-row justify-center items-center">
-          <Timeline
-            radius="xl"
-            lineWidth={3}
-            bulletSize={badgeSize + 4}
-            active={experiences.length}
-            color="rgba(172, 48, 176, 1)"
-          >
-            {experiences.map((experience, index) => (
-              <Timeline.Item
-                key={"experience" + index}
-                title={
-                  <h3 className="bg-gradient-to-r from-sky-200 via-orange-100 to-purple-400 bg-clip-text text-transparent text-2xl font-extrabold">
-                    {experience.company}
-                  </h3>
-                }
-                bullet={experience.bullet}
-              >
-                <div className="flex flex-row flex-nowrap gap-2">
-                  {positionBadge(experience.position)}
-                  {dateBadge(experience.date)}
-                </div>
-                <div className="my-2 flex flex-col max-w-2xl">
-                  <Text size="sm">{experience.caption}</Text>
-                  {experience.responsibilities.length > 0 && (
-                    <div className="m-2 p-4 bg-slate-600/70 rounded-xl">
-                      <List size="sm" listStyleType="disc">
-                        {experience.responsibilities.map((resp) => (
-                          <List.Item key={resp} className="w-[95%]">
-                            <p>{resp}</p>
-                          </List.Item>
-                        ))}
-                      </List>
-                    </div>
-                  )}
+    <section className="relative flex w-full flex-col gap-8 overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(251,191,36,0.14),transparent_24%),linear-gradient(180deg,rgba(3,7,18,0.96),rgba(15,23,42,0.93))] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <div className="absolute left-10 top-10 h-32 w-32 rounded-full bg-cyan-400/10 blur-3xl" />
+      <div className="absolute bottom-8 right-8 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" />
 
-                  <div className="flex flex-row flex-wrap gap-2">
-                    {experience.tags.map((tag) => skillBadge(tag))}
-                  </div>
-                </div>
-              </Timeline.Item>
-            ))}
-          </Timeline>
+      <div className="relative z-10 flex flex-col gap-4 lg:max-w-3xl">
+        <span className="w-fit rounded-full border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-cyan-100">
+          Experience Tree
+        </span>
+        <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">
+          A branching career map that stays readable on the page.
+        </h2>
+        <p className="max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+          This is still mock content, but the structure is closer to what a real
+          portfolio needs: clear branches for school, internships, and later
+          leadership, without any canvas overlap.
+        </p>
+      </div>
+
+      <div className="relative z-10 rounded-[32px] border border-white/10 bg-slate-950/45 p-4 sm:p-6 lg:p-8">
+        <div className="mx-auto mb-10 flex max-w-xl flex-col items-center text-center">
+          <div className="rounded-[28px] border border-cyan-300/25 bg-[linear-gradient(160deg,rgba(15,23,42,0.96),rgba(30,41,59,0.92))] px-6 py-5 shadow-[0_24px_70px_rgba(59,130,246,0.2)]">
+            <p className="bg-gradient-to-r from-cyan-200 via-sky-100 to-indigo-300 bg-clip-text text-xs font-bold uppercase tracking-[0.32em] text-transparent">
+              Overview
+            </p>
+            <h3 className="mt-2 text-3xl font-black text-white">Career Journey</h3>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Mock timeline spanning high school, university, {totalRoles} roles,
+              and a leadership arc.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              <Tag tag="2015 - Now" tone="amber" />
+              <Tag tag={`${mockExperienceBranches.length} branches`} tone="sky" />
+              <Tag tag={`${totalRoles} experiences`} tone="emerald" />
+            </div>
+          </div>
+          <div className="h-10 w-px bg-gradient-to-b from-cyan-300/80 to-white/0" />
+        </div>
+
+        <div className="relative flex flex-wrap justify-center gap-6 xl:flex-nowrap">
+          <div className="pointer-events-none absolute left-[8%] right-[8%] top-0 hidden h-px bg-gradient-to-r from-transparent via-cyan-200/45 to-transparent xl:block" />
+          {mockExperienceBranches.map((branch) => (
+            <BranchCard key={branch.id} branch={branch} />
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
