@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import SlidingCards from "../SlidingCards";
 import Carousel from "../Carousel";
 
@@ -53,41 +52,6 @@ const projects = [
 ];
 
 export default function FavProjects() {
-  const [windowSize, setWindowSize] = useState<number>(-1);
-
-  // change component to carousel if screen size too small
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize(window.innerWidth);
-    };
-
-    // check screen size immediately
-    handleResize();
-
-    // add listener window size listener
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  var displayedComponent = <SlidingCards cards={projects} />;
-  if (windowSize < 1100) {
-    displayedComponent = (
-      <Carousel
-        imageList={projects.map((project) => ({
-          src: project.imgSrc,
-          alt: project.name,
-          label: project.name,
-          href: project.href,
-          description: project.description,
-          width: 1024,
-          height: 1024,
-        }))}
-      />
-    );
-  }
-
   return (
     <div className="flex flex-col gap-4 p-8">
       <div>
@@ -101,7 +65,22 @@ export default function FavProjects() {
         </p>
         <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
       </div>
-      {displayedComponent}
+      <div className="min-[1100px]:hidden">
+        <Carousel
+          imageList={projects.map((project) => ({
+            src: project.imgSrc,
+            alt: project.name,
+            label: project.name,
+            href: project.href,
+            description: project.description,
+            width: 1024,
+            height: 1024,
+          }))}
+        />
+      </div>
+      <div className="hidden min-[1100px]:block">
+        <SlidingCards cards={projects} />
+      </div>
       <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
     </div>
   );

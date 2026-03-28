@@ -10,7 +10,9 @@ describe("portfolio experiences", () => {
 
     expect(screen.getByText("Experience Tree")).toBeInTheDocument();
     expect(
-      screen.getByText("A branching career map that stays readable on the page.")
+      screen.getByText(
+        "Work experience grouped by the kinds of systems I like building."
+      )
     ).toBeInTheDocument();
     expect(screen.getByText("Career Journey")).toBeInTheDocument();
 

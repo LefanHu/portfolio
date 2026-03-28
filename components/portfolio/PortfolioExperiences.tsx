@@ -4,8 +4,10 @@ type ExperienceRole = {
   id: string;
   title: string;
   subtitle: string;
+  location: string;
   period: string;
   tags: string[];
+  highlights: string[];
 };
 
 type ExperienceBranch = {
@@ -19,122 +21,82 @@ type ExperienceBranch = {
 
 export const mockExperienceBranches: ExperienceBranch[] = [
   {
-    id: "high-school",
-    title: "High School",
-    subtitle: "Early leadership, clubs, and first technical projects",
-    period: "2015 - 2019",
-    tags: ["STEM", "Clubs", "Foundations"],
+    id: "robotics-and-automation",
+    title: "Robotics and Automation",
+    subtitle: "Applied ML, deployment, and cross-team enablement for physical systems",
+    period: "2025",
+    tags: ["Robotics", "ML", "AWS"],
     roles: [
       {
-        id: "robotics-team",
-        title: "Robotics Team",
-        subtitle: "Software Lead",
-        period: "2016 - 2018",
-        tags: ["Robotics", "Leadership", "Java"],
-      },
-      {
-        id: "student-web-club",
-        title: "Student Web Club",
-        subtitle: "Founder and Builder",
-        period: "2018 - 2019",
-        tags: ["HTML/CSS", "Mentoring", "Design"],
+        id: "amazon-robotics",
+        title: "Amazon Robotics",
+        subtitle: "Software Developer, AR Human Workcell Interface Team",
+        location: "Toronto, ON",
+        period: "Sept. 2025 - Dec. 2025",
+        tags: ["Planning Pipelines", "CDK", "Workcells"],
+        highlights: [
+          "Designed, developed, and deployed ML planning pipelines for robotic movement drive units across fulfillment centers worldwide.",
+          "Led a cross-team effort for work-cell station setup in Toronto, creating a path for teams to test workflows locally instead of relying only on Boston.",
+          "Deployed a custom CDK-managed application for robotic station software to connect to AWS from the Unfabric office network.",
+        ],
       },
     ],
   },
   {
-    id: "university",
-    title: "University",
-    subtitle: "Coursework, student leadership, and community building",
-    period: "2019 - 2025",
-    tags: ["Computer Science", "Hackathons", "Systems"],
+    id: "platform-and-security",
+    title: "Platform and Security",
+    subtitle: "Reliability, compliance, and operational tooling at service scale",
+    period: "2023 - 2025",
+    tags: ["Infrastructure", "Monitoring", "Compliance"],
     roles: [
       {
-        id: "campus-builder-community",
-        title: "Campus Builder Community",
-        subtitle: "Hackathon Organizer",
-        period: "2019 - 2022",
-        tags: ["Events", "Sponsorship", "Community"],
+        id: "adentro",
+        title: "Adentro",
+        subtitle: "DevOps Engineer, Security and DevOps Team",
+        location: "San Francisco, California",
+        period: "May 2025 - Aug. 2025",
+        tags: ["ECS", "Observability", "SOC 2"],
+        highlights: [
+          "Developed and maintained resilient monitoring systems for large-scale ECS clusters supporting 400+ services.",
+          "Led system design improvements adopted cluster-wide, speeding up configuration change workflows by 80%.",
+          "Contributed targeted infrastructure changes that supported SOC 2 compliance efforts across multiple services.",
+        ],
       },
       {
-        id: "interactive-systems-lab",
-        title: "Interactive Systems Lab",
-        subtitle: "Undergraduate Research Assistant",
-        period: "2021 - 2022",
-        tags: ["Research", "Data Viz", "Python"],
+        id: "telus",
+        title: "TELUS",
+        subtitle: "Software Developer, RCOE Team",
+        location: "Toronto, ON",
+        period: "May 2023 - Aug. 2023",
+        tags: ["Spring Boot", "Docker", "GCP Pub/Sub"],
+        highlights: [
+          "Contributed to ACMP, an auto-call management service for automatic dispatching of field technicians.",
+          "Built, tested, and deployed production images of the ACMP service to customer-facing Docker swarms.",
+          "Adopted a GCP Pub/Sub model to facilitate secure communication and enable internal database access through Google services.",
+          "Developed a Java Spring Boot chat service with a serverless architecture, reducing compute cost by 20x.",
+        ],
       },
     ],
   },
   {
-    id: "internships",
-    title: "Internships",
-    subtitle: "Hands-on engineering roles across product and platform teams",
-    period: "2020 - 2024",
-    tags: ["Industry", "Shipping", "Scale"],
+    id: "developer-productivity",
+    title: "Developer Productivity",
+    subtitle: "Internal tooling, diagnostics, and faster workflows for engineering teams",
+    period: "2024",
+    tags: ["Internal Tools", "Splunk", "Automation"],
     roles: [
       {
-        id: "studioforge",
-        title: "StudioForge",
-        subtitle: "Frontend Engineer Intern",
-        period: "Summer 2020",
-        tags: ["Next.js", "Animation", "A/B Testing"],
-      },
-      {
-        id: "latticeworks",
-        title: "LatticeWorks",
-        subtitle: "Software Engineering Intern",
-        period: "Winter 2021",
-        tags: ["TypeScript", "GraphQL", "Testing"],
-      },
-      {
-        id: "sparknote-labs",
-        title: "SparkNote Labs",
-        subtitle: "Product Engineer Intern",
-        period: "2021",
-        tags: ["React", "Node.js", "Analytics"],
-      },
-      {
-        id: "northstar-cloud",
-        title: "Northstar Cloud",
-        subtitle: "Software Engineer Intern",
-        period: "2021 - 2023",
-        tags: ["AWS", "Event-Driven", "Observability"],
-      },
-      {
-        id: "atlas-systems",
-        title: "Atlas Systems",
-        subtitle: "Platform Engineer Intern",
-        period: "2023 - 2024",
-        tags: ["Kubernetes", "CI/CD", "TypeScript"],
-      },
-      {
-        id: "pinecone-digital",
-        title: "Pinecone Digital",
-        subtitle: "Developer Tools Intern",
-        period: "Summer 2023",
-        tags: ["Developer Experience", "CLI", "Observability"],
-      },
-      {
-        id: "orbit-foundry",
-        title: "Orbit Foundry",
-        subtitle: "Technical Program Intern",
-        period: "Fall 2024",
-        tags: ["Program Delivery", "Stakeholders", "Automation"],
-      },
-    ],
-  },
-  {
-    id: "leadership",
-    title: "Leadership",
-    subtitle: "Owning larger scopes and mentoring across projects",
-    period: "2024 - Present",
-    tags: ["Strategy", "Mentorship", "Ownership"],
-    roles: [
-      {
-        id: "heliograph-ai",
-        title: "Heliograph AI",
-        subtitle: "Senior Product Engineer",
-        period: "2024 - Present",
-        tags: ["Tech Lead", "AI UX", "Mentoring"],
+        id: "ciena",
+        title: "CIENA Corporation",
+        subtitle: "Software Developer, Technological Innovation Team",
+        location: "Ottawa, ON",
+        period: "Jan. 2024 - Apr. 2024",
+        tags: ["JupyterLab", "Splunk", "Diagnostics"],
+        highlights: [
+          "Developed major releases of a data aggregator tool used by hundreds of engineers within CIENA.",
+          "Built Splunk search queries that identified common hardware device errors 80% faster.",
+          "Used JupyterLab to automate complex log archive workflows, increasing efficiency by 30%.",
+        ],
       },
     ],
   },
@@ -189,6 +151,9 @@ function BranchCard({ branch }: { branch: ExperienceBranch }) {
                 <div>
                   <h4 className="text-lg font-bold text-white">{role.title}</h4>
                   <p className="text-sm text-emerald-100/90">{role.subtitle}</p>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                    {role.location}
+                  </p>
                 </div>
                 <span className="rounded-full border border-white/10 bg-slate-900/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-200">
                   {role.period}
@@ -199,6 +164,14 @@ function BranchCard({ branch }: { branch: ExperienceBranch }) {
                   <Tag key={`${role.id}-${tag}`} tag={tag} tone="emerald" />
                 ))}
               </div>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-slate-200">
+                {role.highlights.map((highlight) => (
+                  <li key={highlight} className="flex gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                    <span>{highlight}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
             {index < branch.roles.length - 1 ? (
               <div className="absolute -left-[21px] top-9 h-[calc(100%+0.75rem)] w-px bg-white/10" />
@@ -226,12 +199,12 @@ export default function Experiences() {
           Experience Tree
         </span>
         <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">
-          A branching career map that stays readable on the page.
+          Work experience grouped by the kinds of systems I like building.
         </h2>
         <p className="max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-          This is still mock content, but the structure is closer to what a real
-          portfolio needs: clear branches for school, internships, and later
-          leadership, without any canvas overlap.
+          Robotics, platform engineering, reliability, and internal tooling work
+          across internships where I shipped production systems and made complex
+          workflows faster for other teams.
         </p>
       </div>
 
@@ -243,11 +216,11 @@ export default function Experiences() {
             </p>
             <h3 className="mt-2 text-3xl font-black text-white">Career Journey</h3>
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              Mock timeline spanning high school, university, {totalRoles} roles,
-              and a leadership arc.
+              A focused timeline across {totalRoles} engineering roles spanning
+              robotics, platform reliability, and developer productivity.
             </p>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
-              <Tag tag="2015 - Now" tone="amber" />
+              <Tag tag="2023 - 2025" tone="amber" />
               <Tag tag={`${mockExperienceBranches.length} branches`} tone="sky" />
               <Tag tag={`${totalRoles} experiences`} tone="emerald" />
             </div>
