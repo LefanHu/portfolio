@@ -8,7 +8,7 @@ import ParticleWave3D from "@/components/portfolio/js/ParticleWave3D";
 import VoxelFunctionField3D from "@/components/portfolio/js/VoxelFunctionField3D";
 import { WindowIcon } from "@heroicons/react/24/outline";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
 interface AdListEntry {
   title: string;
@@ -145,7 +145,7 @@ const threeExperimentRenderers: Record<string, React.ReactNode> = {
   "crystal_lattice_3d.js": <CrystalLattice3D className="min-h-0 flex-1 w-full" />,
 };
 
-export default function JSPage() {
+function JSPageContent() {
   const searchParams = useSearchParams();
   const [script, setScriptSrc] = useState(defaultScript);
 
@@ -217,5 +217,13 @@ export default function JSPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function JSPage() {
+  return (
+    <Suspense fallback={null}>
+      <JSPageContent />
+    </Suspense>
   );
 }
