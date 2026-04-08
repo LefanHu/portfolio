@@ -5,9 +5,12 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   AcademicCapIcon,
   Bars3Icon,
+  BeakerIcon,
   BellIcon,
+  CommandLineIcon,
   HeartIcon,
   RocketLaunchIcon,
+  SparklesIcon,
   TvIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -60,30 +63,29 @@ const nav = [
       },
     ],
   },
-  // {
-  //   title: "Fun Stuff",
-  //   entries: [
-  //     {
-  //       name: "Algorithm Gallery",
-  //       description: "some description",
-  //       href: "/algo",
-  //       icon: PuzzlePieceIcon,
-  //     },
-  //     {
-  //       name: "JS Canvas",
-  //       description:
-  //         "A collection of weird and playful experiments with JS canvas",
-  //       href: "/js",
-  //       icon: LightBulbIcon,
-  //     },
-  //     {
-  //       name: "CSS",
-  //       description: "A collection of react components that I've written",
-  //       href: "/in-complete",
-  //       icon: WindowIcon,
-  //     },
-  //   ],
-  // },
+  {
+    title: "Experiments",
+    entries: [
+      {
+        name: "JS Canvas",
+        description: "A small playground for canvas-based visual experiments",
+        href: "/js",
+        icon: BeakerIcon,
+      },
+      {
+        name: "Bouncing Balls",
+        description: "Particle motion and collision play on the canvas",
+        href: "/js?script=balls.js",
+        icon: SparklesIcon,
+      },
+      {
+        name: "Hue Effect",
+        description: "A color-shifting canvas experiment with animated tones",
+        href: "/js?script=hue_effect.js",
+        icon: CommandLineIcon,
+      },
+    ],
+  },
 ];
 
 function classNames(...classes: (string | undefined)[]): string {

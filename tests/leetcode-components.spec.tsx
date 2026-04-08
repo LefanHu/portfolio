@@ -10,6 +10,12 @@ vi.mock("react-activity-calendar", () => ({
   ActivityCalendar: (props: unknown) => activityCalendarMock(props),
 }));
 
+class MockIntersectionObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
 const profilePayload = {
   data: {
     matchedUser: {
@@ -58,6 +64,10 @@ const profilePayload = {
 };
 
 describe("leetcode UI regressions", () => {
+  beforeEach(() => {
+    vi.stubGlobal("IntersectionObserver", MockIntersectionObserver);
+  });
+
   afterEach(() => {
     vi.unstubAllGlobals();
     activityCalendarMock.mockClear();
@@ -88,6 +98,36 @@ describe("leetcode UI regressions", () => {
     expect(screen.getByText(/fundamental skills/i)).toBeInTheDocument();
     expect(screen.getByText(/array/i)).toBeInTheDocument();
     expect(screen.queryByText("Bad Submission")).not.toBeInTheDocument();
+  });
+
+  it("shows an unavailable state when the API payload is missing matchedUser", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          data: {
+            recentSubmissionList: [],
+          },
+        }),
+      })
+    );
+
+    render(
+      <MantineProvider>
+        <LeetcodeStats />
+      </MantineProvider>
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/\(Unavailable!\) Leetcode Statistics/i)
+      ).toBeInTheDocument()
+    );
+
+    expect(
+      screen.getByText(/Submission calendar is unavailable right now./i)
+    ).toBeInTheDocument();
   });
 
   it("maps submission counts into integer activity levels", () => {
