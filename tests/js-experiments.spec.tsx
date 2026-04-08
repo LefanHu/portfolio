@@ -3,6 +3,21 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import JSCanvas from "@/components/jsCanvas";
 import JSPage from "@/app/(portfolio)/js/page";
 
+const allScripts = [
+  "balls.js",
+  "hue_effect.js",
+  "starfield_warp.js",
+  "matrix_rain.js",
+  "orbit_trails.js",
+  "lava_lamp.js",
+  "sunset_waves.js",
+  "plasma_field.js",
+  "fireflies.js",
+  "kaleidoscope_lines.js",
+  "tunnel_rings.js",
+  "equalizer_bars.js",
+];
+
 const searchParamsState = {
   script: null as string | null,
 };
@@ -32,18 +47,33 @@ describe("js experiments", () => {
   });
 
   it("uses the query string script when loading the JS experiments page", () => {
-    searchParamsState.script = "hue_effect.js";
+    searchParamsState.script = "starfield_warp.js";
 
     render(<JSPage />);
 
     expect(screen.getByText("Running")).toBeInTheDocument();
     expect(
-      screen.getByText("hue_effect.js", { selector: "span" })
+      screen.getByText("starfield_warp.js", { selector: "span" })
     ).toBeInTheDocument();
 
     const frame = screen.getByTitle(/js canvas experiment/i);
-    expect(frame.getAttribute("srcdoc")).toContain('/scripts/hue_effect.js');
+    expect(frame.getAttribute("srcdoc")).toContain('/scripts/starfield_warp.js');
   });
+
+  it.each(allScripts)(
+    "loads %s from the query string into the iframe runner",
+    (scriptName) => {
+      searchParamsState.script = scriptName;
+
+      render(<JSPage />);
+
+      const frame = screen.getByTitle(/js canvas experiment/i);
+      expect(frame.getAttribute("srcdoc")).toContain(`/scripts/${scriptName}`);
+      expect(
+        screen.getByText(scriptName, { selector: "span" })
+      ).toBeInTheDocument();
+    }
+  );
 
   it("switches experiments when clicking a different script", () => {
     render(<JSPage />);
@@ -59,6 +89,18 @@ describe("js experiments", () => {
       expect(frame.getAttribute("srcdoc")).toContain('/scripts/hue_effect.js');
       expect(
         screen.getByText("hue_effect.js", { selector: "span" })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("renders every registered experiment in the sidebar", () => {
+    render(<JSPage />);
+
+    allScripts.forEach((scriptName) => {
+      expect(
+        screen.getByRole("button", {
+          name: new RegExp(scriptName.replace(".", "\\."), "i"),
+        })
       ).toBeInTheDocument();
     });
   });

@@ -25,6 +25,66 @@ const jsList: AdListEntry[] = [
     file: "hue_effect.js",
     icon: WindowIcon,
   },
+  {
+    title: "starfield_warp.js",
+    description: "A hyperspace starfield that rushes toward the viewer.",
+    file: "starfield_warp.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "matrix_rain.js",
+    description: "Digital rain with glowing characters drifting down the screen.",
+    file: "matrix_rain.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "orbit_trails.js",
+    description: "Satellites orbit a center point and leave vivid motion trails.",
+    file: "orbit_trails.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "lava_lamp.js",
+    description: "Soft neon blobs pulse and drift like a retro lava lamp.",
+    file: "lava_lamp.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "sunset_waves.js",
+    description: "Layered sine waves shimmer beneath a warm sunset gradient.",
+    file: "sunset_waves.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "plasma_field.js",
+    description: "A shimmering plasma texture that ripples through warm neon hues.",
+    file: "plasma_field.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "fireflies.js",
+    description: "Dozens of glowing fireflies drift and pulse in the dark.",
+    file: "fireflies.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "kaleidoscope_lines.js",
+    description: "Mirrored linework spins into a live kaleidoscope pattern.",
+    file: "kaleidoscope_lines.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "tunnel_rings.js",
+    description: "Concentric rings surge forward like a luminous tunnel.",
+    file: "tunnel_rings.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "equalizer_bars.js",
+    description: "Fake audio bars bounce with a glossy synthwave backdrop.",
+    file: "equalizer_bars.js",
+    icon: WindowIcon,
+  },
 ];
 
 const defaultScript = jsList[0].file;

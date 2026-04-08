@@ -24,4 +24,21 @@ describe("navbar regressions", () => {
       screen.getByRole("link", { name: /alternate portfolio/i })
     ).toHaveAttribute("href", "/projects/threejs");
   });
+
+  it("keeps the experiments flyout focused on the top-level JS canvas page", () => {
+    render(<Navbar />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Experiments" }));
+
+    expect(screen.getByRole("link", { name: /js canvas/i })).toHaveAttribute(
+      "href",
+      "/js"
+    );
+    expect(
+      screen.queryByRole("link", { name: /bouncing balls/i })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /hue effect/i })
+    ).not.toBeInTheDocument();
+  });
 });
