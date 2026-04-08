@@ -4,6 +4,12 @@ node_modules
 .turbo
 .git
 .gitignore
+.codex
+.env*
+coverage
+tests
+vitest.config.mts
+tsconfig.tsbuildinfo
 *.md
 dist
 docker-compose.yml
