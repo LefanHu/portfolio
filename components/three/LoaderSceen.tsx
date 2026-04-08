@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useProgress } from "@react-three/drei";
 
 export function LoaderScreen() {
   const { active, progress } = useProgress();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (progress === 100) {
-      setIsLoading(false);
-    }
-  }, [progress]);
+  const isLoading = active || progress < 100;
 
   return (
     <div

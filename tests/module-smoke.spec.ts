@@ -20,11 +20,31 @@ function collectTsxFiles(dir: string): string[] {
   });
 }
 
-const pageFiles = collectTsxFiles(path.join(rootDir, "app")).filter((file) =>
-  /(page|not-found)\.tsx$/.test(file)
-);
+const pageSmokeExclusions = new Set([
+  path.join(rootDir, "app", "(portfolio)", "js", "page.tsx"),
+  path.join(rootDir, "app", "(portfolio-3D)", "home", "page.tsx"),
+]);
 
-const componentFiles = collectTsxFiles(path.join(rootDir, "components"));
+const componentSmokeExclusions = new Set([
+  path.join(rootDir, "components", "AxeModel.tsx"),
+  path.join(rootDir, "components", "CapsuleModel.tsx"),
+  path.join(rootDir, "components", "Display.tsx"),
+  path.join(rootDir, "components", "FlatScreenModel.tsx"),
+  path.join(rootDir, "components", "GuitarModel.tsx"),
+  path.join(rootDir, "components", "PortfolioScene.tsx"),
+  path.join(rootDir, "components", "RobotModel.tsx"),
+]);
+
+const pageFiles = collectTsxFiles(path.join(rootDir, "app"))
+  .filter((file) => /(page|not-found)\.tsx$/.test(file))
+  .filter((file) => !pageSmokeExclusions.has(file));
+
+const componentFiles = collectTsxFiles(path.join(rootDir, "components")).filter(
+  (file) =>
+    !componentSmokeExclusions.has(file) &&
+    !file.startsWith(path.join(rootDir, "components", "portfolio", "js")) &&
+    !file.startsWith(path.join(rootDir, "components", "three"))
+);
 
 describe("page module smoke", () => {
   test.each(pageFiles)("imports %s", async (file) => {

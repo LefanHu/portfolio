@@ -1,16 +1,15 @@
 import React from "react";
 import Image from "next/image";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 
 export default function NextUICard() {
   return (
-    <Card className="py-4 bg-gray-400 rounded-md">
-      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+    <div className="rounded-md bg-gray-400 py-4 shadow-sm">
+      <div className="flex flex-col items-start px-4 pb-0 pt-2">
         <p className="text-tiny uppercase font-bold">Daily Mix</p>
         <small className="text-default-500">12 Tracks</small>
         <h4 className="font-bold text-large">Frontend Radio</h4>
-      </CardHeader>
-      <CardBody className="overflow-visible py-2">
+      </div>
+      <div className="overflow-visible py-2">
         <Image
           alt="Card background"
           className="object-cover rounded-xl"
@@ -18,7 +17,7 @@ export default function NextUICard() {
           width={270}
           height={200}
         />
-      </CardBody>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -1,5 +1,4 @@
 import React from "react";
-import { Card, CardBody } from "@nextui-org/card";
 
 interface BasicNextUICardProps {
   text: string;
@@ -8,10 +7,10 @@ interface BasicNextUICardProps {
 
 export default function BasicUICard(props: BasicNextUICardProps) {
   return (
-    <Card className={props.className}>
-      <CardBody>
+    <div className={`rounded-xl border border-white/10 bg-white/95 shadow-sm ${props.className ?? ""}`}>
+      <div className="px-4 py-3">
         <p>{props.text}</p>
-      </CardBody>
-    </Card>
+      </div>
+    </div>
   );
 }

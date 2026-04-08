@@ -7,15 +7,19 @@ let cachedProfile:
     }
   | undefined;
 
+function jsonResponse(payload: string, cacheStatus: "HIT" | "MISS" | "STALE") {
+  return new Response(payload, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "X-Cache": cacheStatus,
+    },
+  });
+}
+
 export async function GET(req: Request) {
   if (cachedProfile && cachedProfile.expiresAt > Date.now()) {
-    return new Response(cachedProfile.payload, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "X-Cache": "HIT",
-      },
-    });
+    return jsonResponse(cachedProfile.payload, "HIT");
   }
 
   try {
@@ -98,6 +102,10 @@ export async function GET(req: Request) {
         }
       }`;
 
+    if (!process.env.LEETCODE_USERNAME) {
+      throw new Error("LEETCODE_USERNAME is not configured");
+    }
+
     const content = await fetch(endpoint, {
       method: "POST",
       cache: "no-store",
@@ -114,33 +122,41 @@ export async function GET(req: Request) {
       }),
     });
 
-    const payload = JSON.stringify(await content.json());
+    if (!content.ok) {
+      throw new Error(`leetcode upstream returned ${content.status}`);
+    }
+
+    const parsed = (await content.json()) as {
+      data?: unknown;
+      errors?: unknown;
+    };
+
+    if (!parsed.data || parsed.errors) {
+      throw new Error("leetcode response was missing data");
+    }
+
+    const payload = JSON.stringify(parsed);
 
     cachedProfile = {
       expiresAt: Date.now() + CACHE_TTL_MS,
       payload,
     };
 
-    return new Response(payload, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "X-Cache": "MISS",
-      },
-    });
-  } catch (error) {
+    return jsonResponse(payload, "MISS");
+  } catch {
     if (cachedProfile) {
-      return new Response(cachedProfile.payload, {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "X-Cache": "STALE",
-        },
-      });
+      return jsonResponse(cachedProfile.payload, "STALE");
     }
 
-    return new Response(`something went wrong ${error}`, {
-      status: 400,
-    });
+    return Response.json(
+      {
+        error: "LeetCode profile is currently unavailable.",
+      },
+      {
+        status: 503,
+      }
+    );
+  } finally {
+    void req;
   }
 }

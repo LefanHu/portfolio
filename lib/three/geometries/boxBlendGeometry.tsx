@@ -55,7 +55,7 @@ export function BoxBlendGeometry({
     if (!geometry.current) return;
     geometry.current.translate(0, 0, -depth / 2);
     geometry.current.computeVertexNormals();
-  }, [shape]);
+  }, [depth, shape]);
 
   return <extrudeGeometry ref={geometry} args={[shape, config]} />;
 }

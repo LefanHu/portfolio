@@ -14,34 +14,49 @@ const geometries = [
   { geometry: new THREE.BoxGeometry(2.5, 2.5, 2.5) },
 ];
 
+function createSeededRandom(seed: number) {
+  let state = seed;
+
+  return () => {
+    state = (state * 1664525 + 1013904223) % 4294967296;
+    return state / 4294967296;
+  };
+}
+
+function randomInRange(random: () => number, min: number, max: number) {
+  return min + random() * (max - min);
+}
+
 export function Geometries(props: Omit<JSX.IntrinsicElements["group"], "ref">) {
   const n = 20;
-  const randProps = useMemo(
-    () =>
-      Array.from({ length: n }, () => geometries[Math.floor(Math.random() * geometries.length)]),
-    []
-  );
+  const instances = useMemo(() => {
+    const random = createSeededRandom(42);
 
-  const getRandomPastelColor = () => {
-    const r = Math.floor(Math.random() * 127 + 127);
-    const g = Math.floor(Math.random() * 127 + 127);
-    const b = Math.floor(Math.random() * 127 + 127);
-    return `rgb(${r}, ${g}, ${b})`;
-  };
+    return Array.from({ length: n }, (_, index) => ({
+      key: `${index}-${Math.floor(random() * geometries.length)}`,
+      geometry: geometries[Math.floor(random() * geometries.length)].geometry,
+      scale: randomInRange(random, 0.25, 0.5),
+      position: [
+        randomInRange(random, -26, 26),
+        randomInRange(random, 0, 6),
+        randomInRange(random, -16, -8),
+      ] as [number, number, number],
+      color: `rgb(${Math.floor(randomInRange(random, 127, 254))}, ${Math.floor(
+        randomInRange(random, 127, 254)
+      )}, ${Math.floor(randomInRange(random, 127, 254))})`,
+    }));
+  }, []);
 
-  return randProps.map((prop) => {
+  return instances.map((instance) => {
     return (
-      <Float {...props} key={prop.geometry.id}>
+      <Float {...props} key={instance.key}>
         <mesh
-          scale={THREE.MathUtils.randFloat(0.25, 0.5)}
-          position={[
-            THREE.MathUtils.randFloat(-26, 26),
-            THREE.MathUtils.randFloat(0, 6),
-            THREE.MathUtils.randFloat(-16, -8),
-          ]}
-          geometry={prop.geometry}
-          material={new THREE.MeshStandardMaterial({color: getRandomPastelColor()})}
-        />
+          scale={instance.scale}
+          position={instance.position}
+          geometry={instance.geometry}
+        >
+          <meshStandardMaterial color={instance.color} />
+        </mesh>
       </Float>
     );
   });

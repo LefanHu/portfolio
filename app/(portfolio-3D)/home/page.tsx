@@ -11,14 +11,13 @@ import {
   Preload,
 } from "@react-three/drei";
 
-import { Suspense, use, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { PortfolioScene } from "@/components/PortfolioScene";
 
 import { useActiveViewStore, useCameraStore } from "@/lib/store";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { setViewPosition } from "@/lib/threeSceneViewHelpers";
 import { LoaderScreen } from "@/components/three/LoaderSceen";
-import { BoxBlend } from "@/lib/three/shapes/boxBlend";
 
 function Camera() {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -27,26 +26,24 @@ function Camera() {
 
   // stop camera motion while not focused
   useEffect(() => {
-    window.addEventListener("blur", () => {
+    function handleBlur() {
       setIsFocused(false);
-    });
+    }
 
-    window.addEventListener("focus", () => {
+    function handleFocus() {
       setIsFocused(true);
-    });
+    }
+
+    window.addEventListener("blur", handleBlur);
+    window.addEventListener("focus", handleFocus);
 
     return () => {
-      window.removeEventListener("blur", () => {
-        setIsFocused(false);
-      });
-
-      window.removeEventListener("focus", () => {
-        setIsFocused(true);
-      });
+      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener("focus", handleFocus);
     };
   }, []);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     const camera = cameraRef.current;
     if (!camera || !isFocused) return;
 
@@ -62,7 +59,7 @@ function Camera() {
       .normalize();
 
     // calculate target quat
-    var qt = new THREE.Quaternion().setFromUnitVectors(
+    const qt = new THREE.Quaternion().setFromUnitVectors(
       new THREE.Vector3(0, 0, -1),
       direction
     );

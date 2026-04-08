@@ -21,8 +21,7 @@ The app uses the Next.js App Router with route groups to separate different site
 - **Project detail pages** (e.g., media stack, drone, Three.js work, stable diffusion)
 - **Interactive visuals** using React Three Fiber / Drei and custom components
 - **LeetCode stats API integration** via GraphQL
-- **Image generation/gallery workflow** backed by MongoDB + S3 presigned uploads
-- **Protected experimental routes** using NextAuth credential auth
+- **S3 bucket listing endpoint** for lightweight asset inspection
 
 ## Tech stack
 
@@ -30,7 +29,6 @@ The app uses the Next.js App Router with route groups to separate different site
 - **Language:** TypeScript + React 19
 - **Styling/UI:** Tailwind CSS, Mantine, NextUI, Framer Motion
 - **3D/Graphics:** Three.js, @react-three/fiber, @react-three/drei
-- **Data/Auth:** MongoDB (Mongoose), NextAuth
 - **Cloud:** AWS S3 (presigned uploads)
 
 ## Project structure
@@ -39,12 +37,11 @@ The app uses the Next.js App Router with route groups to separate different site
 app/
   (portfolio)/         Main portfolio pages
   (portfolio-3D)/      3D-focused pages
-  (meilin)/silly-goose Experimental/fun pages
   api/                 Backend route handlers
 components/            Reusable UI and 3D components
 lib/                   Shared utilities and Three.js helpers
-models/                Mongoose models
-  public/                Static assets (images, models)
+models/                Local model/component definitions
+public/                Static assets (images, models)
 ```
 
 ## Getting started
@@ -60,14 +57,6 @@ pnpm install
 Create a `.env.local` in the project root and set the values you need.
 
 ```bash
-# MongoDB
-MONGODB_URI=
-
-# Auth
-NEXTAUTH_SECRET=
-SILLY_GOOSE_USER=
-SILLY_GOOSE_PASSWORD=
-
 # LeetCode integration
 LEETCODE_USERNAME=
 
@@ -95,7 +84,7 @@ Open [http://localhost:3000](http://localhost:3000).
 - `pnpm dev` — start development server
 - `pnpm build` — create production build
 - `pnpm start` — run production server
-- `pnpm lint` — run Next.js linting
+- `pnpm lint` — run ESLint
 - `pnpm test` — run Vitest smoke tests
 
 ## Testing
@@ -114,10 +103,7 @@ pnpm test
 ## API routes (high level)
 
 - `GET /api/leetcode/profile` — fetches LeetCode profile + activity data
-- `GET /api/ts-images` / `POST /api/ts-images` — image metadata CRUD endpoints
-- `POST /api/ts-images/upload` — generates S3 presigned upload payload
 - `GET /api/s3/buckets/[bucket]/files` — lists bucket objects
-- `GET|POST /api/auth/[...nextauth]` — auth handler
 
 ## Deployment
 

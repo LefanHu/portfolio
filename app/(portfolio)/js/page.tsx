@@ -8,7 +8,7 @@ import ParticleWave3D from "@/components/portfolio/js/ParticleWave3D";
 import VoxelFunctionField3D from "@/components/portfolio/js/VoxelFunctionField3D";
 import { WindowIcon } from "@heroicons/react/24/outline";
 import { useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useMemo, useState } from "react";
 
 interface AdListEntry {
   title: string;
@@ -147,19 +147,23 @@ const threeExperimentRenderers: Record<string, React.ReactNode> = {
 
 function JSPageContent() {
   const searchParams = useSearchParams();
-  const [script, setScriptSrc] = useState(defaultScript);
+  const [selectedScript, setSelectedScript] = useState<string | null>(null);
 
-  useEffect(() => {
+  const script = useMemo(() => {
+    if (selectedScript) {
+      return selectedScript;
+    }
+
     const requestedScript = searchParams.get("script");
     const isKnownScript = jsList.some((entry) => entry.file === requestedScript);
 
-    setScriptSrc(isKnownScript && requestedScript ? requestedScript : defaultScript);
-  }, [searchParams]);
+    return isKnownScript && requestedScript ? requestedScript : defaultScript;
+  }, [searchParams, selectedScript]);
 
   function changeScript(file: string) {
     return () => {
-      setScriptSrc(file);
-    }
+      setSelectedScript(file);
+    };
   }
 
   const activeScript = jsList.find((entry) => entry.file === script) ?? jsList[0];

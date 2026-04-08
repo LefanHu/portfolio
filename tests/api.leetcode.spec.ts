@@ -59,4 +59,26 @@ describe("leetcode profile route", () => {
     expect(stale.headers.get("X-Cache")).toBe("STALE");
     await expect(stale.json()).resolves.toEqual({ data: { ok: "fresh" } });
   });
+
+  it("returns a 503 error when upstream fails before cache is populated", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ errors: [{ message: "bad upstream" }] }), {
+          status: 502,
+          headers: { "Content-Type": "application/json" },
+        })
+      )
+    );
+    process.env.LEETCODE_USERNAME = "leaf";
+
+    const { GET } = await import("@/app/api/leetcode/profile/route");
+
+    const response = await GET(new Request("http://localhost/api/leetcode/profile"));
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({
+      error: "LeetCode profile is currently unavailable.",
+    });
+  });
 });

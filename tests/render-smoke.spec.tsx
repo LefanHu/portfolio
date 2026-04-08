@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import RootLayout from "@/app/layout";
 import ContactForm from "@/components/ContactForm";
 import Navbar from "@/components/Navbar";
@@ -7,13 +8,14 @@ import NotFoundPage from "@/app/(portfolio)/not-found";
 
 describe("render smoke", () => {
   it("renders the root layout wrapper", () => {
-    render(
+    const markup = renderToStaticMarkup(
       <RootLayout>
         <div>content</div>
       </RootLayout>
     );
 
-    expect(screen.getByText("content")).toBeInTheDocument();
+    expect(markup).toContain("content");
+    expect(markup).toContain("font-sans");
   });
 
   it("renders the navbar", () => {
