@@ -85,6 +85,12 @@ const jsList: AdListEntry[] = [
     file: "equalizer_bars.js",
     icon: WindowIcon,
   },
+  {
+    title: "sort_visualizer.js",
+    description: "Animated sorting bars race through classic algorithms.",
+    file: "sort_visualizer.js",
+    icon: WindowIcon,
+  },
 ];
 
 const defaultScript = jsList[0].file;

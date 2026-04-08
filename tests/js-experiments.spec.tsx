@@ -16,6 +16,7 @@ const allScripts = [
   "kaleidoscope_lines.js",
   "tunnel_rings.js",
   "equalizer_bars.js",
+  "sort_visualizer.js",
 ];
 
 const searchParamsState = {
