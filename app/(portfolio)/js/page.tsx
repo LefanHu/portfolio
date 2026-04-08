@@ -1,6 +1,11 @@
 "use client";
 
 import JSCanvas from "@/components/jsCanvas";
+import CrystalLattice3D from "@/components/portfolio/js/CrystalLattice3D";
+import NeonTunnel3D from "@/components/portfolio/js/NeonTunnel3D";
+import OrbitalNodes3D from "@/components/portfolio/js/OrbitalNodes3D";
+import ParticleWave3D from "@/components/portfolio/js/ParticleWave3D";
+import VoxelFunctionField3D from "@/components/portfolio/js/VoxelFunctionField3D";
 import { WindowIcon } from "@heroicons/react/24/outline";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -91,9 +96,54 @@ const jsList: AdListEntry[] = [
     file: "sort_visualizer.js",
     icon: WindowIcon,
   },
+  {
+    title: "voxel_function_field.js",
+    description: "A rotating voxel gyroid, sampled from a famous implicit 3D surface.",
+    file: "voxel_function_field.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "neon_tunnel_3d.js",
+    description: "A glowing tunnel of rings rushing through a dark void.",
+    file: "neon_tunnel_3d.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "particle_wave_3d.js",
+    description: "A responsive wave surface made from hundreds of floating particles.",
+    file: "particle_wave_3d.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "orbital_nodes_3d.js",
+    description: "Colorful nodes orbit a bright core in layered trajectories.",
+    file: "orbital_nodes_3d.js",
+    icon: WindowIcon,
+  },
+  {
+    title: "crystal_lattice_3d.js",
+    description: "A pulsing lattice of crystalline forms in a volumetric grid.",
+    file: "crystal_lattice_3d.js",
+    icon: WindowIcon,
+  },
 ];
 
 const defaultScript = jsList[0].file;
+const threeExperimentScripts = new Set([
+  "voxel_function_field.js",
+  "neon_tunnel_3d.js",
+  "particle_wave_3d.js",
+  "orbital_nodes_3d.js",
+  "crystal_lattice_3d.js",
+]);
+
+const threeExperimentRenderers: Record<string, React.ReactNode> = {
+  "voxel_function_field.js": <VoxelFunctionField3D className="min-h-0 flex-1 w-full" />,
+  "neon_tunnel_3d.js": <NeonTunnel3D className="min-h-0 flex-1 w-full" />,
+  "particle_wave_3d.js": <ParticleWave3D className="min-h-0 flex-1 w-full" />,
+  "orbital_nodes_3d.js": <OrbitalNodes3D className="min-h-0 flex-1 w-full" />,
+  "crystal_lattice_3d.js": <CrystalLattice3D className="min-h-0 flex-1 w-full" />,
+};
 
 export default function JSPage() {
   const searchParams = useSearchParams();
@@ -113,13 +163,14 @@ export default function JSPage() {
   }
 
   const activeScript = jsList.find((entry) => entry.file === script) ?? jsList[0];
+  const usesThreeRenderer = threeExperimentScripts.has(script);
 
   return (
-    <div className="p-8 grid grid-cols-4 bg-black flex-grow box-border max-h-full">
-      <div className="col-span-1 h-full box-border">
+    <div className="grid h-[calc(100vh-4rem)] grid-cols-4 gap-0 bg-black p-8 box-border">
+      <div className="col-span-1 h-full min-h-0 box-border">
         {/* <AdList className="flex-grow-1" entries={jsList} title="JS Experiments" /> */}
         <div className="flex h-full w-full flex-col items-center justify-center gap-y-2">
-          <div className="w-full h-full rounded-xl border border-gray-200 bg-white py-4 px-2">
+          <div className="h-full w-full overflow-y-auto rounded-xl border border-gray-200 bg-white py-4 px-2">
             <div className="flex items-center justify-between px-2 text-base font-medium text-gray-700">
               <div>JS Experiments</div>
             </div>
@@ -155,11 +206,15 @@ export default function JSPage() {
           </div>
         </div>
       </div>
-      <div className="ml-8 col-span-3 rounded-xl border-white border-2 border-dashed box-border overflow-clip">
+      <div className="col-span-3 ml-8 flex min-h-0 flex-col overflow-hidden rounded-xl border-2 border-dashed border-white box-border">
         <div className="border-b border-white/15 bg-white/5 px-4 py-3 text-sm text-gray-300">
           Running <span className="font-semibold text-white">{activeScript.title}</span>
         </div>
-        <JSCanvas className="h-full w-full" scriptSrc={`/scripts/${script}`} />
+        {usesThreeRenderer ? (
+          threeExperimentRenderers[script]
+        ) : (
+          <JSCanvas className="min-h-0 flex-1 w-full" scriptSrc={`/scripts/${script}`} />
+        )}
       </div>
     </div>
   );

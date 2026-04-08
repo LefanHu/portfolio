@@ -128,6 +128,14 @@ describe("leetcode UI regressions", () => {
     expect(
       screen.getByText(/Submission calendar is unavailable right now./i)
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Skill breakdown is unavailable right now./i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Recent accepted submissions are unavailable right now./i)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/fundamental skills/i)).not.toBeInTheDocument();
+    expect(activityCalendarMock).not.toHaveBeenCalled();
   });
 
   it("maps submission counts into integer activity levels", () => {

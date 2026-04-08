@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import JSCanvas from "@/components/jsCanvas";
 import JSPage from "@/app/(portfolio)/js/page";
 
@@ -17,7 +17,20 @@ const allScripts = [
   "tunnel_rings.js",
   "equalizer_bars.js",
   "sort_visualizer.js",
+  "voxel_function_field.js",
+  "neon_tunnel_3d.js",
+  "particle_wave_3d.js",
+  "orbital_nodes_3d.js",
+  "crystal_lattice_3d.js",
 ];
+
+const threeScripts = new Set([
+  "voxel_function_field.js",
+  "neon_tunnel_3d.js",
+  "particle_wave_3d.js",
+  "orbital_nodes_3d.js",
+  "crystal_lattice_3d.js",
+]);
 
 const searchParamsState = {
   script: null as string | null,
@@ -26,6 +39,39 @@ const searchParamsState = {
 const mockSearchParams = {
   get: (key: string) => (key === "script" ? searchParamsState.script : null),
 };
+
+vi.mock("@/components/portfolio/js/VoxelFunctionField3D", () => ({
+  default: (props: { className?: string }) => (
+    <div
+      className={props.className}
+      data-testid="voxel-function-field-3d"
+    />
+  ),
+}));
+
+vi.mock("@/components/portfolio/js/NeonTunnel3D", () => ({
+  default: (props: { className?: string }) => (
+    <div className={props.className} data-testid="neon-tunnel-3d" />
+  ),
+}));
+
+vi.mock("@/components/portfolio/js/ParticleWave3D", () => ({
+  default: (props: { className?: string }) => (
+    <div className={props.className} data-testid="particle-wave-3d" />
+  ),
+}));
+
+vi.mock("@/components/portfolio/js/OrbitalNodes3D", () => ({
+  default: (props: { className?: string }) => (
+    <div className={props.className} data-testid="orbital-nodes-3d" />
+  ),
+}));
+
+vi.mock("@/components/portfolio/js/CrystalLattice3D", () => ({
+  default: (props: { className?: string }) => (
+    <div className={props.className} data-testid="crystal-lattice-3d" />
+  ),
+}));
 
 vi.mock("next/navigation", () => ({
   useSearchParams: () => mockSearchParams,
@@ -68,11 +114,31 @@ describe("js experiments", () => {
 
       render(<JSPage />);
 
-      const frame = screen.getByTitle(/js canvas experiment/i);
-      expect(frame.getAttribute("srcdoc")).toContain(`/scripts/${scriptName}`);
       expect(
         screen.getByText(scriptName, { selector: "span" })
       ).toBeInTheDocument();
+
+      if (threeScripts.has(scriptName)) {
+        const expectedTestId =
+          scriptName === "voxel_function_field.js"
+            ? "voxel-function-field-3d"
+            : scriptName === "neon_tunnel_3d.js"
+              ? "neon-tunnel-3d"
+              : scriptName === "particle_wave_3d.js"
+                ? "particle-wave-3d"
+                : scriptName === "orbital_nodes_3d.js"
+                  ? "orbital-nodes-3d"
+                  : "crystal-lattice-3d";
+
+        expect(screen.getByTestId(expectedTestId)).toBeInTheDocument();
+        expect(
+          screen.queryByTitle(/js canvas experiment/i)
+        ).not.toBeInTheDocument();
+        return;
+      }
+
+      const frame = screen.getByTitle(/js canvas experiment/i);
+      expect(frame.getAttribute("srcdoc")).toContain(`/scripts/${scriptName}`);
     }
   );
 
@@ -92,6 +158,38 @@ describe("js experiments", () => {
         screen.getByText("hue_effect.js", { selector: "span" })
       ).toBeInTheDocument();
     });
+  });
+
+  it("renders the voxel experiment through the three renderer path", () => {
+    searchParamsState.script = "voxel_function_field.js";
+
+    render(<JSPage />);
+
+    expect(screen.getByTestId("voxel-function-field-3d")).toBeInTheDocument();
+    expect(screen.queryByTitle(/js canvas experiment/i)).not.toBeInTheDocument();
+  });
+
+  it("renders the new three experiments through dedicated renderer components", () => {
+    searchParamsState.script = "neon_tunnel_3d.js";
+    render(<JSPage />);
+
+    expect(screen.getByTestId("neon-tunnel-3d")).toBeInTheDocument();
+    expect(screen.queryByTitle(/js canvas experiment/i)).not.toBeInTheDocument();
+
+    cleanup();
+    searchParamsState.script = "particle_wave_3d.js";
+    render(<JSPage />);
+    expect(screen.getByTestId("particle-wave-3d")).toBeInTheDocument();
+
+    cleanup();
+    searchParamsState.script = "orbital_nodes_3d.js";
+    render(<JSPage />);
+    expect(screen.getByTestId("orbital-nodes-3d")).toBeInTheDocument();
+
+    cleanup();
+    searchParamsState.script = "crystal_lattice_3d.js";
+    render(<JSPage />);
+    expect(screen.getByTestId("crystal-lattice-3d")).toBeInTheDocument();
   });
 
   it("renders every registered experiment in the sidebar", () => {

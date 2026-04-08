@@ -104,7 +104,7 @@ export default function LeetcodeStats() {
               </ul>
             </div>
             <div className="col-span-1 md:col-span-2 p-4 bg-gray-600/45 rounded-2xl row-auto">
-              {hasProfile ? (
+              {matchedUser ? (
                 skillCategories.map((skillCategory, skillIndx) => (
                   <div key={skillIndx}>
                     <dt className="inline-block text-2xl font-bold Skills">
@@ -139,7 +139,7 @@ export default function LeetcodeStats() {
                 Submission Calendar
               </h3>
             </div>
-            {hasProfile ? (
+            {matchedUser ? (
               <LTActivityCalendar
                 calendarstring={matchedUser.submissionCalendar}
                 className="flex w-full justify-center"
