@@ -28,10 +28,10 @@ export default function ContactForm() {
                 </div>
                 <a
                   className="text-[#007bff] text-sm ml-4"
-                  href="mailto:lefanhu1@gmail.com"
+                  href="mailto:l2hu@uwaterloo.ca"
                 >
                   <small className="block text-white">Mail</small>
-                  <strong>lefanhu1@gmail.com</strong>
+                  <strong>l2hu@uwaterloo.ca</strong>
                 </a>
               </li>
             </ul>
@@ -39,8 +39,11 @@ export default function ContactForm() {
           <div>
             <h2 className="text-white text-base font-bold">Socials</h2>
             <ul className="flex mt-4 space-x-4">
+              <li className="flex items-center">
+                <a className="text-sky-300 underline" href="https://github.com/LefanHu">GitHub</a>
+              </li>
               <li className="bg-[#e6e6e6cf] h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-                <a href="https://www.linkedin.com/in/lefan-hu-579591204/">
+                <a href="https://www.linkedin.com/in/lefan-hu-579591204/" aria-label="LinkedIn">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20px"
@@ -56,7 +59,7 @@ export default function ContactForm() {
                 </a>
               </li>
               <li className="bg-[#e6e6e6cf] h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-                <a href="https://www.instagram.com/leaf_me_alone2/">
+                <a href="https://www.instagram.com/leaf_me_alone2/" aria-label="Instagram">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20px"

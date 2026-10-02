@@ -1,7 +1,7 @@
 import ContactForm from "@/components/ContactForm";
 import Experiences from "@/components/portfolio/PortfolioExperiences";
 import HomeDeferredSections from "@/components/portfolio/HomeDeferredSections";
-import Interests from "@/components/portfolio/PortfolioInterests";
+import About from "@/components/portfolio/PortfolioAbout";
 import FavProjects from "@/components/portfolio/PortfolioProjects";
 
 export default function Home() {
@@ -13,10 +13,10 @@ export default function Home() {
             Lefan&apos;s Portfolio
           </h1>
         </div>
+        {/* <About /> */}
         <FavProjects />
         <Experiences />
         <HomeDeferredSections />
-        {/* <Interests /> */}
         <ContactForm />
       </div>
     </div>

@@ -29,7 +29,7 @@ describe("render smoke", () => {
     render(<ContactForm />);
 
     expect(screen.getByText("Contact Me")).toBeInTheDocument();
-    expect(screen.getByText("lefanhu1@gmail.com")).toBeInTheDocument();
+    expect(screen.getByText("l2hu@uwaterloo.ca")).toBeInTheDocument();
   });
 
   it("renders the not-found page", () => {

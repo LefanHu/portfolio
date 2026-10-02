@@ -19,12 +19,12 @@ type ExperienceBranch = {
   roles: ExperienceRole[];
 };
 
-export const mockExperienceBranches: ExperienceBranch[] = [
+export const experienceBranches: ExperienceBranch[] = [
   {
     id: "robotics-and-automation",
     title: "Robotics and Automation",
     subtitle: "Applied ML, deployment, and cross-team enablement for physical systems",
-    period: "2025",
+    period: "2025 - 2026",
     tags: ["Robotics", "ML", "AWS"],
     roles: [
       {
@@ -32,11 +32,11 @@ export const mockExperienceBranches: ExperienceBranch[] = [
         title: "Amazon Robotics",
         subtitle: "Software Developer, AR Human Workcell Interface Team",
         location: "Toronto, ON",
-        period: "Sept. 2025 - Dec. 2025",
+        period: "Sept. 2025 - Apr. 2026",
         tags: ["Planning Pipelines", "CDK", "Workcells"],
         highlights: [
-          "Designed, developed, and deployed ML planning pipelines for robotic movement drive units across fulfillment centers worldwide.",
-          "Led a cross-team effort for work-cell station setup in Toronto, creating a path for teams to test workflows locally instead of relying only on Boston.",
+          "Designed, developed, and deployed ML planning pipelines for robotic movement drive units across 1,200+ fulfillment centers worldwide.",
+          "Led a cross-team effort to establish a robotics lab in Toronto, using a custom VPN routed through corporate infrastructure and robotic drive simulation clusters to enable capabilities previously exclusive to Amazon Robotics HQ, saving approximately $1 million in deployment costs.",
           "Deployed a custom CDK-managed application for robotic station software to connect to AWS from the Unfabric office network.",
         ],
       },
@@ -82,9 +82,21 @@ export const mockExperienceBranches: ExperienceBranch[] = [
     id: "developer-productivity",
     title: "Developer Productivity",
     subtitle: "Internal tooling, diagnostics, and faster workflows for engineering teams",
-    period: "2024",
-    tags: ["Internal Tools", "Splunk", "Automation"],
+    period: "2024 - 2026",
+    tags: ["Internal Tools", "AI", "Automation"],
     roles: [
+      {
+        id: "capital-one",
+        title: "Capital One",
+        subtitle: "Software Developer, The 6ix Team",
+        location: "Toronto, ON",
+        period: "May 2026 - Aug. 2026",
+        tags: ["AI Automation", "Figma MCP", "Astro"],
+        highlights: [
+          "Developed an AI-automated Figma-to-Astro framework for product pages, reducing implementation time from two weeks to one day.",
+          "Integrated Figma MCP to extract layout, spacing, and design-token context for production workflows, minimizing manual intervention.",
+        ],
+      },
       {
         id: "ciena",
         title: "CIENA Corporation",
@@ -93,7 +105,7 @@ export const mockExperienceBranches: ExperienceBranch[] = [
         period: "Jan. 2024 - Apr. 2024",
         tags: ["JupyterLab", "Splunk", "Diagnostics"],
         highlights: [
-          "Developed major releases of a data aggregator tool used by hundreds of engineers within CIENA.",
+          "Developed major releases of a data aggregator tool used by hundreds of engineers within CIENA, saving hundreds of engineering hours.",
           "Built Splunk search queries that identified common hardware device errors 80% faster.",
           "Used JupyterLab to automate complex log archive workflows, increasing efficiency by 30%.",
         ],
@@ -184,7 +196,7 @@ function BranchCard({ branch }: { branch: ExperienceBranch }) {
 }
 
 export default function Experiences() {
-  const totalRoles = mockExperienceBranches.reduce(
+  const totalRoles = experienceBranches.reduce(
     (count, branch) => count + branch.roles.length,
     0
   );
@@ -202,7 +214,7 @@ export default function Experiences() {
           Work experience grouped by the kinds of systems I like building.
         </h2>
         <p className="max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-          Robotics, platform engineering, reliability, and internal tooling work
+          AI automation, robotics, platform engineering, and internal tooling work
           across internships where I shipped production systems and made complex
           workflows faster for other teams.
         </p>
@@ -220,8 +232,8 @@ export default function Experiences() {
               robotics, platform reliability, and developer productivity.
             </p>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
-              <Tag tag="2023 - 2025" tone="amber" />
-              <Tag tag={`${mockExperienceBranches.length} branches`} tone="sky" />
+              <Tag tag="2023 - 2026" tone="amber" />
+              <Tag tag={`${experienceBranches.length} branches`} tone="sky" />
               <Tag tag={`${totalRoles} experiences`} tone="emerald" />
             </div>
           </div>
@@ -230,7 +242,7 @@ export default function Experiences() {
 
         <div className="relative flex flex-wrap justify-center gap-6 xl:flex-nowrap">
           <div className="pointer-events-none absolute left-[8%] right-[8%] top-0 hidden h-px bg-gradient-to-r from-transparent via-cyan-200/45 to-transparent xl:block" />
-          {mockExperienceBranches.map((branch) => (
+          {experienceBranches.map((branch) => (
             <BranchCard key={branch.id} branch={branch} />
           ))}
         </div>

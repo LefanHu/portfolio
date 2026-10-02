@@ -9,7 +9,7 @@ config.autoAddCss = false;
 export const metadata: Metadata = {
   title: "Lefan's Website",
   description:
-    "Portfolio website showcasing various projects, experiences, and interests.",
+    "Lefan Hu, University of Waterloo Computer Engineering student. Explore projects and experience in AI, robotics, cloud infrastructure, and FPGA acceleration.",
 };
 
 const theme = createTheme({});

@@ -20,7 +20,7 @@ export default function Highlights() {
       <div className="container mx-auto px-6 text-center md:px-12">
         <div className="mb-16">
           <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 dark:text-white md:text-4xl">
-            2-nd Year Computer Engineer @ University of Waterloo
+            Computer Engineering @ University of Waterloo · Class of 2028
           </h2>
           <p className="text-gray-600 dark:text-gray-300 lg:mx-auto lg:w-8/12">
             Please explore some of my previous projects and experiences on this website, below are a few projects I&apos;ve worked on (not limited to):

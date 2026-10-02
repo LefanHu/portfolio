@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import Experiences, {
-  mockExperienceBranches,
+  experienceBranches,
 } from "@/components/portfolio/PortfolioExperiences";
 
 describe("portfolio experiences", () => {
@@ -16,15 +16,15 @@ describe("portfolio experiences", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Career Journey")).toBeInTheDocument();
 
-    for (const branch of mockExperienceBranches) {
+    for (const branch of experienceBranches) {
       expect(screen.getAllByText(branch.title).length).toBeGreaterThan(0);
     }
   });
 
-  it("renders all mock roles", () => {
+  it("renders all resume roles", () => {
     render(<Experiences />);
 
-    const roleTitles = mockExperienceBranches.flatMap((branch) =>
+    const roleTitles = experienceBranches.flatMap((branch) =>
       branch.roles.map((role) => role.title)
     );
 
@@ -36,13 +36,13 @@ describe("portfolio experiences", () => {
   it("shows the branch and experience counts in the overview", () => {
     render(<Experiences />);
 
-    const totalRoles = mockExperienceBranches.reduce(
+    const totalRoles = experienceBranches.reduce(
       (count, branch) => count + branch.roles.length,
       0
     );
 
     expect(
-      screen.getByText(`${mockExperienceBranches.length} branches`)
+      screen.getByText(`${experienceBranches.length} branches`)
     ).toBeInTheDocument();
     expect(screen.getByText(`${totalRoles} experiences`)).toBeInTheDocument();
   });

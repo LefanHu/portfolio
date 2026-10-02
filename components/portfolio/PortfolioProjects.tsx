@@ -3,53 +3,8 @@
 import SlidingCards from "../SlidingCards";
 import Carousel from "../Carousel";
 
-const projects = [
-  {
-    name: "Stable Diffusion",
-    imgSrc: "/images/swift-beach.jpg",
-    description:
-      "Taylor swift image generator. Trained LORA adapter for stablediffusion-XL using AWS GPU instance",
-    href: "/projects/stable-diffusion",
-  },
-  {
-    name: "HIVE-HQ",
-    imgSrc: "/images/hivehq.png",
-    description: "2022 HTN submission. AI powered Covid safety planner",
-    href: "https://devpost.com/software/hive-hq",
-  },
-  {
-    name: "Drone",
-    imgSrc: "/images/drone.jpg",
-    description:
-      "Custom FPV drone with, GPS, Compass... custom firmware in progress!",
-    href: "/projects/drone",
-  },
-  {
-    name: "Plex, Sonarr, Jackett - Stack",
-    imgSrc: "/images/plex.png",
-    description:
-      "Home media server stack built using docker, authelia, nginx proxy",
-    href: "/projects/media-stack",
-  },
-  {
-    name: "Auto Trader - Arbitrage",
-    imgSrc: "/images/stonks.jpg",
-    description: "Arbitration bot for the Oanda API",
-    href: "https://github.com/LefanHu/OARB",
-  },
-  // {
-  //   name: "Drawbot",
-  //   imgSrc: "/images/drawbot-logo.png",
-  //   description: "2023 HTN submission. AI powered drawing robot",
-  //   href: "/projects/stable-diffusion",
-  // },
-  {
-    name: "Interqu",
-    imgSrc: "/images/interqu.svg",
-    description: "AI interview platform built using AWS SAM",
-    href: "https://github.com/Interqu/interqu-sam",
-  },
-];
+import { projects, acceleratorProject } from "@/lib/portfolioProjects";
+import Link from "next/link";
 
 export default function FavProjects() {
   return (
@@ -59,12 +14,19 @@ export default function FavProjects() {
           Favorite Projects
         </h2>
         <p className="mt-4 text-gray-300 mb-5">
-          Below are some of my personal interests that I enjoy doing in my free
-          time. Although not everything is listed here, but it does highlight
-          some of my personal favorites.
+          Selected work in FPGA acceleration, generative AI, and systems engineering,
+          alongside some of my favorite personal projects.
         </p>
         <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
       </div>
+      <Link href={acceleratorProject.href} className="rounded-2xl border border-cyan-300/25 bg-slate-900 p-6 text-slate-200 hover:border-cyan-300/60">
+        <p className="text-sm text-cyan-200">Jan. 2025 - Apr. 2025 · Waterloo, ON</p>
+        <h3 className="mt-2 text-2xl font-bold text-white">{acceleratorProject.name}</h3>
+        <p className="mt-3 leading-7">{acceleratorProject.description}</p>
+        <p className="mt-3 text-sm text-cyan-200">SystemVerilog · FPGA · Vivado · RTL Design</p>
+        <span className="mt-4 inline-block font-semibold">View project →</span>
+      </Link>
+      <Link href="/project-gallery" className="text-sky-300 underline">View all projects</Link>
       <div className="min-[1100px]:hidden">
         <Carousel
           imageList={projects.map((project) => ({

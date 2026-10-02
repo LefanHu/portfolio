@@ -6,6 +6,9 @@ import Image from "next/image";
 
 export default function TaylorGeneratorProjectPage() {
   const technologies = [
+    "Stable Diffusion XL",
+    "LoRA",
+    "Hugging Face Accelerate",
     "React",
     "NextJS",
     "TailwindCSS",
@@ -19,8 +22,8 @@ export default function TaylorGeneratorProjectPage() {
 
   const overviewPoints = [
     "Generates a photo of Taylor Swift based on the prompt entered to the application",
-    "Prompt is passed to Hugging Face serverless inference for image generation.",
-    "Custom tuned LORA adapter trained on AWS GPU instance and using Huggingface",
+    "Deployed through Hugging Face Serverless Inference to optimize cost and eliminate idle resource usage.",
+    "Fine-tuned a custom LoRA adapter for SDXL on an AWS G4DN GPU instance using Hugging Face Accelerate.",
     "S3 bucket for hosting images",
     "Scrapy for obtaining dataset of Taylor Swift images",
     "NextJS frontend for user interaction",
@@ -82,16 +85,20 @@ export default function TaylorGeneratorProjectPage() {
       <div className="mx-auto grid max-w-4xl grid-cols-1 items-center py-12 gap-y-8 sm:py-16 lg:max-w-7xl px-4 sm:px-6 lg:px-8">
         <div>
           <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-6xl">
-            Stable Diffusion Project
+            SDXL LoRA Adapter
           </h2>
           <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
           {/* technologies */}
-          <div className="flex flex-row gap-2 pt-2">
+          <div className="flex flex-row flex-wrap gap-2 pt-2">
             {technologies.map((tech) => TechnologyBadge(tech))}
           </div>
           <p className="mt-4 text-gray-300 mb-5">
-            Stable diffusion image generator. Originally inspired by someone who
-            loves all things Taylor Swift.
+            A React web app for generating high-quality celebrity images from text
+            prompts, powered by a custom SDXL LoRA adapter. Originally inspired by
+            someone who loves all things Taylor Swift.
+          </p>
+          <p className="mb-5 text-sm text-gray-400">
+            Jan. 2024 - Apr. 2024 · Ottawa, ON
           </p>
 
           <div className="grid grid-cols-1 gap-4 p-4 bg-gray-800/90 rounded-2xl">
