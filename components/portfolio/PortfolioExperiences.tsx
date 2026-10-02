@@ -131,35 +131,36 @@ function Tag({ tag, tone }: { tag: string; tone: "sky" | "amber" | "emerald" }) 
 
 function BranchCard({ branch }: { branch: ExperienceBranch }) {
   return (
-    <article className="relative flex min-w-[280px] max-w-[360px] flex-1 flex-col rounded-[30px] border border-white/10 bg-slate-950/70 p-5 shadow-[0_25px_80px_rgba(2,6,23,0.45)] backdrop-blur">
-      <div className="absolute left-1/2 top-0 h-10 w-px -translate-y-10 bg-gradient-to-b from-cyan-300/80 to-white/0" />
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <p className="bg-gradient-to-r from-cyan-200 via-sky-100 to-indigo-200 bg-clip-text text-xs font-bold uppercase tracking-[0.28em] text-transparent">
-            Branch
-          </p>
-          <h3 className="mt-2 text-2xl font-black text-white">{branch.title}</h3>
+    <article className="relative grid w-full min-w-0 gap-6 rounded-[30px] border border-white/10 bg-slate-950/70 p-4 shadow-[0_25px_80px_rgba(2,6,23,0.45)] backdrop-blur sm:p-6 xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-8">
+      <div className="min-w-0">
+        <div className="mb-4 flex flex-wrap items-start gap-3">
+          <div>
+            <p className="bg-gradient-to-r from-cyan-200 via-sky-100 to-indigo-200 bg-clip-text text-xs font-bold uppercase tracking-[0.28em] text-transparent">
+              Branch
+            </p>
+            <h3 className="mt-2 text-2xl font-black text-white">{branch.title}</h3>
+          </div>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-200">
+            {branch.period}
+          </span>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-200">
-          {branch.period}
-        </span>
+
+        <p className="text-sm leading-6 text-slate-300">{branch.subtitle}</p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {branch.tags.map((tag) => (
+            <Tag key={tag} tag={tag} tone="sky" />
+          ))}
+        </div>
       </div>
 
-      <p className="text-sm leading-6 text-slate-300">{branch.subtitle}</p>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {branch.tags.map((tag) => (
-          <Tag key={tag} tag={tag} tone="sky" />
-        ))}
-      </div>
-
-      <div className="relative mt-8 flex flex-col gap-4 border-l border-white/10 pl-5">
-        {branch.roles.map((role, index) => (
+      <div className="relative flex min-w-0 flex-col gap-4 border-l border-white/10 pl-5">
+        {branch.roles.map((role) => (
           <div key={role.id} className="relative">
             <div className="absolute -left-[21px] top-6 h-px w-4 bg-white/20" />
             <div className="absolute -left-[27px] top-[21px] h-3 w-3 rounded-full border border-slate-950 bg-emerald-300 shadow-[0_0_20px_rgba(52,211,153,0.75)]" />
             <div className="rounded-2xl border border-emerald-300/15 bg-emerald-300/8 p-4">
-              <div className="mb-2 flex items-start justify-between gap-3">
+              <div className="mb-3 flex flex-col items-start gap-3 lg:flex-row lg:justify-between">
                 <div>
                   <h4 className="text-lg font-bold text-white">{role.title}</h4>
                   <p className="text-sm text-emerald-100/90">{role.subtitle}</p>
@@ -167,7 +168,7 @@ function BranchCard({ branch }: { branch: ExperienceBranch }) {
                     {role.location}
                   </p>
                 </div>
-                <span className="rounded-full border border-white/10 bg-slate-900/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-200">
+                <span className="shrink-0 rounded-full border border-white/10 bg-slate-900/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-200">
                   {role.period}
                 </span>
               </div>
@@ -179,15 +180,12 @@ function BranchCard({ branch }: { branch: ExperienceBranch }) {
               <ul className="mt-4 space-y-2 text-sm leading-6 text-slate-200">
                 {role.highlights.map((highlight) => (
                   <li key={highlight} className="flex gap-2">
-                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" />
                     <span>{highlight}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            {index < branch.roles.length - 1 ? (
-              <div className="absolute -left-[21px] top-9 h-[calc(100%+0.75rem)] w-px bg-white/10" />
-            ) : null}
           </div>
         ))}
       </div>
@@ -240,8 +238,7 @@ export default function Experiences() {
           <div className="h-10 w-px bg-gradient-to-b from-cyan-300/80 to-white/0" />
         </div>
 
-        <div className="relative flex flex-wrap justify-center gap-6 xl:flex-nowrap">
-          <div className="pointer-events-none absolute left-[8%] right-[8%] top-0 hidden h-px bg-gradient-to-r from-transparent via-cyan-200/45 to-transparent xl:block" />
+        <div className="relative flex flex-col gap-6">
           {experienceBranches.map((branch) => (
             <BranchCard key={branch.id} branch={branch} />
           ))}

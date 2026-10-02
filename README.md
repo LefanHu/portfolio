@@ -48,6 +48,9 @@ public/                Static assets (images, models)
 
 ### 1) Install dependencies
 
+Use Node.js 24 LTS. The project pins pnpm in `package.json`; enable Corepack
+with `corepack enable` before installing dependencies.
+
 ```bash
 pnpm install
 ```

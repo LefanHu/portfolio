@@ -4,7 +4,9 @@ import { MantineProvider } from "@mantine/core";
 import LeetcodeStats from "@/components/portfolio/LeetcodeStats";
 import LTActivityCalendar from "@/components/LTActivityCalendar";
 
-const activityCalendarMock = vi.fn(() => <div data-testid="activity-calendar" />);
+const activityCalendarMock = vi.fn<(props: unknown) => React.JSX.Element>(
+  () => <div data-testid="activity-calendar" />
+);
 
 vi.mock("react-activity-calendar", () => ({
   ActivityCalendar: (props: unknown) => activityCalendarMock(props),
