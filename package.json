@@ -72,5 +72,6 @@
     "fs": false,
     "os": false,
     "path": false
-  }
+  },
+  "packageManager": "pnpm@10.34.2"
 }
