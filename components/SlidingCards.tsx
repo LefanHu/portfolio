@@ -19,6 +19,16 @@ export default function SlidingCards(props: { cards: CardData[] }) {
     setCheckedIndex(index);
   };
 
+  const cardImage = (card: CardData) => (
+    <Image
+      src={card.imgSrc}
+      alt={card.name}
+      width={900}
+      height={600}
+      className="h-full w-full object-cover"
+    />
+  );
+
   return (
     <div className="flex flex-row justify-center items-center">
       <div className="h-[400px] flex flex-nowrap">
@@ -44,18 +54,18 @@ export default function SlidingCards(props: { cards: CardData[] }) {
                   <p>{card.description}</p>
                 </div>
               </div>
-              <Link
-                href={card.href ? card.href : ""}
-                className="absolute object-cover h-full w-full"
-              >
-                <Image
-                  src={card.imgSrc}
-                  alt={card.name}
-                  width={900}
-                  height={600}
-                  className="h-full w-full object-cover"
-                />
-              </Link>
+              {card.href ? (
+                <Link
+                  href={card.href}
+                  className="absolute object-cover h-full w-full"
+                >
+                  {cardImage(card)}
+                </Link>
+              ) : (
+                <div className="absolute object-cover h-full w-full">
+                  {cardImage(card)}
+                </div>
+              )}
             </label>
           </div>
         ))}

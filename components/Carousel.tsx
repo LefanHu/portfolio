@@ -52,6 +52,16 @@ export default function Carousel({
     autoplay: true,
     autoplaySpeed: 3000,
   };
+  const image = (entry: ImageData) => (
+    <Image
+      className="rounded-lg aspect-square"
+      src={entry.src}
+      alt={entry.alt}
+      width={entry.width}
+      height={entry.height}
+    />
+  );
+
   return (
     <div className={className}>
       <Slider {...settings}>
@@ -67,15 +77,11 @@ export default function Carousel({
                 {entry.description}{" "}
               </p>
             )}
-            <Link href={entry.href ? entry.href : ""}>
-              <Image
-                className="rounded-lg aspect-square"
-                src={entry.src}
-                alt={entry.alt}
-                width={entry.height}
-                height={entry.width}
-              />
-            </Link>
+            {entry.href ? (
+              <Link href={entry.href}>{image(entry)}</Link>
+            ) : (
+              image(entry)
+            )}
           </div>
         ))}
       </Slider>
