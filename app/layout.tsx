@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import "./globals.css";
