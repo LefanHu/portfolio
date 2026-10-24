@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MantineProvider } from "@mantine/core";
 import LeetcodeStats from "@/components/portfolio/LeetcodeStats";
 import LTActivityCalendar from "@/components/LTActivityCalendar";
+import ProgressCircles from "@/components/portfolio/lt/ProgressCircles";
 
 const activityCalendarMock = vi.fn<(props: unknown) => React.JSX.Element>(
   () => <div data-testid="activity-calendar" />
@@ -161,5 +162,65 @@ describe("leetcode UI regressions", () => {
       { count: 1, date: "2025-03-29", level: 1 },
       { count: 16, date: "2025-03-30", level: 4 },
     ]);
+  });
+
+  it("shows the empty state when no recent submission is accepted", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          data: {
+            ...profilePayload.data,
+            recentSubmissionList: [profilePayload.data.recentSubmissionList[1]],
+          },
+        }),
+      })
+    );
+
+    render(
+      <MantineProvider>
+        <LeetcodeStats />
+      </MantineProvider>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByText(/\(Live\!\) Leetcode Statistics/i)).toBeInTheDocument()
+    );
+
+    expect(
+      screen.getByText(/Recent accepted submissions are unavailable right now./i)
+    ).toBeInTheDocument();
+  });
+
+  it("does not leak calendarstring onto the DOM", () => {
+    const { container } = render(
+      <LTActivityCalendar calendarstring="{}" className="calendar" />
+    );
+
+    const wrapper = container.querySelector(".calendar");
+    expect(wrapper).not.toBeNull();
+    expect(wrapper).not.toHaveAttribute("calendarstring");
+  });
+
+  it("renders an empty calendar for malformed calendar JSON", () => {
+    render(<LTActivityCalendar calendarstring="not json" />);
+
+    const props = activityCalendarMock.mock.calls[0][0] as { data: unknown[] };
+    expect(props.data).toEqual([]);
+  });
+
+  it("tolerates missing beats stats", () => {
+    render(
+      <MantineProvider>
+        <ProgressCircles
+          progress={profilePayload.data.matchedUser.submitStatsGlobal.acSubmissionNum}
+          beats={null}
+        />
+      </MantineProvider>
+    );
+
+    expect(screen.getByText("Easy - beats 0%")).toBeInTheDocument();
+    expect(screen.getByText("Hard - beats 0%")).toBeInTheDocument();
   });
 });

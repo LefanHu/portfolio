@@ -3,9 +3,18 @@ import { ActivityCalendar } from "react-activity-calendar";
 import "react-activity-calendar/tooltips.css";
 import type { ComponentPropsWithoutRef } from "react";
 
-export default function LTActivityCalendar(
-  props: ComponentPropsWithoutRef<"div"> & { calendarstring: string }
-) {
+function parseCalendar(calendarstring: string): { [key: string]: number } {
+  try {
+    return JSON.parse(calendarstring);
+  } catch {
+    return {};
+  }
+}
+
+export default function LTActivityCalendar({
+  calendarstring,
+  ...divProps
+}: ComponentPropsWithoutRef<"div"> & { calendarstring: string }) {
   const leetcodeCalendarTheme = [
     "#2b2b2b",
     "#314d38",
@@ -15,10 +24,7 @@ export default function LTActivityCalendar(
   ];
 
   // convert calendarString to list
-  const calendarData: { [key: string]: number } = JSON.parse(
-    props.calendarstring
-  );
-  const data = Object.entries(calendarData).map(([timestamp, count]) => {
+  const data = Object.entries(parseCalendar(calendarstring)).map(([timestamp, count]) => {
     const level = Math.max(0, Math.min(4, Math.ceil(count / 4)));
     const date = new Date(parseInt(timestamp, 10) * 1000)
       .toISOString()
@@ -27,7 +33,7 @@ export default function LTActivityCalendar(
   });
 
   return (
-    <div {...props}>
+    <div {...divProps}>
       <ActivityCalendar
         blockRadius={3}
         colorScheme="dark"

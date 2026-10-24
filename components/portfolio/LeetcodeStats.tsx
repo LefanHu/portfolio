@@ -54,7 +54,9 @@ export default function LeetcodeStats() {
     "advanced",
   ];
   const matchedUser = profileStats?.data?.matchedUser;
-  const recentSubmissionList = profileStats?.data?.recentSubmissionList ?? [];
+  const recentAC = (profileStats?.data?.recentSubmissionList ?? [])
+    .filter((sub) => sub.statusDisplay === "Accepted")
+    .slice(0, 6);
   const isLoading = fetchState === "loading";
   const hasProfile = Boolean(matchedUser);
 
@@ -89,13 +91,13 @@ export default function LeetcodeStats() {
               <ul className="w-full flex flex-col gap-2">
                 {isLoading
                   ? range(6).map((indx) => <RecentAC key={indx} />)
-                  : recentSubmissionList.length > 0
-                    ? recentSubmissionList
-                        .filter((sub) => sub.statusDisplay === "Accepted")
-                        .slice(0, 6)
-                        .map((submission, indx) => (
-                          <RecentAC sub={submission} key={indx} />
-                        ))
+                  : recentAC.length > 0
+                    ? recentAC.map((submission) => (
+                        <RecentAC
+                          sub={submission}
+                          key={`${submission.titleSlug}-${submission.timestamp}`}
+                        />
+                      ))
                     : (
                       <li className="w-full rounded-lg border border-white/10 bg-gray-700/40 p-4 text-sm text-gray-300">
                         Recent accepted submissions are unavailable right now.

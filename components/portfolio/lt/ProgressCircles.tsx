@@ -26,10 +26,11 @@ const defaultBeats: Beats[] = [
 ];
 
 export default function LTProgress(props: {
-  progress?: ACSubmissionNum[];
-  beats?: Beats[];
+  progress?: ACSubmissionNum[] | null;
+  beats?: Beats[] | null;
 }) {
-  const { progress = defaultProgress, beats = defaultBeats } = props;
+  const progress = props.progress ?? defaultProgress;
+  const beats = props.beats ?? defaultBeats;
   const problemColors = [
     "text-white",
     "text-green-500",
@@ -49,7 +50,7 @@ export default function LTProgress(props: {
               filledSegmentColor={progressCircleColors[index]}
               size={200}
               thickness={12}
-              value={beats[index - 1].percentage}
+              value={beats[index - 1]?.percentage ?? 0}
               label={
                 <span className="text-5xl font-extrabold leading-tight text-center text-gray-200">
                   {<AnimatedCounter from={0} to={questionType.count} />}
@@ -65,7 +66,7 @@ export default function LTProgress(props: {
             className={`text-base font-medium leading-7 text-center ${problemColors[index]}`}
           >
             {questionType.difficulty}
-            {index !== 0 ? ` - beats ${beats[index - 1].percentage}%` : ""}
+            {index !== 0 ? ` - beats ${beats[index - 1]?.percentage ?? 0}%` : ""}
           </p>
         </div>
       ))}
