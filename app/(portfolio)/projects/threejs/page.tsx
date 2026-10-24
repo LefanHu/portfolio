@@ -23,7 +23,7 @@ export default function ThreeJSProjectPage() {
           <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
           {/* technologies */}
           <div className="flex flex-row flex-wrap gap-2 pt-2">
-            {technologies.map((tech) => TechnologyBadge(tech))}
+            {technologies.map((tech) => <TechnologyBadge key={tech} tech={tech} />)}
           </div>
           <p className="mt-4 text-gray-300 mb-5">
             An experimentation with Three.js in order to create a portfolio

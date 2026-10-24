@@ -1,5 +1,3 @@
-"use client";
-
 type ExperienceRole = {
   id: string;
   title: string;

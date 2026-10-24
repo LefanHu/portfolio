@@ -1,7 +1,7 @@
 "use client";
 import { Badge } from "@mantine/core";
 
-export default function TechnologyBadge(tech: string) {
+export default function TechnologyBadge({ tech }: { tech: string }) {
   return (
     <Badge
       size="md"
@@ -11,7 +11,6 @@ export default function TechnologyBadge(tech: string) {
         to: "rgba(145, 145, 145, 1)",
         deg: 123,
       }}
-      key={tech}
     >
       {tech}
     </Badge>
