@@ -28,6 +28,13 @@ const nextConfig = {
   images: {
     remotePatterns,
   },
+  // iOS and Safari probe these legacy paths regardless of the <link> tags.
+  async rewrites() {
+    return [
+      { source: "/apple-touch-icon.png", destination: "/apple-icon.png" },
+      { source: "/apple-touch-icon-precomposed.png", destination: "/apple-icon.png" },
+    ];
+  },
 };
 
 module.exports = nextConfig;
