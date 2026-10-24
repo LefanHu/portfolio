@@ -109,7 +109,7 @@ describe("js experiments", () => {
 
   it.each(allScripts)(
     "loads %s from the query string into the iframe runner",
-    (scriptName) => {
+    async (scriptName) => {
       searchParamsState.script = scriptName;
 
       render(<JSPage />);
@@ -130,7 +130,7 @@ describe("js experiments", () => {
                   ? "orbital-nodes-3d"
                   : "crystal-lattice-3d";
 
-        expect(screen.getByTestId(expectedTestId)).toBeInTheDocument();
+        expect(await screen.findByTestId(expectedTestId)).toBeInTheDocument();
         expect(
           screen.queryByTitle(/js canvas experiment/i)
         ).not.toBeInTheDocument();

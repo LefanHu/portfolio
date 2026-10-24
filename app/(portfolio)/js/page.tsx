@@ -1,12 +1,8 @@
 "use client";
 
 import JSCanvas from "@/components/jsCanvas";
-import CrystalLattice3D from "@/components/portfolio/js/CrystalLattice3D";
-import NeonTunnel3D from "@/components/portfolio/js/NeonTunnel3D";
-import OrbitalNodes3D from "@/components/portfolio/js/OrbitalNodes3D";
-import ParticleWave3D from "@/components/portfolio/js/ParticleWave3D";
-import VoxelFunctionField3D from "@/components/portfolio/js/VoxelFunctionField3D";
 import { WindowIcon } from "@heroicons/react/24/outline";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import React, { Suspense, useMemo, useState } from "react";
 
@@ -129,13 +125,13 @@ const jsList: AdListEntry[] = [
 ];
 
 const defaultScript = jsList[0].file;
-const threeExperimentScripts = new Set([
-  "voxel_function_field.js",
-  "neon_tunnel_3d.js",
-  "particle_wave_3d.js",
-  "orbital_nodes_3d.js",
-  "crystal_lattice_3d.js",
-]);
+
+// Three.js experiments load on demand so the default 2D canvas doesn't ship three.
+const VoxelFunctionField3D = dynamic(() => import("@/components/portfolio/js/VoxelFunctionField3D"), { ssr: false });
+const NeonTunnel3D = dynamic(() => import("@/components/portfolio/js/NeonTunnel3D"), { ssr: false });
+const ParticleWave3D = dynamic(() => import("@/components/portfolio/js/ParticleWave3D"), { ssr: false });
+const OrbitalNodes3D = dynamic(() => import("@/components/portfolio/js/OrbitalNodes3D"), { ssr: false });
+const CrystalLattice3D = dynamic(() => import("@/components/portfolio/js/CrystalLattice3D"), { ssr: false });
 
 const threeExperimentRenderers: Record<string, React.ReactNode> = {
   "voxel_function_field.js": <VoxelFunctionField3D className="min-h-0 flex-1 w-full" />,
@@ -167,7 +163,7 @@ function JSPageContent() {
   }
 
   const activeScript = jsList.find((entry) => entry.file === script) ?? jsList[0];
-  const usesThreeRenderer = threeExperimentScripts.has(script);
+  const usesThreeRenderer = script in threeExperimentRenderers;
 
   return (
     <div className="grid h-[calc(100vh-4rem)] grid-cols-4 gap-0 bg-black p-8 box-border">
