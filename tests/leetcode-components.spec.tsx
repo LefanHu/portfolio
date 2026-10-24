@@ -210,6 +210,13 @@ describe("leetcode UI regressions", () => {
     expect(props.data).toEqual([]);
   });
 
+  it("renders an empty calendar when the calendar JSON is null", () => {
+    render(<LTActivityCalendar calendarstring="null" />);
+
+    const props = activityCalendarMock.mock.calls[0][0] as { data: unknown[] };
+    expect(props.data).toEqual([]);
+  });
+
   it("tolerates missing beats stats", () => {
     render(
       <MantineProvider>

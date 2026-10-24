@@ -5,7 +5,8 @@ import type { ComponentPropsWithoutRef } from "react";
 
 function parseCalendar(calendarstring: string): { [key: string]: number } {
   try {
-    return JSON.parse(calendarstring);
+    const parsed = JSON.parse(calendarstring);
+    return parsed && typeof parsed === "object" ? parsed : {};
   } catch {
     return {};
   }
