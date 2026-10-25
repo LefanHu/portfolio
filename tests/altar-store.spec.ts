@@ -18,6 +18,25 @@ describe("altar store", () => {
     expect(st.unlocked).toContain("experience");
   });
 
+  it("opens a relic's project when a relic sits alone in the cauldron", () => {
+    const s = createAltarStore();
+    s.getState().itemEntered("hiveHq");
+    s.getState().evaluate();
+    const st = s.getState();
+    expect(st.phase).toBe("revealing");
+    expect(st.activeSection).toBe("hive-hq");
+    expect(st.unlocked).toContain("hive-hq");
+  });
+
+  it("ejects a relic mixed with an ingredient", () => {
+    const s = createAltarStore();
+    s.getState().itemEntered("hiveHq");
+    s.getState().itemEntered("keyboard");
+    s.getState().evaluate();
+    expect(s.getState().phase).toBe("idle");
+    expect(s.getState().contents).toEqual([]);
+  });
+
   it("ejects on an invalid combination", () => {
     const s = createAltarStore();
     s.getState().itemEntered("keyboard");
@@ -31,7 +50,7 @@ describe("altar store", () => {
 
   it("ejects three items together", () => {
     const s = createAltarStore();
-    s.getState().itemEntered("tool");
+    s.getState().itemEntered("fpgaChip");
     s.getState().itemEntered("notebook");
     s.getState().itemEntered("keyboard");
     s.getState().evaluate();
@@ -43,17 +62,17 @@ describe("altar store", () => {
 
   it("leaves state unchanged for a single item", () => {
     const s = createAltarStore();
-    s.getState().itemEntered("tool");
+    s.getState().itemEntered("fpgaChip");
     s.getState().evaluate();
     expect(s.getState().phase).toBe("idle");
-    expect(s.getState().contents).toEqual(["tool"]);
+    expect(s.getState().contents).toEqual(["fpgaChip"]);
     expect(s.getState().ejectNonce).toBe(0);
   });
 
   it("entering then leaving leaves nothing to eject", () => {
     const s = createAltarStore();
-    s.getState().itemEntered("tool");
-    s.getState().itemLeft("tool");
+    s.getState().itemEntered("fpgaChip");
+    s.getState().itemLeft("fpgaChip");
     s.getState().evaluate();
     expect(s.getState().contents).toEqual([]);
     expect(s.getState().ejectNonce).toBe(0);
@@ -61,17 +80,17 @@ describe("altar store", () => {
 
   it("ignores itemEntered while viewing and clearAltar while revealing", () => {
     const s = createAltarStore();
-    s.getState().openSection("about");
+    s.getState().openSection("contact");
     s.getState().clearAltar();
     expect(s.getState().ejectNonce).toBe(0);
     s.getState().revealDone();
-    s.getState().itemEntered("tool");
+    s.getState().itemEntered("fpgaChip");
     expect(s.getState().contents).toEqual([]);
   });
 
   it("clearAltar in idle empties contents and bumps ejectNonce", () => {
     const s = createAltarStore();
-    s.getState().itemEntered("tool");
+    s.getState().itemEntered("fpgaChip");
     s.getState().clearAltar();
     expect(s.getState().contents).toEqual([]);
     expect(s.getState().ejectNonce).toBe(1);
@@ -79,9 +98,9 @@ describe("altar store", () => {
 
   it("walks the reveal/view/return cycle", () => {
     const s = createAltarStore();
-    s.getState().openSection("skills");
+    s.getState().openSection("coding");
     expect(s.getState().phase).toBe("revealing");
-    expect(s.getState().activeSection).toBe("skills");
+    expect(s.getState().activeSection).toBe("coding");
     s.getState().revealDone();
     expect(s.getState().phase).toBe("viewing");
     s.getState().closeSection();
@@ -95,17 +114,17 @@ describe("altar store", () => {
 
   it("ignores openSection unless idle", () => {
     const s = createAltarStore();
-    s.getState().openSection("skills");
+    s.getState().openSection("coding");
     s.getState().revealDone();
-    s.getState().openSection("about");
-    expect(s.getState().activeSection).toBe("skills");
+    s.getState().openSection("contact");
+    expect(s.getState().activeSection).toBe("coding");
     expect(s.getState().phase).toBe("viewing");
   });
 
   it("does not duplicate entered items", () => {
     const s = createAltarStore();
-    s.getState().itemEntered("tool");
-    s.getState().itemEntered("tool");
+    s.getState().itemEntered("fpgaChip");
+    s.getState().itemEntered("fpgaChip");
     expect(s.getState().contents).toHaveLength(1);
   });
 
@@ -126,7 +145,7 @@ describe("altar store", () => {
 describe("altar store summon and highlight", () => {
   it("summonRecipe starts a summon from idle", () => {
     const s = createAltarStore();
-    s.getState().setHighlight("skills");
+    s.getState().setHighlight("coding");
     s.getState().summonRecipe("projects");
     const st = s.getState();
     expect(st.summoning).toBe(true);
@@ -138,14 +157,14 @@ describe("altar store summon and highlight", () => {
   it("ignores summonRecipe while already summoning", () => {
     const s = createAltarStore();
     s.getState().summonRecipe("projects");
-    s.getState().summonRecipe("skills");
+    s.getState().summonRecipe("coding");
     expect(s.getState().summonSection).toBe("projects");
     expect(s.getState().summonNonce).toBe(1);
   });
 
   it("ignores summonRecipe outside idle", () => {
     const s = createAltarStore();
-    s.getState().openSection("about");
+    s.getState().openSection("contact");
     s.getState().revealDone();
     expect(s.getState().phase).toBe("viewing");
     s.getState().summonRecipe("projects");
@@ -175,7 +194,7 @@ describe("altar store summon and highlight", () => {
   it("openSection clears summon and highlight", () => {
     const s = createAltarStore();
     s.getState().summonRecipe("projects");
-    s.getState().openSection("about");
+    s.getState().openSection("contact");
     const st = s.getState();
     expect(st.summoning).toBe(false);
     expect(st.summonSection).toBeNull();
@@ -202,12 +221,12 @@ describe("altar store summon and highlight", () => {
 
   it("setHighlight only applies while idle", () => {
     const s = createAltarStore();
-    s.getState().setHighlight("skills");
-    expect(s.getState().highlight).toBe("skills");
+    s.getState().setHighlight("coding");
+    expect(s.getState().highlight).toBe("coding");
     s.getState().setHighlight(null);
     expect(s.getState().highlight).toBeNull();
-    s.getState().openSection("about");
-    s.getState().setHighlight("skills");
+    s.getState().openSection("contact");
+    s.getState().setHighlight("coding");
     expect(s.getState().highlight).toBeNull();
   });
 });
@@ -215,8 +234,8 @@ describe("altar store summon and highlight", () => {
 describe("altar store persistence", () => {
   it("persists only unlocked and theme", () => {
     const s = createAltarStore();
-    s.getState().itemEntered("tool");
-    s.getState().setHighlight("skills");
+    s.getState().itemEntered("fpgaChip");
+    s.getState().setHighlight("coding");
     s.getState().summonRecipe("projects");
     s.getState().openSection("projects");
     const saved = JSON.parse(sessionStorage.getItem("altar")!);
@@ -248,6 +267,24 @@ describe("altar store persistence", () => {
     expect(s.getState().unlocked).toEqual(["projects"]);
   });
 
+  it("sanitizes persisted views: dropped sections go, sections and project slugs stay", () => {
+    sessionStorage.setItem(
+      "altar",
+      JSON.stringify({ state: { theme: "dark", unlocked: ["about", "skills", "projects", "drone"] }, version: 0 }),
+    );
+    const s = createAltarStore();
+    expect(s.getState().unlocked).toEqual(["projects", "drone"]);
+  });
+
+  it("persists a relic's slug as unlocked", () => {
+    const s = createAltarStore();
+    s.getState().itemEntered("drone");
+    s.getState().evaluate();
+    const saved = JSON.parse(sessionStorage.getItem("altar")!);
+    expect(Object.keys(saved.state).sort()).toEqual(["theme", "unlocked"]);
+    expect(saved.state.unlocked).toEqual(["drone"]);
+  });
+
   it("ignores a persisted unlocked that is not an array", () => {
     sessionStorage.setItem("altar", JSON.stringify({ state: { theme: "dark", unlocked: "projects" }, version: 0 }));
     const s = createAltarStore("light");
@@ -263,7 +300,7 @@ describe("altar store persistence", () => {
       throw new Error("denied");
     });
     const s = createAltarStore();
-    expect(() => s.getState().openSection("about")).not.toThrow();
+    expect(() => s.getState().openSection("contact")).not.toThrow();
     expect(s.getState().phase).toBe("revealing");
   });
 

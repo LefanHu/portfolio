@@ -1,4 +1,5 @@
 import { experienceBranches, type ExperienceBranch } from "@/lib/portfolio/experience";
+import { SITE_ANCHORS } from "@/lib/portfolioProjects";
 
 export { experienceBranches };
 
@@ -88,7 +89,7 @@ export default function Experiences() {
   );
 
   return (
-    <section className="relative flex w-full flex-col gap-8 overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(251,191,36,0.14),transparent_24%),linear-gradient(180deg,rgba(3,7,18,0.96),rgba(15,23,42,0.93))] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <section id={SITE_ANCHORS.experience} className="relative flex w-full flex-col gap-8 overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(251,191,36,0.14),transparent_24%),linear-gradient(180deg,rgba(3,7,18,0.96),rgba(15,23,42,0.93))] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <div className="absolute left-10 top-10 h-32 w-32 rounded-full bg-cyan-400/10 blur-3xl" />
       <div className="absolute bottom-8 right-8 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" />
 

@@ -16,16 +16,20 @@ interface ColliderSpec {
 
 /** One box per item, fitted by hand to its low-poly model (ItemModel.tsx). */
 export const ITEM_COLLIDERS: Record<ItemId, ColliderSpec> = {
-  tool: { half: [0.26, 0.026, 0.08], offset: [0.05, 0.026, 0], rotY: 0.5 },
   notebook: { half: [0.175, 0.05, 0.21], offset: [0, 0.05, 0], rotY: -0.25 },
   driveUnit: { half: [0.17, 0.08, 0.17], offset: [0, 0.08, 0], rotY: 0.3 },
   keyboard: { half: [0.28, 0.034, 0.12], offset: [0, 0.034, 0], rotY: -0.12 },
   fpgaChip: { half: [0.18, 0.028, 0.165], offset: [0, 0.028, 0], rotY: 0.6 },
   solderingIron: { half: [0.175, 0.08, 0.12], offset: [0.055, 0.08, 0], rotY: -0.7 },
   serverRack: { half: [0.13, 0.25, 0.125], offset: [0, 0.25, 0], rotY: 0.15 },
-  chalkBag: { half: [0.15, 0.135, 0.14], offset: [0, 0.135, 0], rotY: 0 },
-  fpvDrone: { half: [0.24, 0.03, 0.24], offset: [0, 0.077, 0], rotY: 0.4 },
   coffeeMug: { half: [0.138, 0.1, 0.1], offset: [0.038, 0.1, 0], rotY: -0.8 },
+  accelerator: { half: [0.16, 0.058, 0.16], offset: [0, 0.058, 0], rotY: 0.35 },
+  drone: { half: [0.24, 0.03, 0.24], offset: [0, 0.077, 0], rotY: 0.4 },
+  mediaStack: { half: [0.15, 0.13, 0.117], offset: [0, 0.13, 0.005], rotY: 0.45 },
+  sdxlLora: { half: [0.15, 0.123, 0.133], offset: [0.008, 0.123, -0.018], rotY: 0.45 },
+  hiveHq: { half: [0.165, 0.052, 0.19], offset: [0, 0.052, 0], rotY: 0.2 },
+  autoTrader: { half: [0.15, 0.115, 0.085], offset: [0, 0.115, 0], rotY: -0.3 },
+  interqu: { half: [0.155, 0.145, 0.085], offset: [0.02, 0.145, 0], rotY: 0.45 },
 };
 
 /** Total visual scale of an item (ITEM_SCALE × MODEL_SCALE). */

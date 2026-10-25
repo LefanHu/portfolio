@@ -1,5 +1,35 @@
-export const projects = [
+export type ProjectSlug =
+  | "llm-accelerator"
+  | "stable-diffusion"
+  | "hive-hq"
+  | "drone"
+  | "media-stack"
+  | "auto-trader"
+  | "interqu";
+
+export interface PortfolioProject {
+  slug: ProjectSlug;
+  name: string;
+  imgSrc: string;
+  description: string;
+  href: string;
+}
+
+// Element ids on `/` that the altar's projections scroll the site to.
+export const SITE_ANCHORS = {
+  projects: "projects",
+  experience: "experience",
+  coding: "coding",
+  contact: "contact",
+} as const;
+
+export function projectCardId(slug: ProjectSlug): string {
+  return `project-${slug}`;
+}
+
+export const projects: PortfolioProject[] = [
   {
+    slug: "stable-diffusion",
     name: "SDXL LoRA Adapter",
     imgSrc: "/images/swift-beach.jpg",
     description:
@@ -7,12 +37,14 @@ export const projects = [
     href: "/projects/stable-diffusion",
   },
   {
+    slug: "hive-hq",
     name: "HIVE-HQ",
     imgSrc: "/images/hivehq.png",
     description: "2022 HTN submission. AI powered Covid safety planner",
     href: "https://devpost.com/software/hive-hq",
   },
   {
+    slug: "drone",
     name: "Drone",
     imgSrc: "/images/drone.jpg",
     description:
@@ -20,6 +52,7 @@ export const projects = [
     href: "/projects/drone",
   },
   {
+    slug: "media-stack",
     name: "Plex, Sonarr, Jackett - Stack",
     imgSrc: "/images/plex.png",
     description:
@@ -27,6 +60,7 @@ export const projects = [
     href: "/projects/media-stack",
   },
   {
+    slug: "auto-trader",
     name: "Auto Trader - Arbitrage",
     imgSrc: "/images/stonks.jpg",
     description: "Arbitration bot for the Oanda API",
@@ -39,6 +73,7 @@ export const projects = [
   //   href: "/projects/stable-diffusion",
   // },
   {
+    slug: "interqu",
     name: "Interqu",
     imgSrc: "/images/interqu.svg",
     description: "AI interview platform built using AWS SAM",
@@ -47,6 +82,7 @@ export const projects = [
 ];
 
 export const acceleratorProject = {
+  slug: "llm-accelerator" as const,
   name: "LLM Inference Accelerator",
   description: "Implemented IBERT inference on a PYNQ FPGA with pipelined SystemVerilog compute units, including systolic arrays, matrix multipliers, softmax, and layer normalization.",
   href: "/projects/llm-accelerator",

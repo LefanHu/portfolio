@@ -1,9 +1,10 @@
-// Wheel scrolling for the projected panel. Inside drei's <Html transform>
+// Wheel scrolling for the projected site. Inside drei's <Html transform>
 // (preserve-3d + matrix3d wrappers) Chrome delivers wheel events to the
 // scroller but does not scroll it (checked with real CDP input; a plain
-// element on the same page scrolls), so the panel scrolls itself: deltas are
-// normalised, accumulated into a target offset and eased toward it per frame.
-// Keyboard scrolling works natively there and is left alone.
+// element on the same page scrolls). The same holds for the site's iframe
+// there: its document gets the wheel, nothing scrolls. So the frame scrolls
+// itself (siteFrame.ts): deltas are normalised, accumulated into a target
+// offset and eased toward it per frame.
 
 /** px per line for deltaMode 1 (DOM_DELTA_LINE). */
 export const LINE_PX = 16;

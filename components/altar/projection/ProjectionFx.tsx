@@ -10,7 +10,7 @@ import { CAMERA, THEMES, THEME_TRANSITION_S } from "@/lib/altar/theme";
 import { mulberry32 } from "../scene/geo";
 import { POINT_SIZE_GLSL, pointUniforms, updatePointUniforms, type PointUniforms } from "../scene/pointSize";
 import { setProp } from "../scene/Std";
-import type { PanelStage } from "./SectionPanel";
+import type { PanelStage } from "./siteFrame";
 
 // The three.js half of a projection: a glowing frame with accent corner
 // brackets around the DOM pane, a beam from the cauldron, and rising sparks.

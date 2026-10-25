@@ -64,4 +64,29 @@ describe("AltarEntry", () => {
     render(<AltarEntry />);
     expect(await screen.findByTestId("experience")).toBeTruthy();
   });
+  it("inside a frame (the altar's own projection), renders nothing and closes the projection once", () => {
+    mocks.readSupportEnv.mockReturnValue({});
+    mocks.detectSupport.mockReturnValue({ ok: true });
+    mocks.detectSupport.mockClear();
+    Object.defineProperty(window, "frameElement", { configurable: true, get: () => document.createElement("iframe") });
+    // jsdom's top window is its own parent: Escapes the parent receives land here
+    const keys: string[] = [];
+    const onKey = (e: KeyboardEvent) => keys.push(e.key);
+    window.addEventListener("keydown", onKey);
+    try {
+      // StrictMode runs the effect twice: still one Escape
+      const { container } = render(
+        <React.StrictMode>
+          <AltarEntry />
+        </React.StrictMode>,
+      );
+      expect(container).toBeEmptyDOMElement();
+      expect(screen.queryByTestId("experience")).toBeNull();
+      expect(mocks.detectSupport).not.toHaveBeenCalled();
+      expect(keys).toEqual(["Escape"]);
+    } finally {
+      window.removeEventListener("keydown", onKey);
+      delete (window as { frameElement?: unknown }).frameElement;
+    }
+  });
 });

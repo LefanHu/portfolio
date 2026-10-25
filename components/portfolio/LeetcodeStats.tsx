@@ -1,6 +1,7 @@
 "use client";
 
 import { LTProfileResponse } from "@/lib/types/stats/lt";
+import { SITE_ANCHORS } from "@/lib/portfolioProjects";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@mantine/core";
 import LTActivityCalendar from "../LTActivityCalendar";
@@ -61,7 +62,7 @@ export default function LeetcodeStats() {
   const hasProfile = Boolean(matchedUser);
 
   return (
-    <div className="grid grid-cols-1 items-center">
+    <div id={SITE_ANCHORS.coding} className="grid grid-cols-1 items-center">
       <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl my-3">
         (
         {fetchState === "loading"

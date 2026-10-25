@@ -1,8 +1,9 @@
 import { contact } from "@/lib/portfolio/contact";
+import { SITE_ANCHORS } from "@/lib/portfolioProjects";
 
 export default function ContactForm() {
   return (
-    <div className="flex flex-row max-w-2xl grid-cols-1 gap-x-8 gap-y-16 px-4 py-8 sm:px-6 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+    <div id={SITE_ANCHORS.contact} className="flex flex-row max-w-2xl grid-cols-1 gap-x-8 gap-y-16 px-4 py-8 sm:px-6 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
       <div>
         <h2 className="text-white text-3xl font-extrabold">Contact Me</h2>
         <p className="text-sm text-gray-500 mt-4">

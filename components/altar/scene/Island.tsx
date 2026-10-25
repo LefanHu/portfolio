@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { CylinderCollider, RigidBody } from "@react-three/rapier";
-import { ALTAR_POS, DESK_POS, GROUND_Y, ISLAND_RADIUS } from "@/lib/altar/layout";
+import { ALTAR_POS, DESK_POS, GROUND_Y, ISLAND_RADIUS, ROCK_SPOTS, TREE_POS } from "@/lib/altar/layout";
 import { PALETTE, type Vec3 } from "@/lib/altar/theme";
 import { islandRockGeometry, jitter, mulberry32, rockChunkGeometry, strataColors } from "./geo";
 import { occluderRef } from "./occluders";
@@ -118,15 +118,7 @@ function Tree({ position, scale = 1 }: { position: Vec3; scale?: number }) {
 
 function Rocks() {
   const rocks = useMemo(() => {
-    const spots: [Vec3, number][] = [
-      [[-3.9, GROUND_Y + 0.1, 1.3], 0.34],
-      [[-3.5, GROUND_Y + 0.05, 1.8], 0.2],
-      [[0.9, GROUND_Y + 0.08, -3.9], 0.38],
-      [[1.6, GROUND_Y + 0.05, 3.3], 0.24],
-      [[-0.8, GROUND_Y + 0.05, 3.9], 0.2],
-      [[3.6, GROUND_Y + 0.05, 1.9], 0.18],
-    ];
-    return spots.map(([p, s], i) => ({ p, s, g: rockChunkGeometry(s, 80 + i) }));
+    return ROCK_SPOTS.map(([p, s], i) => ({ p, s, g: rockChunkGeometry(s, 80 + i) }));
   }, []);
   return (
     <>
@@ -191,9 +183,9 @@ export default function Island() {
       <GrassTufts />
       <Rocks />
       {/* Pines stay out of the column above the cauldron, where projections appear. */}
-      <Tree position={[0.1, GROUND_Y, -3.75]} scale={1.1} />
-      <Tree position={[1.35, GROUND_Y, -3.65]} scale={0.85} />
-      <Tree position={[-2.4, GROUND_Y, 2.9]} scale={0.65} />
+      <Tree position={TREE_POS[0]} scale={1.1} />
+      <Tree position={TREE_POS[1]} scale={0.85} />
+      <Tree position={TREE_POS[2]} scale={0.65} />
     </group>
   );
 }

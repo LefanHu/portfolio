@@ -26,7 +26,7 @@ describe("snapToIdle", () => {
   });
   it("finishes a reveal or a return too", () => {
     const revealing = createAltarStore("dark");
-    revealing.getState().openSection("about");
+    revealing.getState().openSection("contact");
     expect(snapToIdle(revealing, null)).toBe(true);
     expect(revealing.getState().phase).toBe("idle");
 

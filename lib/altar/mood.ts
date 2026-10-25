@@ -1,5 +1,7 @@
-import { matchRecipe, RECIPES, type ItemId, type SectionId } from "./recipes";
+import { matchRecipe, RECIPES, type ItemId } from "./recipes";
+import { isRelic, RELICS } from "./relics";
 import type { Phase, Theme } from "./store";
+import { viewAccent, type ViewId } from "./views";
 
 // How the cauldron reacts to what is in it. Pure: the scene (components/altar/
 // scene/liveMood.ts) lerps toward these targets every frame and layers the
@@ -44,10 +46,9 @@ function restrain(l: Levels, theme: Theme): Levels {
   return { ...l, tint: l.tint * DAY.tint, intensity: 1 + (l.intensity - 1) * DAY.intensity };
 }
 
-const accentOf = (section: SectionId) => RECIPES.find((r) => r.section === section)?.artifact.accent;
-
-/** Accents of every recipe the item belongs to, in RECIPES order. */
+/** Accents of every recipe the item belongs to, in RECIPES order; a relic has its own. */
 export function hintColors(id: ItemId): string[] {
+  if (isRelic(id)) return [RELICS[id].accent];
   return RECIPES.filter((r) => r.items.includes(id)).map((r) => r.artifact.accent);
 }
 
@@ -61,6 +62,7 @@ function mood(kind: MoodKind, colors: string[], theme: Theme): Mood {
  * - idle, one item: hint in that item's recipe accent(s).
  * - idle, a valid pair (the settle window before evaluate): surge, so the surge
  *   is already rising when `revealing` arrives.
+ * - idle, a lone relic: hint in its own accent, until the settle window ends and it opens.
  * - idle, an invalid pair or more: unstable (drained), until the eject.
  * - revealing: surge in the active section's accent; viewing: a calmer hold, so
  *   the surface matches the beam; returning: back to idle with the dissolve.
@@ -68,11 +70,11 @@ function mood(kind: MoodKind, colors: string[], theme: Theme): Mood {
 export function altarMood(
   contents: readonly ItemId[],
   phase: Phase,
-  activeSection: SectionId | null,
+  activeSection: ViewId | null,
   theme: Theme,
 ): Mood {
   if (phase === "revealing" || phase === "viewing") {
-    const a = activeSection && accentOf(activeSection);
+    const a = activeSection && viewAccent(activeSection);
     if (!a) return mood("idle", [], theme);
     return mood(phase === "revealing" ? "surge" : "hold", [a], theme);
   }
@@ -85,6 +87,8 @@ export function altarMood(
       return mood("hint", hintColors(contents[0]), theme);
     case "match":
       return mood("surge", [m.recipe.artifact.accent], theme);
+    case "relic":
+      return mood("hint", hintColors(m.relic), theme);
     case "invalid":
       return mood("unstable", [], theme);
   }

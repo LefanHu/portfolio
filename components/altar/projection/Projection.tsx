@@ -20,19 +20,19 @@ import {
   panelNormal,
   panelPixels,
 } from "@/lib/altar/projection";
-import { RECIPES, type SectionId } from "@/lib/altar/recipes";
 import { useAltarStore, type AltarState } from "@/lib/altar/store";
 import type { Vec3 } from "@/lib/altar/theme";
+import { viewAccent, type ViewId } from "@/lib/altar/views";
 import { getCameraControls } from "../cameraControls";
 import { onBfcacheRestore, snapToIdle } from "./bfcache";
 import { ProjectionBeam, ProjectionFrame } from "./ProjectionFx";
-import SectionPanel, { type PanelStage } from "./SectionPanel";
+import SitePanel, { type PanelStage } from "./SitePanel";
 
 const NORMAL = panelNormal(PANEL_YAW, PANEL_TILT);
 const DEFAULT_SMOOTH_TIME = 0.25;
 
 interface View {
-  section: SectionId;
+  section: ViewId;
   stage: PanelStage;
 }
 
@@ -98,7 +98,7 @@ export default function Projection() {
       if (c) c.smoothTime = DEFAULT_SMOOTH_TIME;
     };
 
-    async function reveal(section: SectionId) {
+    async function reveal(section: ViewId) {
       const live = begin();
       setView({ section, stage: "wire" });
       await wait(STAGE_MS.wire);
@@ -121,7 +121,7 @@ export default function Projection() {
     }
 
     /** Already viewing on mount (hot reload): show the content and frame it. */
-    async function resumeViewing(section: SectionId) {
+    async function resumeViewing(section: ViewId) {
       const live = begin();
       setView({ section, stage: "filled" });
       await fly(closeUp());
@@ -145,8 +145,9 @@ export default function Projection() {
     const unsubscribe = useAltarStore.subscribe((s, prev) => {
       if (s.phase !== prev.phase) enter(s);
     });
-    // Browser Back from a /projects/* page can restore this page from the
-    // back/forward cache mid-view; land in idle instead (see bfcache.ts).
+    // Browser Back after leaving /altar (a top-level navigation) can restore
+    // this page from the back/forward cache mid-view; land in idle instead
+    // (see bfcache.ts).
     const offRestore = onBfcacheRestore(window, () => snapToIdle(useAltarStore, getCameraControls()));
     return () => {
       offRestore();
@@ -171,14 +172,14 @@ export default function Projection() {
   }, [size.width, size.height, get]);
 
   if (!view) return null;
-  const recipe = RECIPES.find((r) => r.section === view.section)!;
+  const accent = viewAccent(view.section);
   // Lay the DOM out at its on-screen size at the close-up, so it renders 1:1 there.
   const px = panelPixels(PANEL_SIZE, size);
 
   return (
     <>
       <group position={PANEL_CENTER} rotation={[PANEL_TILT, PANEL_YAW, 0, "YXZ"]}>
-        <ProjectionFrame stage={view.stage} viewing={viewing} accent={recipe.artifact.accent} theme={theme} />
+        <ProjectionFrame stage={view.stage} viewing={viewing} accent={accent} theme={theme} />
         <Html
           transform
           distanceFactor={htmlDistanceFactor(PANEL_SIZE.width, px.width)}
@@ -186,11 +187,12 @@ export default function Projection() {
           pointerEvents={view.stage === "filled" ? "auto" : "none"}
         >
           <div style={{ width: px.width, height: px.height, fontSize: px.width * PANEL_EM }}>
-            <SectionPanel section={view.section} stage={view.stage} theme={theme} />
+            {/* keyed: a new view is a new frame (first-load anchor, hidden until loaded) */}
+            <SitePanel key={view.section} view={view.section} stage={view.stage} theme={theme} />
           </div>
         </Html>
       </group>
-      <ProjectionBeam stage={view.stage} viewing={viewing} accent={recipe.artifact.accent} theme={theme} />
+      <ProjectionBeam stage={view.stage} viewing={viewing} accent={accent} theme={theme} />
     </>
   );
 }

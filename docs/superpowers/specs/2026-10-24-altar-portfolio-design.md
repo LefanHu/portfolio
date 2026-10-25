@@ -140,3 +140,29 @@ Builder's calls in this revision:
 - The contact projection gets a "Download résumé" header action, because the main site's contact block has none.
 - External links inside a projection open in a new tab. Internal `/projects/*` links stay in the same tab.
 - Summoning first ejects any wrong items in the cauldron, then flies in only the missing items.
+
+## Revision 3 (full site and project relics)
+
+Lefan's requests and decisions:
+
+- **A projection shows the full live site, scrolled to the right section.** It is a same-origin frame of the real site, navbar included, and visitors can browse the whole site inside it. The wireframe draw-in stays. This supersedes Revision 2's per-section components.
+- **Recipes exist only for sections that `/` actually has:** Projects, Experience, Coding (LeetCode stats) and Contact. The About, Skills and Interests recipes are removed.
+- **Every project gets a physical relic.** Dropping a single relic into the cauldron projects that project:
+  - projects with their own page (`/projects/*`) show that page;
+  - external projects show the project gallery scrolled to their card.
+
+  Recipes stay two-item.
+
+Builder's calls in this revision:
+
+- **Items:**
+  - The Coding recipe reuses the old Skills pair (server rack + keyboard) and its artifact.
+  - The wrench and chalk bag are removed.
+  - The FPV drone model becomes the Drone relic.
+- **Relic stand:** relics sit on their own stand of seven plinths with accent rune rings, apart from the desk ingredients.
+- **Links inside a projection:**
+  - The site's own `/altar` link returns to the altar instead of nesting it.
+  - External links open in a new tab.
+  - Everything else browses inside the frame.
+- **Logbook and board:** the Logbook lists relics too and opens them directly. The board stays recipes-only, with a one-line hint about relics.
+- **Main site:** the only change to it is invisible: section `id` anchors and a `slug` field on each project.

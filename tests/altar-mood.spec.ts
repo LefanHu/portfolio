@@ -9,6 +9,7 @@ import {
   type Mood,
 } from "@/lib/altar/mood";
 import { RECIPES } from "@/lib/altar/recipes";
+import { RELICS } from "@/lib/altar/relics";
 
 const accent = (section: string) => RECIPES.find((r) => r.section === section)!.artifact.accent;
 
@@ -18,8 +19,11 @@ describe("hintColors", () => {
     expect(hintColors("coffeeMug")).toEqual([accent("contact")]);
   });
   it("lists both accents, in recipe order, for an item in two recipes", () => {
-    expect(hintColors("keyboard")).toEqual([accent("experience"), accent("skills")]);
-    expect(hintColors("notebook")).toEqual([accent("about"), accent("contact")]);
+    expect(hintColors("keyboard")).toEqual([accent("experience"), accent("coding")]);
+  });
+  it("is a relic's own accent for a relic", () => {
+    expect(hintColors("hiveHq")).toEqual([RELICS.hiveHq.accent]);
+    expect(hintColors("drone")).toEqual([RELICS.drone.accent]);
   });
   it("covers every item with at least one accent", () => {
     for (const r of RECIPES) for (const id of r.items) expect(hintColors(id).length).toBeGreaterThan(0);
@@ -46,7 +50,7 @@ describe("altarMood", () => {
   });
 
   it("hints both accents for an item in two recipes", () => {
-    expect(altarMood(["keyboard"], "idle", null, "dark").colors).toEqual([accent("experience"), accent("skills")]);
+    expect(altarMood(["keyboard"], "idle", null, "dark").colors).toEqual([accent("experience"), accent("coding")]);
   });
 
   it("surges in the recipe accent as soon as a valid pair is inside (settle window)", () => {
@@ -56,24 +60,37 @@ describe("altarMood", () => {
   });
 
   it("surges harder than it hints", () => {
-    const hint = altarMood(["tool"], "idle", null, "dark");
-    const surge = altarMood(["tool", "notebook"], "idle", null, "dark");
+    const hint = altarMood(["coffeeMug"], "idle", null, "dark");
+    const surge = altarMood(["coffeeMug", "notebook"], "idle", null, "dark");
     expect(surge.intensity).toBeGreaterThan(hint.intensity);
     expect(surge.spin).toBeGreaterThan(hint.spin);
   });
 
   it("goes unstable (drained, no accent) on an invalid pair before the eject", () => {
-    const m = altarMood(["tool", "fpgaChip"], "idle", null, "dark");
+    const m = altarMood(["driveUnit", "fpgaChip"], "idle", null, "dark");
     expect(m.kind).toBe("unstable");
     expect(m.colors).toEqual([]);
     expect(m.drain).toBeGreaterThan(0);
-    expect(altarMood(["tool", "fpgaChip", "keyboard"], "idle", null, "dark").kind).toBe("unstable");
+    expect(altarMood(["driveUnit", "fpgaChip", "keyboard"], "idle", null, "dark").kind).toBe("unstable");
   });
 
   it("surges in the active section's accent while revealing, whatever the contents", () => {
-    const m = altarMood([], "revealing", "skills", "dark");
+    const m = altarMood([], "revealing", "coding", "dark");
     expect(m.kind).toBe("surge");
-    expect(m.colors).toEqual([accent("skills")]);
+    expect(m.colors).toEqual([accent("coding")]);
+  });
+
+  it("hints a lone relic in its own accent, and surges in its project's accent once open", () => {
+    const hint = altarMood(["interqu"], "idle", null, "dark");
+    expect(hint.kind).toBe("hint");
+    expect(hint.colors).toEqual([RELICS.interqu.accent]);
+    const open = altarMood([], "revealing", "interqu", "dark");
+    expect(open.kind).toBe("surge");
+    expect(open.colors).toEqual([RELICS.interqu.accent]);
+  });
+
+  it("goes unstable for a relic mixed with anything", () => {
+    expect(altarMood(["interqu", "keyboard"], "idle", null, "dark").kind).toBe("unstable");
   });
 
   it("holds the accent, calmer than the surge, while viewing", () => {
@@ -86,7 +103,7 @@ describe("altarMood", () => {
   });
 
   it("returns to idle while returning (the cyan comes back with the dissolve)", () => {
-    expect(altarMood(["tool", "notebook"], "returning", "about", "dark").kind).toBe("idle");
+    expect(altarMood(["coffeeMug", "notebook"], "returning", "contact", "dark").kind).toBe("idle");
   });
 
   it("falls back to idle outside idle without an active section", () => {
@@ -95,11 +112,11 @@ describe("altarMood", () => {
 
   it("is restrained in daylight: every boost is smaller than at night", () => {
     const cases: [Parameters<typeof altarMood>[0], Parameters<typeof altarMood>[1], Parameters<typeof altarMood>[2]][] = [
-      [["tool"], "idle", null],
+      [["coffeeMug"], "idle", null],
       [["keyboard", "serverRack"], "idle", null],
-      [["tool", "fpgaChip"], "idle", null],
-      [[], "revealing", "about"],
-      [[], "viewing", "about"],
+      [["driveUnit", "fpgaChip"], "idle", null],
+      [[], "revealing", "contact"],
+      [[], "viewing", "contact"],
     ];
     for (const [c, p, s] of cases) {
       const d: Mood = altarMood(c, p, s, "dark");

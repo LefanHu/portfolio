@@ -1,10 +1,12 @@
 import { CAMERA_HOME } from "@/lib/altar/layout";
 import type { AltarState } from "@/lib/altar/store";
 
-// Project links inside a panel are full navigations. Browser Back can restore
-// /altar from the back/forward cache with the JS heap intact, i.e. still in
-// "viewing" with the camera at the close-up. The brief wants Back to land in
-// idle, so a restored page snaps straight there.
+// Links inside a projection navigate the site's frame, not the page (see
+// siteFrame.ts), but the page can still be left mid-view (the address bar, a
+// link outside the frame). Browser Back can then restore /altar from the
+// back/forward cache with the JS heap intact, i.e. still in "viewing" with the
+// camera at the close-up. The brief wants Back to land in idle, so a restored
+// page snaps straight there.
 
 /**
  * Put the scene in idle at once: closeSection() (sends the items home via

@@ -4,7 +4,15 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { CuboidCollider, CylinderCollider, RigidBody } from "@react-three/rapier";
-import { ALTAR_POS, CAULDRON, CAULDRON_FLOOR_TOP_LOCAL, CAULDRON_WALL_TOP_LOCAL } from "@/lib/altar/layout";
+import {
+  ALTAR_POS,
+  BRAZIER_LOCAL,
+  CAULDRON,
+  CAULDRON_FLOOR_TOP_LOCAL,
+  CAULDRON_WALL_TOP_LOCAL,
+  LEVER_ANGLE,
+  LEVER_LOCAL,
+} from "@/lib/altar/layout";
 import { altarOccupancy } from "@/lib/altar/occupancy";
 import { PALETTE, type Vec3 } from "@/lib/altar/theme";
 import { jitter, mulberry32, rockChunkGeometry } from "./geo";
@@ -254,11 +262,6 @@ function Fragments({ rune }: { rune: THREE.Material }) {
   );
 }
 
-const BRAZIERS: Vec3[] = [0.5, 2.6, 4.1].map((a) => [Math.cos(a) * 1.9, 0.2, Math.sin(a) * 1.9]);
-/** Clear lever on the plaza's front edge, facing the camera. */
-const LEVER_ANGLE = 1.3;
-const LEVER_POS: Vec3 = [Math.cos(LEVER_ANGLE) * 1.82, 0.2, Math.sin(LEVER_ANGLE) * 1.82];
-
 /** The hero: a grand cauldron on a rune plaza, with braziers, fragments and the clear lever. */
 export default function Altar() {
   const rune = useRuneMaterial();
@@ -266,11 +269,12 @@ export default function Altar() {
     <group position={ALTAR_POS}>
       <Plaza rune={rune} />
       <Basin rune={rune} />
-      {BRAZIERS.map((p, i) => (
+      {BRAZIER_LOCAL.map((p, i) => (
         <Brazier key={i} position={p} />
       ))}
       <Fragments rune={rune} />
-      <ClearLever position={LEVER_POS} rotationY={-LEVER_ANGLE + Math.PI / 2} rune={rune} />
+      {/* Clear lever on the plaza's front edge, facing the camera. */}
+      <ClearLever position={LEVER_LOCAL} rotationY={-LEVER_ANGLE + Math.PI / 2} rune={rune} />
       <CauldronPhysics />
     </group>
   );

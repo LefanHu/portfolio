@@ -76,7 +76,7 @@ describe("summonPath", () => {
     const starts: [string, ItemId, Vec3][] = [
       ...ITEM_IDS.map((id): [string, ItemId, Vec3] => [`${id} home`, id, ITEM_HOME[id]]),
       // A resting ground item just outside the cauldron's footprint.
-      ["ground 2.3 out", "chalkBag", [ALTAR_POS[0] + 2.3, 0.24, ALTAR_POS[2]]],
+      ["ground 2.3 out", "coffeeMug", [ALTAR_POS[0] + 2.3, 0.24, ALTAR_POS[2]]],
     ];
     for (const [name, id, from] of starts) {
       it(name, () => {

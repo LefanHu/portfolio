@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { acceleratorProject, projects } from "@/lib/portfolioProjects";
+import { acceleratorProject, projectCardId, projects } from "@/lib/portfolioProjects";
 
 export default function Projects() {
   return (
@@ -9,7 +9,7 @@ export default function Projects() {
         <p className="mt-4 text-slate-300">Projects in hardware acceleration, AI, and systems engineering.</p>
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[acceleratorProject, ...projects].map((project) => (
-            <Link key={project.name} href={project.href} className="rounded-2xl border border-white/10 bg-slate-900 p-6 transition-colors hover:border-sky-300/50">
+            <Link key={project.name} id={projectCardId(project.slug)} href={project.href} className="rounded-2xl border border-white/10 bg-slate-900 p-6 transition-colors hover:border-sky-300/50">
               <h2 className="text-2xl font-bold text-white">{project.name}</h2>
               <p className="mt-4 leading-7 text-slate-300">{project.description}</p>
               <span className="mt-6 inline-block font-semibold text-sky-300">View project →</span>

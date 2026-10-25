@@ -46,7 +46,7 @@ describe("createSettleScheduler", () => {
     const store = createAltarStore();
     const disconnect = createSettleScheduler(store).connect();
     store.getState().itemEntered("coffeeMug");
-    store.getState().openSection("about");
+    store.getState().openSection("contact");
     const ejectNonce = store.getState().ejectNonce;
     vi.advanceTimersByTime(SETTLE_MS * 2);
     expect(store.getState().phase).toBe("revealing");

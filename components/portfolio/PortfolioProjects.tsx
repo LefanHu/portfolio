@@ -3,12 +3,12 @@
 import SlidingCards from "../SlidingCards";
 import Carousel from "../Carousel";
 
-import { projects, acceleratorProject } from "@/lib/portfolioProjects";
+import { projects, acceleratorProject, SITE_ANCHORS } from "@/lib/portfolioProjects";
 import Link from "next/link";
 
 export default function FavProjects() {
   return (
-    <div className="flex flex-col gap-4 p-8">
+    <div id={SITE_ANCHORS.projects} className="flex flex-col gap-4 p-8">
       <div>
         <h2 className="text-3xl font-bold tracking-tight text-gray-200 sm:text-4xl">
           Favorite Projects

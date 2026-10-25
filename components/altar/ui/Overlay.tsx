@@ -25,25 +25,30 @@ export default function Overlay() {
   const [hintDismissed, setHintDismissed] = useState(false);
   const logbookButton = useRef<HTMLButtonElement>(null);
   const backButton = useRef<HTMLButtonElement>(null);
-  /** Where focus goes once the drawer has closed. */
-  const restoreFocus = useRef<"logbook" | "back" | null>(null);
+  /** Whether focus goes back to the Logbook button once the drawer has closed. */
+  const refocusLogbook = useRef(false);
 
   const idle = phase === "idle";
   const sectionOpen = phase === "revealing" || phase === "viewing";
 
   const closeLogbook = useCallback((openedSection = false) => {
-    restoreFocus.current = openedSection ? "back" : "logbook";
+    // a section it opened takes focus itself (below)
+    refocusLogbook.current = !openedSection;
     setLogbookOpen(false);
   }, []);
 
-  // After the drawer closes, focus goes back to its opener; if it just opened
-  // a section, to that section's Back button instead.
+  // After the drawer closes on its own, focus goes back to its opener.
   useEffect(() => {
-    const to = restoreFocus.current;
-    if (logbookOpen || !to) return;
-    restoreFocus.current = null;
-    ((to === "back" && backButton.current) || logbookButton.current)?.focus();
-  }, [logbookOpen, phase]);
+    if (logbookOpen || !refocusLogbook.current) return;
+    refocusLogbook.current = false;
+    logbookButton.current?.focus();
+  }, [logbookOpen]);
+
+  // A reveal, however it started (logbook, board summon or cauldron), puts
+  // focus on its Back button: Back mounts in the same commit.
+  useEffect(() => {
+    if (phase === "revealing") backButton.current?.focus();
+  }, [phase]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -121,7 +126,7 @@ export default function Overlay() {
         <div className="au-hint" role="note" data-visible={idle && !logbookOpen}>
           <SparkIcon />
           <span>
-            Drag two items from the desk into the cauldron, click a recipe, or{" "}
+            Drag two items into the cauldron, drop a relic in alone, click a recipe, or{" "}
             <button type="button" className="au-link" onClick={() => setLogbookOpen(true)}>
               open the Logbook
             </button>

@@ -47,9 +47,9 @@ describe("createSensorTracker", () => {
       (id) => log.push(`in:${id}`),
       (id) => log.push(`out:${id}`),
     );
-    t.leave("tool");
-    t.enter("tool");
-    expect(log).toEqual(["in:tool"]);
+    t.leave("fpgaChip");
+    t.enter("fpgaChip");
+    expect(log).toEqual(["in:fpgaChip"]);
   });
 });
 
@@ -72,11 +72,11 @@ describe("tracker occupancy", () => {
   it("resync re-fires onEnter for every occupant", () => {
     const log: string[] = [];
     const t = createSensorTracker((id) => log.push(id), () => {});
-    t.enter("tool");
+    t.enter("fpgaChip");
     t.enter("notebook");
     log.length = 0;
     t.resync();
-    expect(log).toEqual(["tool", "notebook"]);
+    expect(log).toEqual(["fpgaChip", "notebook"]);
   });
 });
 
@@ -96,12 +96,12 @@ describe("createOccupancy", () => {
     expect(store.getState().contents).toEqual(["keyboard", "driveUnit"]);
     store.getState().openSection("experience");
     // ignored by the store outside idle, but physically inside
-    occ.enter("tool");
-    expect(store.getState().contents).not.toContain("tool");
+    occ.enter("fpgaChip");
+    expect(store.getState().contents).not.toContain("fpgaChip");
     store.getState().closeSection();
     store.getState().returnDone(); // empties contents, back to idle
     expect(store.getState().phase).toBe("idle");
-    expect(store.getState().contents).toEqual(["keyboard", "driveUnit", "tool"]);
+    expect(store.getState().contents).toEqual(["keyboard", "driveUnit", "fpgaChip"]);
     off();
   });
 
@@ -152,7 +152,7 @@ describe("cauldronContains", () => {
     expect(cauldronContains(at(CAULDRON.rimInner - c.half[1], floorY + edgeUp), false)).toBe(true);
   });
 
-  const tall: ItemId[] = ["serverRack", "chalkBag", "coffeeMug", "driveUnit"];
+  const tall: ItemId[] = ["serverRack", "coffeeMug", "driveUnit"];
   for (const base of tall) {
     it.each(ids.filter((i) => i !== base))(`counts %s stacked on a standing ${base}`, (top) => {
       expect(cauldronContains(at(0.3, comY(top, floorY + height(base))), false)).toBe(true);

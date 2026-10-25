@@ -66,6 +66,25 @@ describe("tagWireBlocks", () => {
     expect(tagWireBlocks(root)).toBe(80);
   });
 
+  it("tags only what `include` accepts", () => {
+    const root = fixture(`<h2 id="seen">a</h2><p id="hidden">b</p><div id="card" class="rounded"></div>`);
+    expect(tagWireBlocks(root, MAX_WIRE_BLOCKS, (el) => el.id !== "hidden")).toBe(2);
+    expect(root.querySelector("#seen")!.getAttribute("data-wire")).toBe("text");
+    expect(root.querySelector("#card")!.getAttribute("data-wire")).toBe("box");
+    expect(root.querySelector("#hidden")!.getAttribute("data-wire")).toBeNull();
+  });
+
+  it("works on another realm's nodes (an iframe's document)", () => {
+    const frame = document.createElement("iframe");
+    document.body.append(frame);
+    const doc = frame.contentDocument!;
+    doc.body.innerHTML = `<div id="wrap"><img alt="" src="/a.png" /></div><img class="rounded" alt="" src="/b.png" />`;
+    tagWireBlocks(doc.body);
+    expect(doc.getElementById("wrap")!.getAttribute("data-wire")).toBe("img");
+    expect(doc.querySelectorAll("img[data-wire]")).toHaveLength(0);
+    frame.remove();
+  });
+
   it("is idempotent", () => {
     const root = fixture(`<h2>a</h2><div class="rounded"><p>b</p></div><div><img alt="" src="/a.png" /></div>`);
     const first = tagWireBlocks(root);

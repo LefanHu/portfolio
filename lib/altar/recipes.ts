@@ -1,8 +1,10 @@
 import type { ItemId } from "./items";
+import { isRelic, type RelicId } from "./relics";
 
 export type { ItemId };
 
-export type SectionId = "about" | "experience" | "projects" | "skills" | "interests" | "contact";
+/** The main site's sections that have a recipe. Each one is an anchor on `/` (SITE_ANCHORS). */
+export type SectionId = "projects" | "experience" | "coding" | "contact";
 
 export interface Recipe {
   section: SectionId;
@@ -13,10 +15,10 @@ export interface Recipe {
 
 export const RECIPES: Recipe[] = [
   {
-    section: "about",
-    items: ["tool", "notebook"],
-    artifact: { name: "Artifact of Foundations", accent: "#ffb347" },
-    title: "About & Education",
+    section: "projects",
+    items: ["fpgaChip", "solderingIron"],
+    artifact: { name: "Artifact of Tinkering", accent: "#b78cff" },
+    title: "Projects",
   },
   {
     section: "experience",
@@ -25,22 +27,10 @@ export const RECIPES: Recipe[] = [
     title: "Experience",
   },
   {
-    section: "projects",
-    items: ["fpgaChip", "solderingIron"],
-    artifact: { name: "Artifact of Tinkering", accent: "#b78cff" },
-    title: "Projects",
-  },
-  {
-    section: "skills",
+    section: "coding",
     items: ["serverRack", "keyboard"],
     artifact: { name: "Artifact of Uptime", accent: "#7dff8a" },
-    title: "Skills",
-  },
-  {
-    section: "interests",
-    items: ["chalkBag", "fpvDrone"],
-    artifact: { name: "Artifact of Altitude", accent: "#ff5ca8" },
-    title: "Interests",
+    title: "Coding Stats",
   },
   {
     section: "contact",
@@ -54,14 +44,17 @@ export type MatchResult =
   | { kind: "empty" }
   | { kind: "partial" }
   | { kind: "match"; recipe: Recipe }
+  /** Exactly one relic and nothing else: it opens its project. */
+  | { kind: "relic"; relic: RelicId }
   | { kind: "invalid" };
 
 const key = (a: ItemId, b: ItemId) => [a, b].sort().join("+");
 
 export function matchRecipe(contents: readonly ItemId[]): MatchResult {
   if (contents.length === 0) return { kind: "empty" };
-  if (contents.length === 1) return { kind: "partial" };
-  if (contents.length > 2) return { kind: "invalid" };
+  if (contents.length === 1) return isRelic(contents[0]) ? { kind: "relic", relic: contents[0] } : { kind: "partial" };
+  // Relics belong to no recipe: any pair that includes one is wrong.
+  if (contents.length > 2 || contents.some(isRelic)) return { kind: "invalid" };
   const k = key(contents[0], contents[1]);
   const recipe = RECIPES.find((r) => key(r.items[0], r.items[1]) === k);
   return recipe ? { kind: "match", recipe } : { kind: "invalid" };

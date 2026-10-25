@@ -48,7 +48,7 @@
   list-style: none;
 }
 /* entries carry their artifact accent; it re-inks with the theme */
-.au-drawer__list > li {
+.au-drawer__group > li {
   transition: --au-acc 1.5s ease;
 }
 
@@ -301,6 +301,14 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--au-soft);
+}
+.au-board__note {
+  margin-top: 0.55em;
+  padding: 0 0.3em;
+  font-size: 0.8em;
+  line-height: 1.35;
+  font-style: italic;
   color: var(--au-soft);
 }
 .au-pips {
@@ -559,9 +567,6 @@
   gap: 12px;
   padding: 20px 16px 0 22px;
 }
-.au-drawer__head .au-eyebrow {
-  font-size: 11px;
-}
 .au-drawer__title {
   margin-top: 3px;
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
@@ -586,6 +591,22 @@
   padding: 12px;
   scrollbar-width: thin;
   scrollbar-color: var(--au-edge) transparent;
+}
+.au-drawer__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.au-drawer__group-title {
+  margin: 8px 2px 0;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--au-line);
+}
+.au-drawer__group-title:first-child {
+  margin-top: 0;
 }
 .au-entry {
   display: flex;

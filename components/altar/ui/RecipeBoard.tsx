@@ -20,6 +20,7 @@ const contain = (e: SyntheticEvent) => e.stopPropagation();
  * Rows are disabled unless the altar is idle and no summon is under way. The
  * list takes pointer input, and contains it (no orbit, zoom or raycast from a
  * click or wheel on a row); the header and footer let it through to the scene.
+ * Under the list, a line says a relic dropped in alone opens its project.
  * The board fades out while a section is open so it can't overlap the projection.
  */
 export default function RecipeBoard() {
@@ -99,6 +100,7 @@ export default function RecipeBoard() {
           );
         })}
       </ol>
+      <p className="au-board__note">Drop a relic in alone to view its project.</p>
       <footer className="au-board__foot">
         <span>
           {count} of {RECIPES.length} unlocked

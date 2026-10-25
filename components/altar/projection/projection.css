@@ -1,24 +1,13 @@
 /*
  * Section projection panels (components/altar/projection). Global CSS, so every
  * selector is scoped under .ap-root. The frame and header are sized in em: the
- * panel's base font scales with its pixel size. The page content inside
- * (.ap-site) is the main site's own components, which size in rem, so it resets
- * to a fixed 16px base.
- *
- * Unlayered CSS beats Tailwind's layered utilities whatever the specificity, so
- * keep restyling of the site's elements to the few overrides that must apply
- * inside .ap-site (no margin/color/link resets outside the header):
- *   - position: relative on boxes with no position utility (the wire outlines
- *     anchor to them)
- *   - transition-property / transition-duration on every descendant: these
- *     beat the layered Tailwind transition utilities (zero specificity, so
- *     the site's unlayered CSS-module transitions, e.g. SlidingCards, still win)
- *   - background-image on text blocks during the wire stage (skeleton bars)
- *   - the focus outline on links
+ * panel's base font scales with its pixel size. The body is the live site in
+ * an iframe (.ap-frame); its wire stage is WIRE_CSS (wireCss.ts), injected into
+ * the frame's own document, since these rules can't reach into it.
  *
  * Stages (data-stage on .ap-root):
- *   wire     – text is transparent; [data-wire] boxes draw their outlines,
- *              [data-wire="text"] shows skeleton bars, images are crossed frames.
+ *   wire     – header text is transparent; [data-wire] boxes draw their
+ *              outlines, [data-wire="text"] shows skeleton bars.
  *   filled   – content fades in over --ap-fill.
  *   dissolve – content collapses back to bars, then the panel fades out.
  */
@@ -180,6 +169,13 @@
 .ap-root[data-stage="filled"] .ap-head__action:hover {
   background: color-mix(in srgb, var(--proj-accent) 18%, transparent);
 }
+/* "Loading…" until the frame's first page is ready; once empty it takes no room (nor its gap) */
+.ap-head__status {
+  flex: none;
+}
+.ap-head__status:empty {
+  margin-inline-start: -1em;
+}
 .ap-head__ticks {
   display: flex;
   gap: 0.45em;
@@ -197,17 +193,18 @@
 
 /* ------------------------------------------------------------------ body */
 
-.ap-scroll {
+/* The live site: it fills the frame below the header, on the site's own (dark) background. */
+.ap-frame {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  margin-top: 0.35em;
-  padding: 0.75em 1.4em 1.3em;
-  /* content fades out under the header and at the bottom edge instead of being cut */
-  mask-image: linear-gradient(to bottom, transparent 0, black 0.75em, black calc(100% - 1.1em), transparent 100%);
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--proj-line) 45%, transparent) transparent;
+  display: block;
+  width: auto;
+  margin: 0.7em 1.4em 1.4em;
+  border: 0;
+  border-radius: 0.3em;
+  background-color: #000;
+  color-scheme: dark;
+  transition: opacity var(--ap-fill) ease;
 }
 
 .ap-root a:focus-visible {
@@ -215,25 +212,10 @@
   outline-offset: 2px;
 }
 
-/*
- * The main site's section, in its own dark palette in both themes (the site
- * has no light mode). Fixed 16px so its rem sizing ignores the pane's em base.
- */
-.ap-site {
-  padding: 2rem;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #f8fafc;
-  background-color: #0b1120;
-  color-scheme: dark;
-  /* short sections still fill the pane's height, so no light band shows below */
-  min-height: 100%;
-}
-
 /* ------------------------------------------------------------------ stages */
 
-/* Outline-draw layer of wire boxes and images. */
-.ap-root :is([data-wire="box"], [data-wire="img"])::before {
+/* Outline-draw layer of the header's wire boxes. */
+.ap-root [data-wire="box"]::before {
   content: "";
   position: absolute;
   inset: -1px;
@@ -248,28 +230,11 @@
   opacity: 0;
   transition: opacity var(--ap-fill) ease;
 }
-/* the outline layers anchor to the block; positioned site elements already do */
-.ap-root :is([data-wire="box"], [data-wire="img"]):not(.absolute, .fixed, .relative, .sticky) {
+.ap-root [data-wire="box"] {
   position: relative;
 }
-/* Crossed frame over images. */
-.ap-root [data-wire="img"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to top right, transparent calc(50% - 0.6px), var(--ap-wire) 50%, transparent calc(50% + 0.6px)),
-    linear-gradient(to bottom right, transparent calc(50% - 0.6px), var(--ap-wire) 50%, transparent calc(50% + 0.6px));
-  opacity: 0;
-  transition: opacity var(--ap-fill) ease;
-}
-.ap-root [data-wire="img"] > * {
-  transition: opacity var(--ap-fill) ease;
-}
 /* Skeleton bars, one per line of text. */
-/* (not gradient-clipped text: the bars would replace its gradient fill) */
-.ap-root [data-wire="text"]:not([class*="bg-clip-text"]) {
+.ap-root [data-wire="text"] {
   --ap-bar: transparent;
   background-image: repeating-linear-gradient(
     to bottom,
@@ -279,10 +244,9 @@
   );
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  transition: --ap-bar var(--ap-fill) ease;
 }
-/* zero specificity: the site's own transitions (SlidingCards) still win */
-:where(.ap-root) :where(.ap-scroll, .ap-head) * {
+/* zero specificity: the header's own transitions (the action's hover) still win */
+:where(.ap-head) * {
   transition-property: color, border-color, background-color, box-shadow, text-shadow, opacity, --ap-bar;
   transition-duration: var(--ap-fill);
 }
@@ -292,42 +256,23 @@
   border-color: transparent;
   background-color: color-mix(in srgb, var(--proj-fill) calc(var(--ap-pane) * 0.4), transparent);
 }
-.ap-root[data-stage="wire"] :is(.ap-head, .ap-scroll) * {
+.ap-root[data-stage="wire"] .ap-head * {
   color: transparent !important;
   text-shadow: none !important;
   border-color: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
 }
-.ap-root[data-stage="wire"] :is(.ap-sigil, .ap-head__ticks i)::after,
 .ap-root[data-stage="wire"] .ap-head__ticks i {
   opacity: 0;
 }
-.ap-root[data-stage="wire"] :is([data-wire="box"], [data-wire="img"])::before {
+.ap-root[data-stage="wire"] [data-wire="box"]::before {
   opacity: 0.9;
   animation: ap-draw var(--ap-seg) cubic-bezier(0.55, 0, 0.3, 1) var(--wd, 0ms) both;
-}
-.ap-root[data-stage="wire"] [data-wire="img"]::after {
-  opacity: 0.55;
-  animation: ap-fade-in var(--ap-seg) ease var(--wd, 0ms) both;
-}
-.ap-root[data-stage="wire"] [data-wire="img"] > * {
-  opacity: 0;
-}
-/* pictures and icons have no text color to blank: hide them until filled */
-.ap-root[data-stage="wire"] .ap-scroll :is(img, svg, canvas, video),
-.ap-root[data-stage="dissolve"] .ap-scroll :is(img, svg, canvas, video),
-/* gradient-clipped text keeps its fill through color: transparent */
-.ap-root[data-stage="wire"] .ap-scroll [class*="bg-clip-text"],
-.ap-root[data-stage="dissolve"] .ap-scroll [class*="bg-clip-text"] {
-  opacity: 0;
 }
 .ap-root[data-stage="wire"] [data-wire="text"] {
   --ap-bar: color-mix(in srgb, var(--proj-line) 34%, transparent);
   animation: ap-bar var(--ap-seg) cubic-bezier(0.55, 0, 0.3, 1) var(--wd, 0ms) both;
-}
-.ap-root[data-stage="wire"] .ap-scroll {
-  overflow: hidden;
 }
 .ap-root[data-stage="wire"] .ap-sigil {
   border-color: var(--ap-wire);
@@ -339,21 +284,16 @@
   pointer-events: none;
   animation: ap-dissolve var(--ap-dissolve) ease-in both;
 }
-.ap-root[data-stage="dissolve"] :is(.ap-head, .ap-scroll) * {
+.ap-root[data-stage="dissolve"] .ap-head * {
   color: transparent !important;
   text-shadow: none !important;
+  transition-duration: calc(var(--ap-dissolve) * 0.35);
 }
 .ap-root[data-stage="dissolve"] [data-wire="text"] {
   --ap-bar: color-mix(in srgb, var(--proj-line) 30%, transparent);
 }
-.ap-root[data-stage="dissolve"] :is([data-wire="box"], [data-wire="img"])::before {
+.ap-root[data-stage="dissolve"] [data-wire="box"]::before {
   opacity: 0.8;
-}
-.ap-root[data-stage="dissolve"] [data-wire="img"] > * {
-  opacity: 0;
-}
-.ap-root[data-stage="dissolve"] :is(.ap-head, .ap-scroll) * {
-  transition-duration: calc(var(--ap-dissolve) * 0.35);
 }
 
 @keyframes ap-draw {
@@ -378,11 +318,6 @@
   }
   to {
     background-size: 100% 100%;
-  }
-}
-@keyframes ap-fade-in {
-  from {
-    opacity: 0;
   }
 }
 @keyframes ap-dissolve {

@@ -38,7 +38,7 @@ function useHitboxFilter() {
 }
 
 /**
- * The ten draggable desk items, plus the store-driven effects on them:
+ * The draggable items (desk ingredients and stand relics), plus the store-driven effects on them:
  * eject (ejectNonce), return home (resetNonce), dropping any held item (and
  * cancelling summon flights) when the phase leaves idle, summoning a recipe
  * (summonNonce), and the settle debounce that calls evaluate().

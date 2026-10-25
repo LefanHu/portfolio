@@ -16,6 +16,7 @@ import Backdrop from "./scene/Backdrop";
 import Desk from "./scene/Desk";
 import Effects from "./scene/Effects";
 import Island from "./scene/Island";
+import RelicStand from "./scene/RelicStand";
 import Ruins from "./scene/Ruins";
 import Overlay from "./ui/Overlay";
 import RecipeBoardInScene from "./ui/RecipeBoardInScene";
@@ -111,6 +112,7 @@ export default function AltarExperience() {
             <Ruins />
             <Altar />
             <Desk />
+            <RelicStand />
             <Items />
           </Physics>
         </Suspense>

@@ -1,7 +1,9 @@
 import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
 import { useStore } from "zustand";
-import { matchRecipe, RECIPES, type ItemId, type SectionId } from "./recipes";
+import { matchRecipe, type ItemId, type SectionId } from "./recipes";
+import { RELICS } from "./relics";
+import { ALL_VIEWS, type ViewId } from "./views";
 
 export type Phase = "idle" | "revealing" | "viewing" | "returning";
 export type Theme = "light" | "dark";
@@ -12,8 +14,9 @@ export const SETTLE_MS = 400;
 export interface AltarState {
   phase: Phase;
   contents: ItemId[];
-  activeSection: SectionId | null;
-  unlocked: SectionId[];
+  /** The open view: a section or a project. (Named "section" from before projects joined.) */
+  activeSection: ViewId | null;
+  unlocked: ViewId[];
   ejectNonce: number;
   resetNonce: number;
   theme: Theme;
@@ -27,7 +30,7 @@ export interface AltarState {
   itemLeft(id: ItemId): void;
   evaluate(): void;
   clearAltar(): void;
-  openSection(id: SectionId): void;
+  openSection(id: ViewId): void;
   revealDone(): void;
   closeSection(): void;
   returnDone(): void;
@@ -38,7 +41,7 @@ export interface AltarState {
   summonDone(): void;
 }
 
-const SECTION_IDS = new Set<string>(RECIPES.map((r) => r.section));
+const VIEW_IDS = new Set<string>(ALL_VIEWS);
 
 /** Persisted state is untrusted (stale schema, tampering): keep only values the app understands. */
 function sanitize(persisted: unknown, current: AltarState): Partial<AltarState> {
@@ -46,7 +49,7 @@ function sanitize(persisted: unknown, current: AltarState): Partial<AltarState> 
   return {
     theme: p.theme === "light" || p.theme === "dark" ? p.theme : current.theme,
     unlocked: Array.isArray(p.unlocked)
-      ? p.unlocked.filter((id): id is SectionId => typeof id === "string" && SECTION_IDS.has(id))
+      ? p.unlocked.filter((id): id is ViewId => typeof id === "string" && VIEW_IDS.has(id))
       : current.unlocked,
   };
 }
@@ -109,6 +112,7 @@ export function createAltarStore(initialTheme: Theme = "dark") {
           if (s.phase !== "idle" || s.summoning) return;
           const result = matchRecipe(s.contents);
           if (result.kind === "match") s.openSection(result.recipe.section);
+          else if (result.kind === "relic") s.openSection(RELICS[result.relic].slug);
           else if (result.kind === "invalid") s.clearAltar();
         },
         clearAltar: () =>

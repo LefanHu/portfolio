@@ -7,6 +7,7 @@ import { boardLayout } from "@/lib/altar/board";
 import { ITEMS, type ItemId } from "@/lib/altar/items";
 import { CAMERA_HOME } from "@/lib/altar/layout";
 import { RECIPES } from "@/lib/altar/recipes";
+import { RELICS, type RelicId } from "@/lib/altar/relics";
 import { useAltarStore } from "@/lib/altar/store";
 import { CAMERA } from "@/lib/altar/theme";
 
@@ -39,10 +40,10 @@ describe("ITEMS short names", () => {
 });
 
 describe("RecipeBoard", () => {
-  it("lists all six recipes as item + item → title", () => {
+  it("lists all four recipes as item + item → title", () => {
     render(<RecipeBoard />);
     const entries = screen.getAllByRole("listitem");
-    expect(entries).toHaveLength(6);
+    expect(entries).toHaveLength(4);
     RECIPES.forEach((r, i) => {
       expect(entries[i]).toHaveTextContent(r.title);
       expect(entries[i]).toHaveTextContent(ITEMS[r.items[0]].short);
@@ -53,16 +54,28 @@ describe("RecipeBoard", () => {
     expect(within(experience).getByText(/Keyboard/)).toBeInTheDocument();
   });
 
+  it("has four summon buttons and a line about dropping a relic in alone", () => {
+    render(<RecipeBoard />);
+    expect(screen.getAllByRole("button", { name: /: summon$/ })).toHaveLength(4);
+    expect(screen.getByText("Drop a relic in alone to view its project.")).toBeInTheDocument();
+  });
+
+  it("counts recipes only, not viewed relics", () => {
+    useAltarStore.setState({ unlocked: ["coding", "hive-hq"] });
+    render(<RecipeBoard />);
+    expect(screen.getByText(/1 of 4 unlocked/i)).toBeInTheDocument();
+  });
+
   it("marks unlocked entries and counts them", () => {
-    useAltarStore.setState({ unlocked: ["experience", "skills"] });
+    useAltarStore.setState({ unlocked: ["experience", "coding"] });
     render(<RecipeBoard />);
     const entries = screen.getAllByRole("listitem");
     const marked = entries.filter((e) => e.getAttribute("data-unlocked") === "true");
-    expect(marked.map((e) => e.getAttribute("data-section")).sort()).toEqual(["experience", "skills"]);
+    expect(marked.map((e) => e.getAttribute("data-section")).sort()).toEqual(["coding", "experience"]);
     for (const e of marked) expect(within(e).getByText("Unlocked")).toBeInTheDocument();
     const locked = entries.find((e) => e.getAttribute("data-section") === "projects")!;
     expect(within(locked).queryByText("Unlocked")).toBeNull();
-    expect(screen.getByText(/2 of 6 unlocked/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 of 4 unlocked/i)).toBeInTheDocument();
   });
 
   it("hides itself while a section is open", () => {
@@ -132,7 +145,7 @@ describe("RecipeBoard", () => {
     it("disables every button while a summon is in flight", () => {
       useAltarStore.setState({ summoning: true, summonSection: "experience" });
       render(<RecipeBoard />);
-      expect(recipeButtons()).toHaveLength(6);
+      expect(recipeButtons()).toHaveLength(4);
       for (const b of recipeButtons()) expect(b).toBeDisabled();
     });
 
@@ -155,7 +168,7 @@ describe("RecipeBoard", () => {
     it("disables every button while a section is open", () => {
       setPhase("viewing");
       render(<RecipeBoard />);
-      expect(recipeButtons()).toHaveLength(6);
+      expect(recipeButtons()).toHaveLength(4);
       for (const b of recipeButtons()) expect(b).toBeDisabled();
     });
   });
@@ -184,32 +197,105 @@ describe("Overlay", () => {
     expect(document.activeElement).toBe(screen.getByRole("button", { name: /back/i }));
   });
 
-  it("lists all six sections with their artifacts, unlocked ones marked", () => {
-    useAltarStore.setState({ unlocked: ["about"] });
+  it("moves focus to Back as a reveal starts by any path (board summon or cauldron), not only the logbook", () => {
+    render(<Overlay />);
+    screen.getByRole("button", { name: "Logbook" }).focus();
+    // a board summon (or two items dragged in) ends with the cauldron judging its contents
+    const recipe = RECIPES[0];
+    act(() => {
+      const s = useAltarStore.getState();
+      s.summonRecipe(recipe.section);
+      for (const id of recipe.items) s.itemEntered(id);
+      s.summonDone();
+      useAltarStore.getState().evaluate();
+    });
+    expect(useAltarStore.getState().phase).toBe("revealing");
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: /back/i }));
+    // and again for a relic dropped in alone, on the next visit
+    setPhase("returning");
+    act(() => useAltarStore.getState().returnDone());
+    act(() => {
+      useAltarStore.getState().itemEntered("drone");
+      useAltarStore.getState().evaluate();
+    });
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: /back/i }));
+  });
+
+  it("titles the drawer Logbook and says it opens recipes and relics", () => {
     render(<Overlay />);
     fireEvent.click(logbookButton());
-    const entries = within(drawer()).getAllByRole("listitem");
-    expect(entries).toHaveLength(6);
+    const dialog = screen.getByRole("dialog", { name: "Logbook" });
+    expect(dialog).toHaveAccessibleDescription("Open any recipe or relic directly. No crafting needed.");
+  });
+
+  it("lists the four recipes under Recipes, with their artifacts, unlocked ones marked", () => {
+    useAltarStore.setState({ unlocked: ["coding"] });
+    render(<Overlay />);
+    fireEvent.click(logbookButton());
+    const group = within(drawer()).getByRole("list", { name: "Recipes" });
+    const entries = within(group).getAllByRole("listitem");
+    expect(entries).toHaveLength(4);
     RECIPES.forEach((r, i) => {
       expect(entries[i]).toHaveTextContent(r.title);
       expect(entries[i]).toHaveTextContent(r.artifact.name);
     });
-    const about = entries.find((e) => e.getAttribute("data-section") === "about")!;
-    expect(about).toHaveAttribute("data-unlocked", "true");
-    expect(within(about).getByText("Unlocked")).toBeInTheDocument();
+    const coding = entries.find((e) => e.getAttribute("data-section") === "coding")!;
+    expect(coding).toHaveAttribute("data-unlocked", "true");
+    expect(within(coding).getByText("Unlocked")).toBeInTheDocument();
     const contact = entries.find((e) => e.getAttribute("data-section") === "contact")!;
     expect(contact).toHaveAttribute("data-unlocked", "false");
+  });
+
+  it("lists the seven relics under Relics, in stand order, viewed ones ticked", () => {
+    useAltarStore.setState({ unlocked: ["hive-hq"] });
+    render(<Overlay />);
+    fireEvent.click(logbookButton());
+    const group = within(drawer()).getByRole("list", { name: "Relics" });
+    const entries = within(group).getAllByRole("listitem");
+    expect(entries).toHaveLength(7);
+    (Object.keys(RELICS) as RelicId[]).forEach((id, i) => {
+      expect(entries[i]).toHaveTextContent(ITEMS[id].short);
+      expect(entries[i]).toHaveTextContent("Relic");
+      expect(entries[i]).toHaveAttribute("data-relic", RELICS[id].slug);
+    });
+    const hive = entries.find((e) => e.getAttribute("data-relic") === "hive-hq")!;
+    expect(hive).toHaveAttribute("data-unlocked", "true");
+    expect(within(hive).getByText("Unlocked")).toBeInTheDocument();
+    const drone = entries.find((e) => e.getAttribute("data-relic") === "drone")!;
+    expect(drone).toHaveAttribute("data-unlocked", "false");
+    expect(within(drone).queryByText("Unlocked")).toBeNull();
+  });
+
+  it("opens a relic's project directly from the logbook", () => {
+    render(<Overlay />);
+    fireEvent.click(logbookButton());
+    fireEvent.click(within(drawer()).getByRole("button", { name: /HIVE-HQ/ }));
+    const s = useAltarStore.getState();
+    expect(s.phase).toBe("revealing");
+    expect(s.activeSection).toBe("hive-hq");
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("counts every view in the footer, recipes and relics together", () => {
+    useAltarStore.setState({ unlocked: ["coding", "hive-hq", "drone"] });
+    render(<Overlay />);
+    fireEvent.click(logbookButton());
+    expect(within(drawer()).getByText(/3 of 11 unlocked/i)).toBeInTheDocument();
   });
 
   it("disables logbook entries unless idle", () => {
     render(<Overlay />);
     fireEvent.click(logbookButton());
-    const buttons = () => within(drawer()).getAllByRole("button", { name: /Artifact of/ });
-    expect(buttons()).toHaveLength(6);
+    const buttons = () =>
+      within(drawer())
+        .getAllByRole("button")
+        .filter((b) => b.closest("li"));
+    expect(buttons()).toHaveLength(11);
     for (const b of buttons()) expect(b).toBeEnabled();
     setPhase("viewing");
     for (const b of buttons()) expect(b).toBeDisabled();
     fireEvent.click(buttons()[0]);
+    fireEvent.click(within(drawer()).getByRole("button", { name: /HIVE-HQ/ }));
     expect(useAltarStore.getState().activeSection).toBe("projects");
   });
 
@@ -316,6 +402,7 @@ describe("Overlay", () => {
   it("shows a first-visit hint that can open the logbook or be dismissed", () => {
     render(<Overlay />);
     const hint = screen.getByRole("note");
+    expect(hint).toHaveTextContent(/relic/i);
     expect(hint).toHaveTextContent(/click a recipe/i);
     fireEvent.click(within(hint).getByRole("button", { name: /logbook/i }));
     expect(drawer()).toBeInTheDocument();
@@ -327,7 +414,7 @@ describe("Overlay", () => {
   it("drops the hint after the first unlock", () => {
     const { rerender } = render(<Overlay />);
     expect(screen.getByRole("note")).toBeInTheDocument();
-    act(() => useAltarStore.setState({ unlocked: ["about"] }));
+    act(() => useAltarStore.setState({ unlocked: ["contact"] }));
     rerender(<Overlay />);
     expect(screen.queryByRole("note")).toBeNull();
   });
