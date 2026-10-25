@@ -18,6 +18,9 @@ beforeEach(() => {
     contents: [],
     unlocked: [],
     theme: "dark",
+    highlight: null,
+    summoning: false,
+    summonSection: null,
   });
 });
 
@@ -70,6 +73,91 @@ describe("RecipeBoard", () => {
     setPhase("viewing");
     expect(root).toHaveAttribute("data-visible", "false");
     expect(root).toHaveAttribute("aria-hidden", "true");
+  });
+
+  describe("as buttons", () => {
+    // the board is aria-hidden while a section is open, so look past that
+    const recipeButtons = () =>
+      within(screen.getByRole("list", { hidden: true })).getAllByRole("button", { hidden: true });
+
+    it("summons a recipe's items when its button is clicked", () => {
+      render(<RecipeBoard />);
+      fireEvent.click(screen.getByRole("button", { name: "Drive Unit + Keyboard: summon" }));
+      const s = useAltarStore.getState();
+      expect(s.summoning).toBe(true);
+      expect(s.summonSection).toBe("experience");
+    });
+
+    it("marks only the in-flight recipe as summoning", () => {
+      render(<RecipeBoard />);
+      fireEvent.click(screen.getByRole("button", { name: "Drive Unit + Keyboard: summon" }));
+      const marked = screen.getAllByRole("listitem").filter((e) => e.hasAttribute("data-summoning"));
+      expect(marked.map((e) => e.getAttribute("data-section"))).toEqual(["experience"]);
+      expect(marked[0]).toHaveAttribute("data-summoning", "true");
+    });
+
+    it("highlights a recipe's items on hover and focus, and clears on leave and blur", () => {
+      render(<RecipeBoard />);
+      const projects = recipeButtons()[RECIPES.findIndex((r) => r.section === "projects")];
+      fireEvent.pointerEnter(projects);
+      expect(useAltarStore.getState().highlight).toBe("projects");
+      fireEvent.pointerLeave(projects);
+      expect(useAltarStore.getState().highlight).toBeNull();
+      act(() => projects.focus());
+      expect(useAltarStore.getState().highlight).toBe("projects");
+      act(() => projects.blur());
+      expect(useAltarStore.getState().highlight).toBeNull();
+    });
+
+    it("describes each row with its destination and, when unlocked, its state", () => {
+      useAltarStore.setState({ unlocked: ["experience"] });
+      render(<RecipeBoard />);
+      const experience = screen.getByRole("button", { name: "Drive Unit + Keyboard: summon" });
+      expect(experience).toHaveAccessibleDescription(/Experience.*Unlocked/);
+      const projects = screen.getByRole("button", { name: "FPGA Chip + Soldering Iron: summon" });
+      expect(projects).toHaveAccessibleDescription(/Projects/);
+      expect(projects).not.toHaveAccessibleDescription(/Unlocked/);
+    });
+
+    it("does not highlight while a summon is in flight", () => {
+      useAltarStore.setState({ summoning: true, summonSection: "experience" });
+      render(<RecipeBoard />);
+      const projects = recipeButtons()[RECIPES.findIndex((r) => r.section === "projects")];
+      fireEvent.pointerEnter(projects);
+      expect(useAltarStore.getState().highlight).toBeNull();
+      fireEvent.focus(projects);
+      expect(useAltarStore.getState().highlight).toBeNull();
+    });
+
+    it("disables every button while a summon is in flight", () => {
+      useAltarStore.setState({ summoning: true, summonSection: "experience" });
+      render(<RecipeBoard />);
+      expect(recipeButtons()).toHaveLength(6);
+      for (const b of recipeButtons()) expect(b).toBeDisabled();
+    });
+
+    it("keeps pointerdown and wheel on a row from reaching the canvas container", () => {
+      const seen: string[] = [];
+      const { container } = render(
+        <div onPointerDown={() => seen.push("pointerdown")} onWheel={() => seen.push("wheel")}>
+          <RecipeBoard />
+        </div>,
+      );
+      const row = container.querySelector(".au-recipe__btn")!;
+      fireEvent.pointerDown(row);
+      fireEvent.wheel(row);
+      expect(seen).toEqual([]);
+      // outside the list the events still bubble (header passes through to the scene)
+      fireEvent.pointerDown(container.querySelector(".au-board__head")!);
+      expect(seen).toEqual(["pointerdown"]);
+    });
+
+    it("disables every button while a section is open", () => {
+      setPhase("viewing");
+      render(<RecipeBoard />);
+      expect(recipeButtons()).toHaveLength(6);
+      for (const b of recipeButtons()) expect(b).toBeDisabled();
+    });
   });
 
   it("follows the theme", () => {
@@ -228,7 +316,7 @@ describe("Overlay", () => {
   it("shows a first-visit hint that can open the logbook or be dismissed", () => {
     render(<Overlay />);
     const hint = screen.getByRole("note");
-    expect(hint).toHaveTextContent(/drag two items/i);
+    expect(hint).toHaveTextContent(/click a recipe/i);
     fireEvent.click(within(hint).getByRole("button", { name: /logbook/i }));
     expect(drawer()).toBeInTheDocument();
     pressEscape();

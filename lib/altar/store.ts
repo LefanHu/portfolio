@@ -17,6 +17,12 @@ export interface AltarState {
   ejectNonce: number;
   resetNonce: number;
   theme: Theme;
+  /** Recipe whose items the board is hovering; the scene lights them up. */
+  highlight: SectionId | null;
+  /** True while the cauldron pulls in a clicked recipe's items. */
+  summoning: boolean;
+  summonSection: SectionId | null;
+  summonNonce: number;
   itemEntered(id: ItemId): void;
   itemLeft(id: ItemId): void;
   evaluate(): void;
@@ -27,6 +33,9 @@ export interface AltarState {
   returnDone(): void;
   setTheme(t: Theme): void;
   toggleTheme(): void;
+  setHighlight(id: SectionId | null): void;
+  summonRecipe(id: SectionId): void;
+  summonDone(): void;
 }
 
 const SECTION_IDS = new Set<string>(RECIPES.map((r) => r.section));
@@ -77,6 +86,10 @@ export function createAltarStore(initialTheme: Theme = "dark") {
         ejectNonce: 0,
         resetNonce: 0,
         theme: initialTheme,
+        highlight: null,
+        summoning: false,
+        summonSection: null,
+        summonNonce: 0,
 
         itemEntered: (id) =>
           set((s) =>
@@ -92,14 +105,23 @@ export function createAltarStore(initialTheme: Theme = "dark") {
           ),
         evaluate: () => {
           const s = get();
-          if (s.phase !== "idle") return;
+          // Mid-summon the cauldron holds a wrong item plus incoming ones: judging it would eject them all.
+          if (s.phase !== "idle" || s.summoning) return;
           const result = matchRecipe(s.contents);
           if (result.kind === "match") s.openSection(result.recipe.section);
           else if (result.kind === "invalid") s.clearAltar();
         },
         clearAltar: () =>
           set((s) =>
-            s.phase !== "idle" ? s : { contents: [], ejectNonce: s.ejectNonce + 1 },
+            s.phase !== "idle"
+              ? s
+              : {
+                  contents: [],
+                  ejectNonce: s.ejectNonce + 1,
+                  summoning: false,
+                  summonSection: null,
+                  highlight: null,
+                },
           ),
         openSection: (id) =>
           set((s) =>
@@ -108,6 +130,9 @@ export function createAltarStore(initialTheme: Theme = "dark") {
               : {
                   phase: "revealing",
                   activeSection: id,
+                  summoning: false,
+                  summonSection: null,
+                  highlight: null,
                   unlocked: s.unlocked.includes(id) ? s.unlocked : [...s.unlocked, id],
                 },
           ),
@@ -127,6 +152,19 @@ export function createAltarStore(initialTheme: Theme = "dark") {
           ),
         setTheme: (t) => set({ theme: t }),
         toggleTheme: () => set((s) => ({ theme: s.theme === "dark" ? "light" : "dark" })),
+        setHighlight: (id) => set((s) => (s.phase !== "idle" ? s : { highlight: id })),
+        summonRecipe: (id) =>
+          set((s) =>
+            s.phase !== "idle" || s.summoning
+              ? s
+              : {
+                  summoning: true,
+                  summonSection: id,
+                  summonNonce: s.summonNonce + 1,
+                  highlight: null,
+                },
+          ),
+        summonDone: () => set({ summoning: false, summonSection: null }),
       }),
       {
         name: "altar",

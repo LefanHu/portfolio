@@ -1,7 +1,20 @@
 /*
  * Section projection panels (components/altar/projection). Global CSS, so every
- * selector is scoped under .ap-root. All sizes are em: the panel's base font
- * scales with its pixel size, so the layout is identical at any viewport.
+ * selector is scoped under .ap-root. The frame and header are sized in em: the
+ * panel's base font scales with its pixel size. The page content inside
+ * (.ap-site) is the main site's own components, which size in rem, so it resets
+ * to a fixed 16px base.
+ *
+ * Unlayered CSS beats Tailwind's layered utilities whatever the specificity, so
+ * keep restyling of the site's elements to the few overrides that must apply
+ * inside .ap-site (no margin/color/link resets outside the header):
+ *   - position: relative on boxes with no position utility (the wire outlines
+ *     anchor to them)
+ *   - transition-property / transition-duration on every descendant: these
+ *     beat the layered Tailwind transition utilities (zero specificity, so
+ *     the site's unlayered CSS-module transitions, e.g. SlidingCards, still win)
+ *   - background-image on text blocks during the wire stage (skeleton bars)
+ *   - the focus outline on links
  *
  * Stages (data-stage on .ap-root):
  *   wire     – text is transparent; [data-wire] boxes draw their outlines,
@@ -71,14 +84,10 @@
 .ap-root *::after {
   box-sizing: border-box;
 }
-.ap-root :where(h2, h3, p, ul, li) {
+.ap-head :where(p, h2) {
   margin: 0;
-  padding: 0;
 }
-.ap-root :where(ul) {
-  list-style: none;
-}
-.ap-root a {
+.ap-head a {
   color: inherit;
   text-decoration: none;
 }
@@ -155,6 +164,22 @@
 .ap-root[data-theme="dark"] .ap-title {
   text-shadow: 0 0 0.45em var(--ap-glow);
 }
+.ap-head__action {
+  flex: none;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ap-head);
+  padding: 0.35em 0.9em;
+  border: 1px solid var(--ap-head);
+  border-radius: 0.3em;
+  transition: background-color 0.2s ease;
+}
+.ap-root[data-stage="filled"] .ap-head__action:hover {
+  background: color-mix(in srgb, var(--proj-accent) 18%, transparent);
+}
 .ap-head__ticks {
   display: flex;
   gap: 0.45em;
@@ -185,339 +210,24 @@
   scrollbar-color: color-mix(in srgb, var(--proj-line) 45%, transparent) transparent;
 }
 
-.ap-card {
-  position: relative;
-  display: block;
-  padding: 1em 1.1em;
-  border: 1px solid var(--ap-edge);
-  border-radius: 0.35em;
-  background-color: var(--ap-card);
-}
-a.ap-card {
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    transform 0.2s ease;
-}
-.ap-root[data-stage="filled"] a.ap-card:hover {
-  border-color: color-mix(in srgb, var(--proj-accent) 70%, transparent);
-  background-color: color-mix(in srgb, var(--proj-accent) 9%, transparent);
-}
 .ap-root a:focus-visible {
   outline: 2px solid var(--ap-head);
   outline-offset: 2px;
 }
 
-.ap-label {
-  --lh: 1.6em;
-  line-height: var(--lh);
-  font-size: 0.68em;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ap-head);
-  width: max-content;
-  max-width: 100%;
-}
-.ap-card__title {
-  --lh: 1.3em;
-  line-height: var(--lh);
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 1.22em;
-  font-weight: 600;
-  color: var(--ap-strong);
-  margin-top: 0.15em;
-}
-.ap-display {
-  --lh: 1.15em;
-  line-height: var(--lh);
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 2.6em;
-  font-weight: 600;
-  color: var(--ap-strong);
-  margin: 0.15em 0 0.3em;
-  width: max-content;
-  max-width: 100%;
-}
-.ap-root[data-theme="dark"] :is(.ap-display, .ap-email) {
-  text-shadow: 0 0 0.5em var(--ap-glow);
-}
-.ap-lead {
-  --lh: 1.55em;
-  line-height: var(--lh);
-  font-size: 1.12em;
-}
-.ap-body {
-  --lh: 1.5em;
-  line-height: var(--lh);
-  font-size: 0.9em;
-  color: var(--ap-soft);
-  margin-top: 0.35em;
-}
-.ap-sub {
-  --lh: 1.45em;
-  line-height: var(--lh);
-  font-size: 0.88em;
-  margin-top: 0.1em;
-}
-.ap-meta {
-  --lh: 1.5em;
-  line-height: var(--lh);
-  font-size: 0.78em;
-  letter-spacing: 0.04em;
-  color: var(--ap-head);
-  margin-top: 0.3em;
-}
-.ap-note {
-  --lh: 1.5em;
-  line-height: var(--lh);
-  margin-top: 0.9em;
-  padding-left: 0.8em;
-  border-left: 2px solid var(--ap-head);
-  color: var(--ap-strong);
-}
-.ap-cta {
-  --lh: 1.5em;
-  line-height: var(--lh);
-  display: inline-block;
-  margin-top: 0.6em;
-  font-size: 0.8em;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--ap-head);
-}
-
-.ap-bullets {
-  margin-top: 0.6em;
-  display: grid;
-  gap: 0.4em;
-}
-.ap-bullets li {
-  --lh: 1.5em;
-  line-height: var(--lh);
-  position: relative;
-  padding-left: 1.1em;
-  font-size: 0.86em;
-  color: var(--ap-soft);
-}
-.ap-bullets li::after {
-  content: "";
-  position: absolute;
-  left: 0.15em;
-  top: 0.62em;
-  width: 0.38em;
-  height: 0.38em;
-  transform: rotate(45deg);
-  background: var(--ap-head);
-}
-
-.ap-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4em;
-  margin-top: 0.75em;
-}
-.ap-chip {
-  padding: 0.18em 0.65em;
-  font-size: 0.76em;
+/*
+ * The main site's section, in its own dark palette in both themes (the site
+ * has no light mode). Fixed 16px so its rem sizing ignores the pane's em base.
+ */
+.ap-site {
+  padding: 2rem;
+  font-size: 16px;
   line-height: 1.5;
-  border: 1px solid color-mix(in srgb, var(--proj-line) 35%, transparent);
-  border-radius: 1em;
-  background: color-mix(in srgb, var(--proj-line) 7%, transparent);
-  color: var(--ap-strong);
-}
-
-.ap-img {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 0.25em;
-  background: color-mix(in srgb, var(--proj-line) 8%, transparent);
-}
-.ap-img img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ------------------------------------------------------------------ layouts */
-
-.ap-grid3 {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9em;
-}
-.ap-columns {
-  columns: 2;
-  column-gap: 0.9em;
-}
-.ap-columns > .ap-card {
-  break-inside: avoid;
-  margin-bottom: 0.9em;
-}
-
-.ap-about {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 0.9em;
+  color: #f8fafc;
+  background-color: #0b1120;
+  color-scheme: dark;
+  /* short sections still fill the pane's height, so no light band shows below */
   min-height: 100%;
-}
-.ap-about__intro {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.6em 1.8em;
-}
-.ap-about__side {
-  display: grid;
-  gap: 0.9em;
-  align-content: stretch;
-}
-.ap-about__side > .ap-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.2em 1.4em;
-}
-.ap-about .ap-display {
-  font-size: 3.1em;
-}
-.ap-about .ap-lead {
-  font-size: 1.22em;
-}
-
-.ap-projects {
-  display: grid;
-  gap: 0.9em;
-}
-.ap-feature {
-  display: grid;
-  grid-template-columns: 13em 1fr;
-  gap: 1.3em;
-  align-items: center;
-}
-.ap-feature__art {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.35em;
-  padding: 0.7em;
-  aspect-ratio: 16 / 10;
-  border-radius: 0.25em;
-  background: color-mix(in srgb, var(--proj-line) 6%, transparent);
-}
-.ap-feature__art i {
-  border: 1px solid color-mix(in srgb, var(--proj-accent) 70%, transparent);
-  border-radius: 0.12em;
-  animation: ap-pulse 2.4s ease-in-out infinite;
-}
-.ap-feature__title {
-  font-size: 1.45em;
-}
-.ap-proj {
-  display: flex;
-  flex-direction: column;
-  padding: 0.7em 0.7em 0.9em;
-}
-.ap-proj .ap-img {
-  margin-bottom: 0.55em;
-}
-.ap-proj__desc {
-  flex: 1;
-}
-
-.ap-skills {
-  grid-template-columns: 1fr;
-  grid-auto-rows: 1fr;
-  min-height: 100%;
-}
-.ap-skills > .ap-card {
-  display: grid;
-  grid-template-columns: 15em 1fr;
-  grid-template-rows: auto auto;
-  column-gap: 1.6em;
-  align-content: center;
-  padding: 1.1em 1.5em;
-}
-.ap-skills .ap-card__title {
-  grid-column: 1;
-  font-size: 1.45em;
-}
-.ap-skills .ap-chips {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
-  margin-top: 0;
-  gap: 0.55em;
-}
-.ap-skills .ap-chip {
-  font-size: 0.95em;
-  padding: 0.25em 0.8em;
-}
-
-.ap-interests {
-  display: grid;
-  gap: 0.9em;
-}
-.ap-strip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.9em;
-}
-
-.ap-contact {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 0.9em;
-  min-height: 100%;
-}
-.ap-contact__main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 1.8em 2em;
-}
-.ap-email {
-  --lh: 1.25em;
-  line-height: var(--lh);
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 2.2em;
-  font-weight: 600;
-  color: var(--ap-strong);
-  margin: 0.2em 0 0.45em;
-  border-bottom: 2px solid color-mix(in srgb, var(--proj-accent) 70%, transparent);
-}
-.ap-btn {
-  display: inline-block;
-  margin-top: 1.4em;
-  padding: 0.6em 1.3em;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  border: 1px solid var(--ap-head);
-  border-radius: 0.3em;
-  color: var(--ap-strong);
-  background: color-mix(in srgb, var(--proj-accent) 16%, transparent);
-  transition: background-color 0.2s ease;
-}
-.ap-root[data-stage="filled"] .ap-btn:hover {
-  background: color-mix(in srgb, var(--proj-accent) 30%, transparent);
-}
-.ap-contact__links {
-  display: grid;
-  gap: 0.9em;
-}
-.ap-linkrow {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.2em 1.6em;
-}
-.ap-linkrow .ap-card__title {
-  font-size: 1.7em;
-}
-.ap-linkrow .ap-meta {
-  font-size: 0.9em;
 }
 
 /* ------------------------------------------------------------------ stages */
@@ -538,8 +248,8 @@ a.ap-card {
   opacity: 0;
   transition: opacity var(--ap-fill) ease;
 }
-.ap-root [data-wire="box"],
-.ap-root [data-wire="img"] {
+/* the outline layers anchor to the block; positioned site elements already do */
+.ap-root :is([data-wire="box"], [data-wire="img"]):not(.absolute, .fixed, .relative, .sticky) {
   position: relative;
 }
 /* Crossed frame over images. */
@@ -558,19 +268,21 @@ a.ap-card {
   transition: opacity var(--ap-fill) ease;
 }
 /* Skeleton bars, one per line of text. */
-.ap-root [data-wire="text"] {
+/* (not gradient-clipped text: the bars would replace its gradient fill) */
+.ap-root [data-wire="text"]:not([class*="bg-clip-text"]) {
   --ap-bar: transparent;
   background-image: repeating-linear-gradient(
     to bottom,
-    transparent 0 calc((var(--lh, 1.5em) - 0.5em) / 2),
-    var(--ap-bar) calc((var(--lh, 1.5em) - 0.5em) / 2) calc((var(--lh, 1.5em) + 0.5em) / 2),
-    transparent calc((var(--lh, 1.5em) + 0.5em) / 2) var(--lh, 1.5em)
+    transparent 0 calc((var(--lh, 1lh) - 0.5em) / 2),
+    var(--ap-bar) calc((var(--lh, 1lh) - 0.5em) / 2) calc((var(--lh, 1lh) + 0.5em) / 2),
+    transparent calc((var(--lh, 1lh) + 0.5em) / 2) var(--lh, 1lh)
   );
   background-repeat: no-repeat;
   background-size: 100% 100%;
   transition: --ap-bar var(--ap-fill) ease;
 }
-.ap-root :is(.ap-scroll, .ap-head) * {
+/* zero specificity: the site's own transitions (SlidingCards) still win */
+:where(.ap-root) :where(.ap-scroll, .ap-head) * {
   transition-property: color, border-color, background-color, box-shadow, text-shadow, opacity, --ap-bar;
   transition-duration: var(--ap-fill);
 }
@@ -587,8 +299,8 @@ a.ap-card {
   background-color: transparent !important;
   box-shadow: none !important;
 }
-.ap-root[data-stage="wire"] :is(.ap-bullets li, .ap-sigil, .ap-head__ticks i, .ap-feature__art i)::after,
-.ap-root[data-stage="wire"] :is(.ap-head__ticks i, .ap-feature__art i) {
+.ap-root[data-stage="wire"] :is(.ap-sigil, .ap-head__ticks i)::after,
+.ap-root[data-stage="wire"] .ap-head__ticks i {
   opacity: 0;
 }
 .ap-root[data-stage="wire"] :is([data-wire="box"], [data-wire="img"])::before {
@@ -600,6 +312,14 @@ a.ap-card {
   animation: ap-fade-in var(--ap-seg) ease var(--wd, 0ms) both;
 }
 .ap-root[data-stage="wire"] [data-wire="img"] > * {
+  opacity: 0;
+}
+/* pictures and icons have no text color to blank: hide them until filled */
+.ap-root[data-stage="wire"] .ap-scroll :is(img, svg, canvas, video),
+.ap-root[data-stage="dissolve"] .ap-scroll :is(img, svg, canvas, video),
+/* gradient-clipped text keeps its fill through color: transparent */
+.ap-root[data-stage="wire"] .ap-scroll [class*="bg-clip-text"],
+.ap-root[data-stage="dissolve"] .ap-scroll [class*="bg-clip-text"] {
   opacity: 0;
 }
 .ap-root[data-stage="wire"] [data-wire="text"] {
@@ -678,16 +398,6 @@ a.ap-card {
     transform: translateY(-2%) scale(1.015);
   }
 }
-@keyframes ap-pulse {
-  0%,
-  100% {
-    background: color-mix(in srgb, var(--proj-accent) 10%, transparent);
-  }
-  50% {
-    background: color-mix(in srgb, var(--proj-accent) 55%, transparent);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .ap-root,
   .ap-root *,

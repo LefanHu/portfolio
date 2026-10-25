@@ -119,3 +119,24 @@ Data that lives inside component files should be pulled into shared modules so b
 - Loading screen design (the existing `LoaderScreen` may be reused or replaced).
 - The breakpoint or heuristic for "phone".
 - Tests, at a sensible level for the repo (it uses Vitest and Testing Library), e.g. covering recipe matching logic and the phone fallback.
+
+## Revision 2 (after launch)
+
+Lefan's requests and decisions:
+
+- **Projections render the real site.** A projection no longer uses altar-only duplicate panels. It mounts the main site's own section components:
+  - About summary and Technical Skills, split from `PortfolioAbout`
+  - Experiences
+  - Favorite Projects
+  - Interests
+  - Contact
+
+  The wireframe draw-in stays and is applied to that DOM. Edits to the main site show up in both places.
+- **The recipe board is clickable.** Clicking a recipe makes the cauldron pull that recipe's two items in; the normal reveal follows. Hovering a recipe highlights its two items on the desk (accent ring plus name tags), because the models alone don't say which item is which.
+
+Builder's calls in this revision:
+
+- The site content keeps the main site's dark styling in both themes. Only the projection frame, header and beam follow the light/dark theme.
+- The contact projection gets a "Download résumé" header action, because the main site's contact block has none.
+- External links inside a projection open in a new tab. Internal `/projects/*` links stay in the same tab.
+- Summoning first ejects any wrong items in the cauldron, then flies in only the missing items.

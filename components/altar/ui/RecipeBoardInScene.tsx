@@ -17,8 +17,10 @@ const _target = new THREE.Vector3();
  * A world-space pane that floats after the camera: when the visitor orbits or
  * zooms, it lags, then eases back to the same spot and size, so it never
  * swings off screen and is crisp (1:1) whenever the camera rests.
- * Pointer events are off, so it never takes a click or a drag from the scene,
- * and it adds nothing raycastable. Its z-range sits under the item tooltip's.
+ * Only the recipe list takes pointer input (the width wrapper and .au-board
+ * are pointer-events: none, see ui.css), so the header, footer and everything
+ * around the board still pass clicks and drags to the scene. It adds nothing
+ * raycastable. Its z-range sits under the item tooltip's.
  */
 export default function RecipeBoardInScene() {
   const width = useThree((s) => s.size.width);
@@ -53,8 +55,8 @@ export default function RecipeBoardInScene() {
 
   return (
     <group ref={group}>
-      <Html transform distanceFactor={b.distanceFactor} zIndexRange={[10, 0]} pointerEvents="none">
-        <div style={{ width: b.cssWidth, fontSize: b.fontSize }}>
+      <Html transform distanceFactor={b.distanceFactor} zIndexRange={[10, 0]} pointerEvents="auto">
+        <div style={{ width: b.cssWidth, fontSize: b.fontSize, pointerEvents: "none" }}>
           <RecipeBoard />
         </div>
       </Html>

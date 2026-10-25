@@ -7,14 +7,16 @@ type StoreLike = {
 
 /**
  * Debounced evaluation: `evaluate()` runs `ms` after the last change to the
- * cauldron's contents, while the phase is idle and something is inside.
+ * cauldron's contents (or the end of a summon), while the phase is idle and
+ * something is inside.
  */
 export function createSettleScheduler(store: StoreLike, ms = SETTLE_MS) {
   return {
     connect(): () => void {
       let timer: ReturnType<typeof setTimeout> | undefined;
       const unsub = store.subscribe((s, prev) => {
-        if (s.contents === prev.contents && s.phase === prev.phase) return;
+        const summonEnded = prev.summoning && !s.summoning;
+        if (s.contents === prev.contents && s.phase === prev.phase && !summonEnded) return;
         clearTimeout(timer);
         timer = undefined;
         if (s.phase === "idle" && s.contents.length > 0) {

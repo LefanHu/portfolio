@@ -121,7 +121,7 @@ export default function Overlay() {
         <div className="au-hint" role="note" data-visible={idle && !logbookOpen}>
           <SparkIcon />
           <span>
-            Drag two items from the desk into the cauldron, or{" "}
+            Drag two items from the desk into the cauldron, click a recipe, or{" "}
             <button type="button" className="au-link" onClick={() => setLogbookOpen(true)}>
               open the Logbook
             </button>

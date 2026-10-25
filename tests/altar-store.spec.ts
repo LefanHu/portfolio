@@ -123,10 +123,101 @@ describe("altar store", () => {
   });
 });
 
+describe("altar store summon and highlight", () => {
+  it("summonRecipe starts a summon from idle", () => {
+    const s = createAltarStore();
+    s.getState().setHighlight("skills");
+    s.getState().summonRecipe("projects");
+    const st = s.getState();
+    expect(st.summoning).toBe(true);
+    expect(st.summonSection).toBe("projects");
+    expect(st.summonNonce).toBe(1);
+    expect(st.highlight).toBeNull();
+  });
+
+  it("ignores summonRecipe while already summoning", () => {
+    const s = createAltarStore();
+    s.getState().summonRecipe("projects");
+    s.getState().summonRecipe("skills");
+    expect(s.getState().summonSection).toBe("projects");
+    expect(s.getState().summonNonce).toBe(1);
+  });
+
+  it("ignores summonRecipe outside idle", () => {
+    const s = createAltarStore();
+    s.getState().openSection("about");
+    s.getState().revealDone();
+    expect(s.getState().phase).toBe("viewing");
+    s.getState().summonRecipe("projects");
+    expect(s.getState().summoning).toBe(false);
+    expect(s.getState().summonNonce).toBe(0);
+  });
+
+  it("summonDone ends the summon", () => {
+    const s = createAltarStore();
+    s.getState().summonRecipe("projects");
+    s.getState().summonDone();
+    expect(s.getState().summoning).toBe(false);
+    expect(s.getState().summonSection).toBeNull();
+    expect(s.getState().summonNonce).toBe(1);
+  });
+
+  it("evaluate is a no-op while summoning", () => {
+    const s = createAltarStore();
+    s.getState().itemEntered("notebook");
+    s.getState().itemEntered("keyboard");
+    s.getState().summonRecipe("projects");
+    s.getState().evaluate();
+    expect(s.getState().phase).toBe("idle");
+    expect(s.getState().ejectNonce).toBe(0);
+  });
+
+  it("openSection clears summon and highlight", () => {
+    const s = createAltarStore();
+    s.getState().summonRecipe("projects");
+    s.getState().openSection("about");
+    const st = s.getState();
+    expect(st.summoning).toBe(false);
+    expect(st.summonSection).toBeNull();
+    expect(st.highlight).toBeNull();
+  });
+
+  it("clearAltar clears summon and highlight", () => {
+    const s = createAltarStore();
+    s.getState().summonRecipe("projects");
+    s.getState().clearAltar();
+    expect(s.getState().summoning).toBe(false);
+    expect(s.getState().summonSection).toBeNull();
+    expect(s.getState().highlight).toBeNull();
+  });
+
+  it("clearAltar outside idle leaves summon state alone", () => {
+    const s = createAltarStore();
+    s.getState().summonRecipe("projects");
+    s.setState({ phase: "viewing" });
+    s.getState().clearAltar();
+    expect(s.getState().summoning).toBe(true);
+    expect(s.getState().summonSection).toBe("projects");
+  });
+
+  it("setHighlight only applies while idle", () => {
+    const s = createAltarStore();
+    s.getState().setHighlight("skills");
+    expect(s.getState().highlight).toBe("skills");
+    s.getState().setHighlight(null);
+    expect(s.getState().highlight).toBeNull();
+    s.getState().openSection("about");
+    s.getState().setHighlight("skills");
+    expect(s.getState().highlight).toBeNull();
+  });
+});
+
 describe("altar store persistence", () => {
   it("persists only unlocked and theme", () => {
     const s = createAltarStore();
     s.getState().itemEntered("tool");
+    s.getState().setHighlight("skills");
+    s.getState().summonRecipe("projects");
     s.getState().openSection("projects");
     const saved = JSON.parse(sessionStorage.getItem("altar")!);
     expect(Object.keys(saved.state).sort()).toEqual(["theme", "unlocked"]);

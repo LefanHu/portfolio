@@ -1,8 +1,10 @@
 import { about, skillGroups } from "@/lib/portfolio/about";
 
-export default function About() {
+const cardClasses = "rounded-2xl border border-white/10 bg-slate-900/90 p-6 sm:p-8";
+
+function AboutSummaryContent() {
   return (
-    <section aria-labelledby="about-heading" className="rounded-2xl border border-white/10 bg-slate-900/90 p-6 sm:p-8">
+    <>
       <h2 id="about-heading" className="text-3xl font-bold text-white">About Me</h2>
       <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
         I&apos;m {about.name}, {about.blurb}
@@ -21,6 +23,13 @@ export default function About() {
           <p className="mt-2 leading-7 text-slate-300">{about.research.description}</p>
         </div>
       </div>
+    </>
+  );
+}
+
+function TechnicalSkillsContent() {
+  return (
+    <>
       <h3 className="mt-8 text-xl font-bold text-white">Technical Skills</h3>
       <div className="mt-4 grid gap-6 lg:grid-cols-3">
         {skillGroups.map((group) => (
@@ -34,6 +43,32 @@ export default function About() {
           </div>
         ))}
       </div>
+    </>
+  );
+}
+
+export function AboutSummary() {
+  return (
+    <section aria-labelledby="about-heading" className={cardClasses}>
+      <AboutSummaryContent />
+    </section>
+  );
+}
+
+// The heading's top margin separates it from the summary inside About; on its own card it starts flush.
+export function TechnicalSkills() {
+  return (
+    <section aria-label="Technical Skills" className={`${cardClasses} [&>h3:first-child]:mt-0`}>
+      <TechnicalSkillsContent />
+    </section>
+  );
+}
+
+export default function About() {
+  return (
+    <section aria-labelledby="about-heading" className={cardClasses}>
+      <AboutSummaryContent />
+      <TechnicalSkillsContent />
     </section>
   );
 }

@@ -63,4 +63,21 @@ describe("createSettleScheduler", () => {
     vi.advanceTimersByTime(SETTLE_MS * 2);
     expect(store.getState().phase).toBe("idle");
   });
+
+  it("re-arms when summoning ends without a contents change", () => {
+    const store = createAltarStore();
+    const disconnect = createSettleScheduler(store).connect();
+    store.getState().itemEntered("driveUnit");
+    store.getState().itemEntered("keyboard");
+    store.getState().summonRecipe("projects");
+    vi.advanceTimersByTime(SETTLE_MS * 2);
+    expect(store.getState().phase).toBe("idle");
+    store.getState().summonDone();
+    vi.advanceTimersByTime(SETTLE_MS - 1);
+    expect(store.getState().phase).toBe("idle");
+    vi.advanceTimersByTime(1);
+    expect(store.getState().phase).toBe("revealing");
+    expect(store.getState().activeSection).toBe("experience");
+    disconnect();
+  });
 });
