@@ -1,0 +1,700 @@
+/*
+ * Section projection panels (components/altar/projection). Global CSS, so every
+ * selector is scoped under .ap-root. All sizes are em: the panel's base font
+ * scales with its pixel size, so the layout is identical at any viewport.
+ *
+ * Stages (data-stage on .ap-root):
+ *   wire     – text is transparent; [data-wire] boxes draw their outlines,
+ *              [data-wire="text"] shows skeleton bars, images are crossed frames.
+ *   filled   – content fades in over --ap-fill.
+ *   dissolve – content collapses back to bars, then the panel fades out.
+ */
+
+@property --proj-line {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #6fe6ff;
+}
+@property --proj-fill {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0b2a44;
+}
+@property --proj-text {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #a8f1ff;
+}
+@property --ap-bar {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.ap-root {
+  /* derived tokens; theme blocks below override */
+  --ap-pane: 70%;
+  --ap-head: var(--proj-accent);
+  --ap-strong: color-mix(in srgb, var(--proj-text) 70%, white);
+  --ap-soft: color-mix(in srgb, var(--proj-text) 72%, transparent);
+  --ap-edge: color-mix(in srgb, var(--proj-line) 30%, transparent);
+  --ap-card: color-mix(in srgb, var(--proj-line) 6%, transparent);
+  --ap-glow: color-mix(in srgb, var(--proj-accent) 55%, transparent);
+  --ap-wire: var(--proj-line);
+
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--proj-line) 55%, transparent);
+  border-radius: 0.35em;
+  color: var(--proj-text);
+  background-color: color-mix(in srgb, var(--proj-fill) var(--ap-pane), transparent);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  user-select: text;
+  transition:
+    --proj-line 1.5s ease,
+    --proj-fill 1.5s ease,
+    --proj-text 1.5s ease,
+    box-shadow 1.5s ease,
+    background-color var(--ap-fill) ease,
+    border-color var(--ap-fill) ease;
+}
+.ap-root *,
+.ap-root *::before,
+.ap-root *::after {
+  box-sizing: border-box;
+}
+.ap-root :where(h2, h3, p, ul, li) {
+  margin: 0;
+  padding: 0;
+}
+.ap-root :where(ul) {
+  list-style: none;
+}
+.ap-root a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ap-root[data-theme="dark"] {
+  box-shadow:
+    0 0 2.2em color-mix(in srgb, var(--proj-line) 22%, transparent),
+    inset 0 0 3em color-mix(in srgb, var(--proj-line) 12%, transparent);
+  /* faint scanlines */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--proj-line) 5%, transparent) 0 1px,
+    transparent 1px 0.25em
+  );
+}
+.ap-root[data-theme="light"] {
+  --ap-pane: 84%;
+  --ap-head: color-mix(in oklab, var(--proj-accent) 52%, #1b2836);
+  --ap-strong: color-mix(in srgb, var(--proj-text) 80%, black);
+  --ap-soft: color-mix(in srgb, var(--proj-text) 80%, transparent);
+  --ap-edge: color-mix(in srgb, var(--proj-line) 22%, transparent);
+  --ap-card: color-mix(in srgb, white 45%, transparent);
+  --ap-glow: transparent;
+  box-shadow: 0 0.6em 2.4em color-mix(in srgb, #1b2836 18%, transparent);
+}
+
+/* ------------------------------------------------------------------ header */
+
+.ap-head {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin: 1.1em 1.4em 0;
+  padding: 0.65em 1em;
+  border: 1px solid color-mix(in srgb, var(--proj-line) 40%, transparent);
+  border-radius: 0.3em;
+  background: color-mix(in srgb, var(--proj-accent) 7%, transparent);
+}
+.ap-sigil {
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+  transform: rotate(45deg);
+  border: 2px solid var(--ap-head);
+  box-shadow:
+    0 0 0.6em var(--ap-glow),
+    inset 0 0 0.35em var(--ap-glow);
+}
+.ap-head__titles {
+  flex: 1;
+  min-width: 0;
+}
+.ap-eyebrow {
+  --lh: 1.5em;
+  line-height: var(--lh);
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ap-head);
+  width: max-content;
+  max-width: 100%;
+}
+.ap-title {
+  --lh: 1.2em;
+  line-height: var(--lh);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.85em;
+  font-weight: 600;
+  color: var(--ap-strong);
+  width: max-content;
+  max-width: 100%;
+}
+.ap-root[data-theme="dark"] .ap-title {
+  text-shadow: 0 0 0.45em var(--ap-glow);
+}
+.ap-head__ticks {
+  display: flex;
+  gap: 0.45em;
+}
+.ap-head__ticks i {
+  display: block;
+  width: 2.2em;
+  height: 0.18em;
+  border-radius: 1em;
+  background: color-mix(in srgb, var(--proj-line) 45%, transparent);
+}
+.ap-head__ticks i:first-child {
+  background: var(--ap-head);
+}
+
+/* ------------------------------------------------------------------ body */
+
+.ap-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin-top: 0.35em;
+  padding: 0.75em 1.4em 1.3em;
+  /* content fades out under the header and at the bottom edge instead of being cut */
+  mask-image: linear-gradient(to bottom, transparent 0, black 0.75em, black calc(100% - 1.1em), transparent 100%);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--proj-line) 45%, transparent) transparent;
+}
+
+.ap-card {
+  position: relative;
+  display: block;
+  padding: 1em 1.1em;
+  border: 1px solid var(--ap-edge);
+  border-radius: 0.35em;
+  background-color: var(--ap-card);
+}
+a.ap-card {
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+.ap-root[data-stage="filled"] a.ap-card:hover {
+  border-color: color-mix(in srgb, var(--proj-accent) 70%, transparent);
+  background-color: color-mix(in srgb, var(--proj-accent) 9%, transparent);
+}
+.ap-root a:focus-visible {
+  outline: 2px solid var(--ap-head);
+  outline-offset: 2px;
+}
+
+.ap-label {
+  --lh: 1.6em;
+  line-height: var(--lh);
+  font-size: 0.68em;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ap-head);
+  width: max-content;
+  max-width: 100%;
+}
+.ap-card__title {
+  --lh: 1.3em;
+  line-height: var(--lh);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.22em;
+  font-weight: 600;
+  color: var(--ap-strong);
+  margin-top: 0.15em;
+}
+.ap-display {
+  --lh: 1.15em;
+  line-height: var(--lh);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 2.6em;
+  font-weight: 600;
+  color: var(--ap-strong);
+  margin: 0.15em 0 0.3em;
+  width: max-content;
+  max-width: 100%;
+}
+.ap-root[data-theme="dark"] :is(.ap-display, .ap-email) {
+  text-shadow: 0 0 0.5em var(--ap-glow);
+}
+.ap-lead {
+  --lh: 1.55em;
+  line-height: var(--lh);
+  font-size: 1.12em;
+}
+.ap-body {
+  --lh: 1.5em;
+  line-height: var(--lh);
+  font-size: 0.9em;
+  color: var(--ap-soft);
+  margin-top: 0.35em;
+}
+.ap-sub {
+  --lh: 1.45em;
+  line-height: var(--lh);
+  font-size: 0.88em;
+  margin-top: 0.1em;
+}
+.ap-meta {
+  --lh: 1.5em;
+  line-height: var(--lh);
+  font-size: 0.78em;
+  letter-spacing: 0.04em;
+  color: var(--ap-head);
+  margin-top: 0.3em;
+}
+.ap-note {
+  --lh: 1.5em;
+  line-height: var(--lh);
+  margin-top: 0.9em;
+  padding-left: 0.8em;
+  border-left: 2px solid var(--ap-head);
+  color: var(--ap-strong);
+}
+.ap-cta {
+  --lh: 1.5em;
+  line-height: var(--lh);
+  display: inline-block;
+  margin-top: 0.6em;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ap-head);
+}
+
+.ap-bullets {
+  margin-top: 0.6em;
+  display: grid;
+  gap: 0.4em;
+}
+.ap-bullets li {
+  --lh: 1.5em;
+  line-height: var(--lh);
+  position: relative;
+  padding-left: 1.1em;
+  font-size: 0.86em;
+  color: var(--ap-soft);
+}
+.ap-bullets li::after {
+  content: "";
+  position: absolute;
+  left: 0.15em;
+  top: 0.62em;
+  width: 0.38em;
+  height: 0.38em;
+  transform: rotate(45deg);
+  background: var(--ap-head);
+}
+
+.ap-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  margin-top: 0.75em;
+}
+.ap-chip {
+  padding: 0.18em 0.65em;
+  font-size: 0.76em;
+  line-height: 1.5;
+  border: 1px solid color-mix(in srgb, var(--proj-line) 35%, transparent);
+  border-radius: 1em;
+  background: color-mix(in srgb, var(--proj-line) 7%, transparent);
+  color: var(--ap-strong);
+}
+
+.ap-img {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 0.25em;
+  background: color-mix(in srgb, var(--proj-line) 8%, transparent);
+}
+.ap-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------------------ layouts */
+
+.ap-grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9em;
+}
+.ap-columns {
+  columns: 2;
+  column-gap: 0.9em;
+}
+.ap-columns > .ap-card {
+  break-inside: avoid;
+  margin-bottom: 0.9em;
+}
+
+.ap-about {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 0.9em;
+  min-height: 100%;
+}
+.ap-about__intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.6em 1.8em;
+}
+.ap-about__side {
+  display: grid;
+  gap: 0.9em;
+  align-content: stretch;
+}
+.ap-about__side > .ap-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.2em 1.4em;
+}
+.ap-about .ap-display {
+  font-size: 3.1em;
+}
+.ap-about .ap-lead {
+  font-size: 1.22em;
+}
+
+.ap-projects {
+  display: grid;
+  gap: 0.9em;
+}
+.ap-feature {
+  display: grid;
+  grid-template-columns: 13em 1fr;
+  gap: 1.3em;
+  align-items: center;
+}
+.ap-feature__art {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.35em;
+  padding: 0.7em;
+  aspect-ratio: 16 / 10;
+  border-radius: 0.25em;
+  background: color-mix(in srgb, var(--proj-line) 6%, transparent);
+}
+.ap-feature__art i {
+  border: 1px solid color-mix(in srgb, var(--proj-accent) 70%, transparent);
+  border-radius: 0.12em;
+  animation: ap-pulse 2.4s ease-in-out infinite;
+}
+.ap-feature__title {
+  font-size: 1.45em;
+}
+.ap-proj {
+  display: flex;
+  flex-direction: column;
+  padding: 0.7em 0.7em 0.9em;
+}
+.ap-proj .ap-img {
+  margin-bottom: 0.55em;
+}
+.ap-proj__desc {
+  flex: 1;
+}
+
+.ap-skills {
+  grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;
+  min-height: 100%;
+}
+.ap-skills > .ap-card {
+  display: grid;
+  grid-template-columns: 15em 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 1.6em;
+  align-content: center;
+  padding: 1.1em 1.5em;
+}
+.ap-skills .ap-card__title {
+  grid-column: 1;
+  font-size: 1.45em;
+}
+.ap-skills .ap-chips {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin-top: 0;
+  gap: 0.55em;
+}
+.ap-skills .ap-chip {
+  font-size: 0.95em;
+  padding: 0.25em 0.8em;
+}
+
+.ap-interests {
+  display: grid;
+  gap: 0.9em;
+}
+.ap-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9em;
+}
+
+.ap-contact {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 0.9em;
+  min-height: 100%;
+}
+.ap-contact__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1.8em 2em;
+}
+.ap-email {
+  --lh: 1.25em;
+  line-height: var(--lh);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 2.2em;
+  font-weight: 600;
+  color: var(--ap-strong);
+  margin: 0.2em 0 0.45em;
+  border-bottom: 2px solid color-mix(in srgb, var(--proj-accent) 70%, transparent);
+}
+.ap-btn {
+  display: inline-block;
+  margin-top: 1.4em;
+  padding: 0.6em 1.3em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--ap-head);
+  border-radius: 0.3em;
+  color: var(--ap-strong);
+  background: color-mix(in srgb, var(--proj-accent) 16%, transparent);
+  transition: background-color 0.2s ease;
+}
+.ap-root[data-stage="filled"] .ap-btn:hover {
+  background: color-mix(in srgb, var(--proj-accent) 30%, transparent);
+}
+.ap-contact__links {
+  display: grid;
+  gap: 0.9em;
+}
+.ap-linkrow {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.2em 1.6em;
+}
+.ap-linkrow .ap-card__title {
+  font-size: 1.7em;
+}
+.ap-linkrow .ap-meta {
+  font-size: 0.9em;
+}
+
+/* ------------------------------------------------------------------ stages */
+
+/* Outline-draw layer of wire boxes and images. */
+.ap-root :is([data-wire="box"], [data-wire="img"])::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(var(--ap-wire), var(--ap-wire)) top left / 100% 1px no-repeat,
+    linear-gradient(var(--ap-wire), var(--ap-wire)) top right / 1px 100% no-repeat,
+    linear-gradient(var(--ap-wire), var(--ap-wire)) bottom right / 100% 1px no-repeat,
+    linear-gradient(var(--ap-wire), var(--ap-wire)) bottom left / 1px 100% no-repeat;
+  opacity: 0;
+  transition: opacity var(--ap-fill) ease;
+}
+.ap-root [data-wire="box"],
+.ap-root [data-wire="img"] {
+  position: relative;
+}
+/* Crossed frame over images. */
+.ap-root [data-wire="img"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 0.6px), var(--ap-wire) 50%, transparent calc(50% + 0.6px)),
+    linear-gradient(to bottom right, transparent calc(50% - 0.6px), var(--ap-wire) 50%, transparent calc(50% + 0.6px));
+  opacity: 0;
+  transition: opacity var(--ap-fill) ease;
+}
+.ap-root [data-wire="img"] > * {
+  transition: opacity var(--ap-fill) ease;
+}
+/* Skeleton bars, one per line of text. */
+.ap-root [data-wire="text"] {
+  --ap-bar: transparent;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 calc((var(--lh, 1.5em) - 0.5em) / 2),
+    var(--ap-bar) calc((var(--lh, 1.5em) - 0.5em) / 2) calc((var(--lh, 1.5em) + 0.5em) / 2),
+    transparent calc((var(--lh, 1.5em) + 0.5em) / 2) var(--lh, 1.5em)
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  transition: --ap-bar var(--ap-fill) ease;
+}
+.ap-root :is(.ap-scroll, .ap-head) * {
+  transition-property: color, border-color, background-color, box-shadow, text-shadow, opacity, --ap-bar;
+  transition-duration: var(--ap-fill);
+}
+
+/* wire */
+.ap-root[data-stage="wire"] {
+  border-color: transparent;
+  background-color: color-mix(in srgb, var(--proj-fill) calc(var(--ap-pane) * 0.4), transparent);
+}
+.ap-root[data-stage="wire"] :is(.ap-head, .ap-scroll) * {
+  color: transparent !important;
+  text-shadow: none !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.ap-root[data-stage="wire"] :is(.ap-bullets li, .ap-sigil, .ap-head__ticks i, .ap-feature__art i)::after,
+.ap-root[data-stage="wire"] :is(.ap-head__ticks i, .ap-feature__art i) {
+  opacity: 0;
+}
+.ap-root[data-stage="wire"] :is([data-wire="box"], [data-wire="img"])::before {
+  opacity: 0.9;
+  animation: ap-draw var(--ap-seg) cubic-bezier(0.55, 0, 0.3, 1) var(--wd, 0ms) both;
+}
+.ap-root[data-stage="wire"] [data-wire="img"]::after {
+  opacity: 0.55;
+  animation: ap-fade-in var(--ap-seg) ease var(--wd, 0ms) both;
+}
+.ap-root[data-stage="wire"] [data-wire="img"] > * {
+  opacity: 0;
+}
+.ap-root[data-stage="wire"] [data-wire="text"] {
+  --ap-bar: color-mix(in srgb, var(--proj-line) 34%, transparent);
+  animation: ap-bar var(--ap-seg) cubic-bezier(0.55, 0, 0.3, 1) var(--wd, 0ms) both;
+}
+.ap-root[data-stage="wire"] .ap-scroll {
+  overflow: hidden;
+}
+.ap-root[data-stage="wire"] .ap-sigil {
+  border-color: var(--ap-wire);
+  box-shadow: none;
+}
+
+/* dissolve: back to wire, then gone */
+.ap-root[data-stage="dissolve"] {
+  pointer-events: none;
+  animation: ap-dissolve var(--ap-dissolve) ease-in both;
+}
+.ap-root[data-stage="dissolve"] :is(.ap-head, .ap-scroll) * {
+  color: transparent !important;
+  text-shadow: none !important;
+}
+.ap-root[data-stage="dissolve"] [data-wire="text"] {
+  --ap-bar: color-mix(in srgb, var(--proj-line) 30%, transparent);
+}
+.ap-root[data-stage="dissolve"] :is([data-wire="box"], [data-wire="img"])::before {
+  opacity: 0.8;
+}
+.ap-root[data-stage="dissolve"] [data-wire="img"] > * {
+  opacity: 0;
+}
+.ap-root[data-stage="dissolve"] :is(.ap-head, .ap-scroll) * {
+  transition-duration: calc(var(--ap-dissolve) * 0.35);
+}
+
+@keyframes ap-draw {
+  from {
+    background-size:
+      0 1px,
+      1px 0,
+      0 1px,
+      1px 0;
+  }
+  to {
+    background-size:
+      100% 1px,
+      1px 100%,
+      100% 1px,
+      1px 100%;
+  }
+}
+@keyframes ap-bar {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+@keyframes ap-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes ap-dissolve {
+  0%,
+  35% {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    filter: blur(0.35em);
+    transform: translateY(-2%) scale(1.015);
+  }
+}
+@keyframes ap-pulse {
+  0%,
+  100% {
+    background: color-mix(in srgb, var(--proj-accent) 10%, transparent);
+  }
+  50% {
+    background: color-mix(in srgb, var(--proj-accent) 55%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-root,
+  .ap-root *,
+  .ap-root *::before,
+  .ap-root *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

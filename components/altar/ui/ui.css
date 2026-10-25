@@ -1,0 +1,648 @@
+/*
+ * Altar UI: the in-scene recipe board and the DOM overlay (logbook, back,
+ * theme, hint). Global CSS; every selector is prefixed .au-. Colour tokens are
+ * set inline per theme (tokens.ts) and registered here so a theme change
+ * cross-fades over 1.5 s (THEME_TRANSITION_S), matching the scene.
+ *
+ * The board is em-based: RecipeBoardInScene sets its width and base font so it
+ * renders 1:1 from the home camera. The overlay is px-based.
+ */
+
+@property --au-line { syntax: "<color>"; inherits: true; initial-value: #6fe6ff; }
+@property --au-text { syntax: "<color>"; inherits: true; initial-value: #a8f1ff; }
+@property --au-strong { syntax: "<color>"; inherits: true; initial-value: #d3f8ff; }
+@property --au-soft { syntax: "<color>"; inherits: true; initial-value: #a8f1ffbb; }
+@property --au-edge { syntax: "<color>"; inherits: true; initial-value: #6fe6ff6b; }
+@property --au-pane { syntax: "<color>"; inherits: true; initial-value: #0b2a44cc; }
+@property --au-raise { syntax: "<color>"; inherits: true; initial-value: #6fe6ff12; }
+@property --au-shadow { syntax: "<color>"; inherits: true; initial-value: #6fe6ff38; }
+@property --au-scrim { syntax: "<color>"; inherits: true; initial-value: #03071670; }
+@property --au-acc { syntax: "<color>"; inherits: true; initial-value: #ffffff; }
+
+.au-themed {
+  color: var(--au-text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    --au-line 1.5s ease,
+    --au-text 1.5s ease,
+    --au-strong 1.5s ease,
+    --au-soft 1.5s ease,
+    --au-edge 1.5s ease,
+    --au-pane 1.5s ease,
+    --au-raise 1.5s ease,
+    --au-shadow 1.5s ease,
+    --au-scrim 1.5s ease;
+}
+.au-themed *,
+.au-themed *::before,
+.au-themed *::after {
+  box-sizing: border-box;
+}
+.au-themed :where(h2, p, ol, ul, li) {
+  margin: 0;
+  padding: 0;
+}
+.au-themed :where(ol, ul) {
+  list-style: none;
+}
+/* entries carry their artifact accent; it re-inks with the theme */
+.au-drawer__list > li {
+  transition: --au-acc 1.5s ease;
+}
+
+.au-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.au-eyebrow {
+  font-size: 0.72em;
+  font-weight: 650;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--au-line);
+}
+.au-themed[data-theme="dark"] .au-eyebrow {
+  text-shadow: 0 0 0.8em color-mix(in srgb, var(--au-line) 45%, transparent);
+}
+
+/* Artifact sigil: a small diamond in the entry's accent, filled once unlocked. */
+.au-sigil {
+  flex: none;
+  width: 0.62em;
+  height: 0.62em;
+  margin: 0 0.2em;
+  transform: rotate(45deg);
+  border: 0.13em solid var(--au-acc);
+  opacity: 0.85;
+  transition:
+    background-color 0.4s ease,
+    box-shadow 0.4s ease,
+    opacity 0.4s ease;
+}
+[data-unlocked="true"] > .au-sigil,
+[data-unlocked="true"] > button > .au-sigil {
+  opacity: 1;
+  background-color: var(--au-acc);
+}
+.au-themed[data-theme="dark"] [data-unlocked="true"] > .au-sigil,
+.au-themed[data-theme="dark"] [data-unlocked="true"] > button > .au-sigil {
+  box-shadow: 0 0 0.7em color-mix(in srgb, var(--au-acc) 70%, transparent);
+}
+
+/* ================================================================ board */
+
+.au-board {
+  position: relative;
+  width: 100%;
+  padding: 1.05em 1.05em 0.85em;
+  border: 1px solid var(--au-edge);
+  border-radius: 0.45em;
+  background-color: var(--au-pane);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--au-line) 4%, transparent) 0 1px,
+    transparent 1px 0.25em
+  );
+  box-shadow:
+    0 0 2.4em var(--au-shadow),
+    inset 0 0 2.4em var(--au-raise);
+  pointer-events: none;
+  user-select: none;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    --au-line 1.5s ease,
+    --au-text 1.5s ease,
+    --au-strong 1.5s ease,
+    --au-soft 1.5s ease,
+    --au-edge 1.5s ease,
+    --au-pane 1.5s ease,
+    --au-raise 1.5s ease,
+    --au-shadow 1.5s ease,
+    opacity 0.6s ease 0.15s,
+    visibility 0s linear 0s;
+}
+.au-board[data-visible="false"] {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    --au-line 1.5s ease,
+    --au-text 1.5s ease,
+    --au-strong 1.5s ease,
+    --au-soft 1.5s ease,
+    --au-edge 1.5s ease,
+    --au-pane 1.5s ease,
+    --au-raise 1.5s ease,
+    --au-shadow 1.5s ease,
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+/* corner brackets, as on the projection frame */
+.au-board::before,
+.au-board::after {
+  content: "";
+  position: absolute;
+  width: 1.1em;
+  height: 1.1em;
+  border-color: var(--au-line);
+  border-style: solid;
+  pointer-events: none;
+}
+.au-board::before {
+  top: -0.3em;
+  left: -0.3em;
+  border-width: 2px 0 0 2px;
+  border-top-left-radius: 0.2em;
+}
+.au-board::after {
+  right: -0.3em;
+  bottom: -0.3em;
+  border-width: 0 2px 2px 0;
+  border-bottom-right-radius: 0.2em;
+}
+
+.au-board__head {
+  padding: 0 0.3em 0.6em;
+  margin-bottom: 0.4em;
+  border-bottom: 1px solid var(--au-edge);
+}
+.au-board__title {
+  margin-top: 0.15em;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.32em;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--au-strong);
+}
+.au-themed[data-theme="dark"] .au-board__title {
+  text-shadow: 0 0 0.6em color-mix(in srgb, var(--au-line) 35%, transparent);
+}
+
+.au-board__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+.au-recipe {
+  display: flex;
+  align-items: center;
+  gap: 0.65em;
+  padding: 0.3em 0.5em;
+  border: 1px solid transparent;
+  border-radius: 0.3em;
+  transition:
+    --au-acc 1.5s ease,
+    background-color 0.5s ease,
+    border-color 0.5s ease;
+}
+.au-recipe[data-unlocked="true"] {
+  border-color: color-mix(in srgb, var(--au-acc) 34%, transparent);
+  background-color: color-mix(in srgb, var(--au-acc) 9%, transparent);
+}
+.au-recipe__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.au-recipe__items {
+  font-size: 0.9em;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--au-soft);
+}
+.au-recipe__plus {
+  color: var(--au-line);
+  font-weight: 700;
+}
+.au-recipe__title {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.06em;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--au-strong);
+}
+.au-recipe__arrow {
+  color: var(--au-acc);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+}
+.au-recipe__done {
+  display: inline-flex;
+  font-size: 1.05em;
+  color: var(--au-acc);
+}
+.au-themed[data-theme="dark"] .au-recipe__done {
+  filter: drop-shadow(0 0 0.35em color-mix(in srgb, var(--au-acc) 60%, transparent));
+}
+
+.au-board__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  margin-top: 0.55em;
+  padding: 0.6em 0.3em 0;
+  border-top: 1px solid var(--au-edge);
+  font-size: 0.74em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--au-soft);
+}
+.au-pips {
+  display: flex;
+  gap: 0.55em;
+}
+.au-pips i {
+  display: block;
+  width: 0.6em;
+  height: 0.6em;
+  transform: rotate(45deg);
+  border: 1px solid color-mix(in srgb, var(--au-acc) 70%, transparent);
+  transition:
+    --au-acc 1.5s ease,
+    background-color 0.4s ease;
+}
+.au-pips i[data-on="true"] {
+  background: var(--au-acc);
+}
+
+/* ============================================================== overlay */
+
+.au-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  font-size: 14px;
+}
+.au-overlay button,
+.au-overlay a.au-btn {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+.au-corner {
+  position: absolute;
+  top: 16px;
+  display: flex;
+  gap: 8px;
+}
+/* Back sits mid-left as a side tab: the projection's corner brackets own the corners. */
+.au-corner--left {
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.au-corner--right {
+  right: 16px;
+}
+/* While a section is open, the right-hand controls stack in a column, clear of the projection. */
+.au-corner--right[data-compact="true"] {
+  flex-direction: column;
+}
+
+.au-btn,
+.au-icon-btn,
+.au-entry,
+.au-link {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.au-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 15px 0 13px;
+  border: 1px solid var(--au-edge);
+  border-radius: 8px;
+  background: var(--au-pane);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.2);
+  box-shadow: 0 2px 18px var(--au-shadow);
+  color: var(--au-strong);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    gap 0.3s ease,
+    padding 0.3s ease;
+}
+.au-btn svg {
+  flex: none;
+  font-size: 18px;
+  color: var(--au-line);
+}
+.au-btn:hover {
+  border-color: color-mix(in srgb, var(--au-line) 75%, transparent);
+  background-color: color-mix(in srgb, var(--au-line) 14%, var(--au-pane));
+}
+.au-btn--icon {
+  width: 40px;
+  padding: 0;
+  justify-content: center;
+}
+.au-btn__label {
+  display: inline-block;
+  max-width: 7em;
+  overflow: hidden;
+  transition:
+    max-width 0.3s ease,
+    opacity 0.2s ease;
+}
+/* While a section is open the logbook shrinks to its icon, clear of the projection. */
+.au-btn[data-compact="true"] {
+  gap: 0;
+  width: 40px;
+  padding: 0;
+  justify-content: center;
+}
+.au-btn[data-compact="true"] .au-btn__label {
+  max-width: 0;
+  opacity: 0;
+}
+.au-btn--back {
+  flex-direction: column;
+  gap: 5px;
+  width: 64px;
+  height: auto;
+  padding: 12px 0 10px;
+  animation: au-fade-in 0.35s ease both;
+}
+.au-btn--back svg {
+  font-size: 20px;
+}
+
+.au-kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--au-edge);
+  border-radius: 4px;
+  font: 600 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--au-soft);
+}
+
+.au-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--au-soft);
+  font-size: 18px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.au-icon-btn:hover {
+  color: var(--au-strong);
+  border-color: var(--au-edge);
+  background: var(--au-raise);
+}
+.au-icon-btn--small {
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+}
+
+.au-overlay :focus-visible {
+  outline: 2px solid var(--au-line);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------- hint */
+
+.au-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 32px);
+  padding: 7px 8px 7px 15px;
+  border: 1px solid var(--au-edge);
+  border-radius: 10px;
+  background: var(--au-pane);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.2);
+  box-shadow: 0 2px 18px var(--au-shadow);
+  color: var(--au-strong);
+  font-size: 14px;
+  transform: translateX(-50%);
+  animation: au-hint-in 0.7s ease 0.9s both;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0s;
+}
+.au-hint[data-visible="false"] {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+.au-hint > svg {
+  flex: none;
+  font-size: 15px;
+  color: var(--au-line);
+}
+.au-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--au-line) !important;
+  font-weight: 650 !important;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--au-line) 45%, transparent);
+  text-underline-offset: 3px;
+}
+.au-link:hover {
+  text-decoration-color: currentColor;
+}
+
+/* ----------------------------------------------------------- drawer */
+
+.au-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+  background: var(--au-scrim);
+  animation: au-fade-in 0.25s ease both;
+}
+.au-drawer {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  max-height: calc(100% - 24px);
+  width: min(380px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  border: 1px solid var(--au-edge);
+  border-radius: 12px;
+  background-color: var(--au-pane);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 8px 40px var(--au-shadow);
+  animation: au-drawer-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.au-drawer__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 16px 0 22px;
+}
+.au-drawer__head .au-eyebrow {
+  font-size: 11px;
+}
+.au-drawer__title {
+  margin-top: 3px;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--au-strong);
+}
+.au-drawer__desc {
+  padding: 6px 22px 14px;
+  border-bottom: 1px solid var(--au-edge);
+  color: var(--au-soft);
+  font-size: 13.5px;
+}
+.au-drawer__list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--au-edge) transparent;
+}
+.au-entry {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 11px 12px 11px 14px;
+  border: 1px solid var(--au-edge);
+  border-radius: 9px;
+  background: var(--au-raise);
+  text-align: left;
+  font-size: 15px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+[data-unlocked="true"] > .au-entry {
+  border-color: color-mix(in srgb, var(--au-acc) 40%, transparent);
+  background: color-mix(in srgb, var(--au-acc) 8%, transparent);
+}
+.au-entry:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--au-acc) 80%, transparent);
+  background: color-mix(in srgb, var(--au-acc) 13%, transparent);
+}
+.au-entry:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.au-entry__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.au-entry__title {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--au-strong);
+}
+.au-entry__artifact {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--au-acc);
+}
+.au-entry__recipe {
+  font-size: 12.5px;
+  color: var(--au-soft);
+}
+.au-entry__status {
+  display: inline-flex;
+  font-size: 18px;
+  color: var(--au-soft);
+}
+[data-unlocked="true"] .au-entry__status {
+  color: var(--au-acc);
+}
+.au-drawer__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  white-space: nowrap;
+  padding: 12px 22px 16px;
+  border-top: 1px solid var(--au-edge);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--au-soft);
+}
+
+@keyframes au-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes au-hint-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+@keyframes au-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .au-themed,
+  .au-themed * {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+  }
+}

@@ -1,3 +1,5 @@
+import { contact } from "@/lib/portfolio/contact";
+
 export default function ContactForm() {
   return (
     <div className="flex flex-row max-w-2xl grid-cols-1 gap-x-8 gap-y-16 px-4 py-8 sm:px-6 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
@@ -28,10 +30,10 @@ export default function ContactForm() {
                 </div>
                 <a
                   className="text-[#007bff] text-sm ml-4"
-                  href="mailto:l2hu@uwaterloo.ca"
+                  href={`mailto:${contact.email}`}
                 >
                   <small className="block text-white">Mail</small>
-                  <strong>l2hu@uwaterloo.ca</strong>
+                  <strong>{contact.email}</strong>
                 </a>
               </li>
             </ul>
@@ -40,10 +42,10 @@ export default function ContactForm() {
             <h2 className="text-white text-base font-bold">Socials</h2>
             <ul className="flex mt-4 space-x-4">
               <li className="flex items-center">
-                <a className="text-sky-300 underline" href="https://github.com/LefanHu">GitHub</a>
+                <a className="text-sky-300 underline" href={contact.github}>GitHub</a>
               </li>
               <li className="bg-[#e6e6e6cf] h-10 w-10 rounded-full flex items-center justify-center shrink-0">
-                <a href="https://www.linkedin.com/in/lefan-hu-579591204/" aria-label="LinkedIn">
+                <a href={contact.linkedin} aria-label="LinkedIn">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20px"

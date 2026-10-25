@@ -12,6 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import FlyoutMenu from "./flyoutmenu";
 import Image from "next/image";
+import { contact } from "@/lib/portfolio/contact";
 
 const nav = [
   {
@@ -115,7 +116,7 @@ export default function Navbar() {
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <a
-                  href="mailto:l2hu@uwaterloo.ca"
+                  href={`mailto:${contact.email}`}
                   aria-label="Email Lefan"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
@@ -152,7 +153,7 @@ export default function Navbar() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="mailto:l2hu@uwaterloo.ca"
+                            href={`mailto:${contact.email}`}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"

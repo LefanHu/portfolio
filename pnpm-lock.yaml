@@ -38,6 +38,9 @@ importers:
       '@react-three/postprocessing':
         specifier: ^3.1.3
         version: 3.1.3(@react-three/fiber@9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.183.2))(@types/three@0.183.1)(postprocessing@6.39.0(three@0.183.2))(react@19.3.0)(three@0.183.2)
+      '@react-three/rapier':
+        specifier: 2.2.0
+        version: 2.2.0(@react-three/fiber@9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.183.2))(react@19.3.0)(three@0.183.2)
       '@tsparticles/all':
         specifier: ^3.9.1
         version: 3.9.1
@@ -353,6 +356,9 @@ packages:
 
   '@dimforge/rapier3d-compat@0.12.0':
     resolution: {integrity: sha512-uekIGetywIgopfD97oDL5PfeezkFpNhwlzlaEYNOA0N6ghdsOvh/HYjSMek5Q2O1PYvRSDFcqFVJl4r4ZBwOow==}
+
+  '@dimforge/rapier3d-compat@0.19.2':
+    resolution: {integrity: sha512-AZHL1jqUF55QJkJyU1yKeh4ImX2J93bVLIezT1+o0FZqTix6O06MOaqpKoJ4MmbDCsoZmwO+qc471/SDMDm2AA==}
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -981,6 +987,13 @@ packages:
       postprocessing: ^6.36.0
       react: ^19.0.0
       three: '>= 0.156.0'
+
+  '@react-three/rapier@2.2.0':
+    resolution: {integrity: sha512-mVsqbKXlGZoN+XrqdhzFZUQmy8pibEOVzl4k7LC+LHe84bQnYBSagy1Hvbda6bL1PJDdTFyiDiBk5buKFinNIQ==}
+    peerDependencies:
+      '@react-three/fiber': ^9.0.4
+      react: ^19
+      three: '>=0.159.0'
 
   '@react-types/shared@3.36.1':
     resolution: {integrity: sha512-AzsuD9OfxTOZMMvTRhlN3oHBwOmFN7tDh27LzqmHt4+uOgPhJT7ZM7/kVs/8/o0WxayMUIk3hBmCFRHv1FUoag==}
@@ -4454,6 +4467,8 @@ snapshots:
 
   '@dimforge/rapier3d-compat@0.12.0': {}
 
+  '@dimforge/rapier3d-compat@0.19.2': {}
+
   '@emnapi/core@1.10.0':
     dependencies:
       '@emnapi/wasi-threads': 1.2.1
@@ -4970,6 +4985,15 @@ snapshots:
       three: 0.183.2
     transitivePeerDependencies:
       - '@types/three'
+
+  '@react-three/rapier@2.2.0(@react-three/fiber@9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.183.2))(react@19.3.0)(three@0.183.2)':
+    dependencies:
+      '@dimforge/rapier3d-compat': 0.19.2
+      '@react-three/fiber': 9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.183.2)
+      react: 19.3.0
+      suspend-react: 0.1.3(react@19.3.0)
+      three: 0.183.2
+      three-stdlib: 2.36.1(three@0.183.2)
 
   '@react-types/shared@3.36.1(react@19.3.0)':
     dependencies:

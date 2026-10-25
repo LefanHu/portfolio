@@ -3,10 +3,15 @@ import "@testing-library/jest-dom/vitest";
 import React from "react";
 import { vi } from "vitest";
 
-vi.mock("next/image", () => ({
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) =>
-    React.createElement("img", props),
-}));
+vi.mock("next/image", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("next/image")>();
+  return {
+    default: (props: React.ImgHTMLAttributes<HTMLImageElement>) =>
+      React.createElement("img", props),
+    // the real function (pure, config-driven), spied on
+    getImageProps: vi.fn(actual.getImageProps),
+  };
+});
 
 vi.mock("next/link", () => ({
   default: ({

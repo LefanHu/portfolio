@@ -43,7 +43,8 @@ const componentFiles = collectTsxFiles(path.join(rootDir, "components")).filter(
   (file) =>
     !componentSmokeExclusions.has(file) &&
     !file.startsWith(path.join(rootDir, "components", "portfolio", "js")) &&
-    !file.startsWith(path.join(rootDir, "components", "three"))
+    !file.startsWith(path.join(rootDir, "components", "three")) &&
+    !file.startsWith(path.join(rootDir, "components", "altar"))
 );
 
 describe("page module smoke", () => {
