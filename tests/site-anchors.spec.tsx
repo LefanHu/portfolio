@@ -1,6 +1,5 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { MantineProvider } from "@mantine/core";
 import {
   SITE_ANCHORS,
   acceleratorProject,
@@ -42,11 +41,7 @@ describe("site anchors", () => {
     ["coding", LeetcodeStats],
     ["contact", ContactForm],
   ] as const)("renders the %s anchor", (key, Component) => {
-    const { container } = render(
-      <MantineProvider>
-        <Component />
-      </MantineProvider>
-    );
+    const { container } = render(<Component />);
     const matches = container.querySelectorAll(`#${SITE_ANCHORS[key]}`);
     expect(matches).toHaveLength(1);
   });

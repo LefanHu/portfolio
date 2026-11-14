@@ -4,6 +4,8 @@
   const ctx = canvas.getContext("2d");
 
   const BAR_COUNT = 72;
+  // Frames a finished sort stays on screen before the next algorithm starts (about 3 s).
+  const HOLD_FRAMES = 180;
   const algorithms = [
     { name: "Bubble Sort", generateSteps: buildBubbleSteps },
     { name: "Selection Sort", generateSteps: buildSelectionSteps },
@@ -20,20 +22,11 @@
   let stepIndex = 0;
   let algorithmIndex = 0;
   let activePair = [];
-  let controls;
+  let heldFrames = 0;
+  let chart;
+  let algorithmButtons = [];
+  let algorithmSelect;
   let statusLabel;
-
-  function resizeCanvas() {
-    container.style.position = "relative";
-    width = container.clientWidth;
-    height = container.clientHeight;
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    ensureControls();
-    startAlgorithm(algorithmIndex);
-  }
 
   function randomValues() {
     return Array.from({ length: BAR_COUNT }, () => 0.08 + Math.random() * 0.92);
@@ -264,154 +257,153 @@
     return localSteps;
   }
 
-  function updateControls() {
-    if (!controls) {
-      return;
-    }
-
-    const buttons = controls.querySelectorAll("[data-algorithm-index]");
-    buttons.forEach((button) => {
-      const isActive =
-        Number(button.getAttribute("data-algorithm-index")) === algorithmIndex;
-      button.style.background = isActive ? "#60a5fa" : "rgba(255,255,255,0.08)";
-      button.style.color = isActive ? "#08111f" : "#dbeafe";
-    });
-
-    if (statusLabel) {
-      statusLabel.textContent =
-        stepIndex >= steps.length
-          ? `${algorithms[algorithmIndex].name} complete`
-          : `Running ${algorithms[algorithmIndex].name}`;
-    }
+  function isSorted() {
+    return stepIndex >= steps.length;
   }
 
-  function resetVisualization(nextAlgorithmIndex) {
+  function updateControls() {
+    algorithmButtons.forEach((button, index) => {
+      button.setAttribute("aria-pressed", String(index === algorithmIndex));
+    });
+    algorithmSelect.value = String(algorithmIndex);
+    statusLabel.textContent = isSorted()
+      ? `${algorithms[algorithmIndex].name} complete`
+      : `Running ${algorithms[algorithmIndex].name}`;
+  }
+
+  function startAlgorithm(nextAlgorithmIndex) {
     algorithmIndex = nextAlgorithmIndex % algorithms.length;
     values = randomValues();
     steps = algorithms[algorithmIndex].generateSteps(values);
     stepIndex = 0;
     activePair = [];
+    heldFrames = 0;
     updateControls();
+    // Shown at once, so a choice registers even while the animation is paused.
+    draw();
   }
 
-  function startAlgorithm(nextAlgorithmIndex) {
-    resetVisualization(nextAlgorithmIndex);
-  }
-
-  function shuffleCurrentAlgorithm() {
-    resetVisualization(algorithmIndex);
-  }
-
-  function makeControlButton(label, onClick) {
+  function makeButton(label, onClick) {
     const button = document.createElement("button");
     button.textContent = label;
     button.type = "button";
-    button.style.border = "1px solid rgba(255,255,255,0.12)";
-    button.style.borderRadius = "999px";
-    button.style.padding = "8px 12px";
-    button.style.background = "rgba(255,255,255,0.08)";
-    button.style.color = "#dbeafe";
-    button.style.font = "600 12px sans-serif";
-    button.style.cursor = "pointer";
     button.addEventListener("click", onClick);
     return button;
   }
 
-  function ensureControls() {
-    if (controls) {
-      return;
-    }
+  // The controls are laid out by the browser in a bar above the chart, not
+  // floated over a header painted on the canvas, so nothing can overlap at any
+  // width. (The playground's own title bar names the piece, so the bar holds
+  // only the controls.) On a narrow stage the six algorithm buttons give way
+  // to one menu.
+  function buildLayout() {
+    const style = document.createElement("style");
+    style.textContent = `
+      #canvasContainer { display: flex; flex-direction: column; background: #08111f; font-family: sans-serif; }
+      .sv-controls { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px; background: rgba(255, 255, 255, 0.06); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+      .sv-status { margin-left: 8px; font-size: 12px; font-weight: 500; color: rgba(191, 219, 254, 0.92); }
+      .sv-controls button, .sv-controls select { min-height: 34px; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 999px; padding: 0 14px; background: rgba(255, 255, 255, 0.08); color: #dbeafe; font: 600 12px sans-serif; cursor: pointer; color-scheme: dark; }
+      .sv-controls button[aria-pressed="true"] { background: #60a5fa; color: #08111f; }
+      .sv-controls :focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
+      .sv-controls select { display: none; flex: 1; min-width: 0; }
+      .sv-chart { position: relative; flex: 1; min-height: 0; }
+      .sv-chart canvas { position: absolute; inset: 0; }
+      @media (pointer: coarse) {
+        .sv-controls button, .sv-controls select { min-height: 44px; }
+      }
+      @media (max-width: 599px) {
+        .sv-controls { padding: 8px; }
+        .sv-status, .sv-controls button[data-algorithm-index] { display: none; }
+        .sv-controls button, .sv-controls select { min-height: 44px; font-size: 13px; }
+        .sv-controls select { display: block; }
+      }
+    `;
+    document.head.appendChild(style);
 
-    controls = document.createElement("div");
-    controls.style.position = "absolute";
-    controls.style.top = "12px";
-    controls.style.left = "12px";
-    controls.style.right = "12px";
-    controls.style.display = "flex";
-    controls.style.flexWrap = "wrap";
-    controls.style.alignItems = "center";
-    controls.style.gap = "8px";
-    controls.style.zIndex = "1";
+    const controls = document.createElement("div");
+    controls.className = "sv-controls";
 
-    algorithms.forEach((algorithm, index) => {
-      const button = makeControlButton(algorithm.name, function () {
+    algorithmSelect = document.createElement("select");
+    algorithmSelect.setAttribute("aria-label", "Algorithm");
+    algorithmSelect.addEventListener("change", function () {
+      startAlgorithm(Number(algorithmSelect.value));
+    });
+
+    algorithmButtons = algorithms.map((algorithm, index) => {
+      const button = makeButton(algorithm.name, function () {
         startAlgorithm(index);
       });
       button.setAttribute("data-algorithm-index", String(index));
       controls.appendChild(button);
-    });
 
-    const shuffleButton = makeControlButton("Shuffle", function () {
-      shuffleCurrentAlgorithm();
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = algorithm.name;
+      algorithmSelect.appendChild(option);
+      return button;
     });
-    controls.appendChild(shuffleButton);
 
     statusLabel = document.createElement("span");
-    statusLabel.style.marginLeft = "8px";
-    statusLabel.style.color = "rgba(191, 219, 254, 0.92)";
-    statusLabel.style.font = "500 12px sans-serif";
-    controls.appendChild(statusLabel);
+    statusLabel.className = "sv-status";
 
-    container.appendChild(controls);
-    updateControls();
+    controls.append(
+      algorithmSelect,
+      makeButton("Shuffle", function () {
+        startAlgorithm(algorithmIndex);
+      }),
+      statusLabel
+    );
+
+    chart = document.createElement("div");
+    chart.className = "sv-chart";
+    chart.appendChild(canvas);
+    container.append(controls, chart);
+  }
+
+  function resizeCanvas() {
+    width = chart.clientWidth;
+    height = chart.clientHeight;
+
+    // Size the backing store for the screen (capped at 2x) and keep drawing in CSS pixels.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
   }
 
   function applyNextStep() {
-    if (stepIndex < steps.length) {
-      const step = steps[stepIndex];
-      activePair = step.indices;
+    const step = steps[stepIndex];
+    activePair = step.indices;
 
-      if (step.type === "swap") {
-        const first = step.indices[0];
-        const second = step.indices[1];
-        const tmp = values[first];
-        values[first] = values[second];
-        values[second] = tmp;
-      } else if (step.type === "write") {
-        values[step.indices[0]] = step.value;
-      }
-
-      stepIndex += 1;
-      if (stepIndex >= steps.length) {
-        activePair = [];
-      }
-      updateControls();
-      return;
+    if (step.type === "swap") {
+      const first = step.indices[0];
+      const second = step.indices[1];
+      const tmp = values[first];
+      values[first] = values[second];
+      values[second] = tmp;
+    } else if (step.type === "write") {
+      values[step.indices[0]] = step.value;
     }
 
-    activePair = [];
-    updateControls();
+    stepIndex += 1;
+    if (isSorted()) {
+      activePair = [];
+      updateControls();
+    }
   }
 
   function draw() {
-    ctx.clearRect(0, 0, width, height);
-
     const background = ctx.createLinearGradient(0, 0, 0, height);
     background.addColorStop(0, "#08111f");
     background.addColorStop(1, "#131b2b");
     ctx.fillStyle = background;
     ctx.fillRect(0, 0, width, height);
 
-    const panelHeight = 92;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
-    ctx.fillRect(0, 0, width, panelHeight);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-    ctx.beginPath();
-    ctx.moveTo(0, panelHeight + 0.5);
-    ctx.lineTo(width, panelHeight + 0.5);
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(222, 231, 255, 0.95)";
-    ctx.font = "600 18px sans-serif";
-    ctx.fillText("Sort Visualizer", 20, 62);
-    ctx.font = "12px sans-serif";
-    ctx.fillStyle = "rgba(188, 200, 232, 0.85)";
-    ctx.fillText("Choose an algorithm and reshuffle whenever you want.", 20, 80);
-
-    const chartTop = panelHeight + 20;
-    const chartHeight = height - chartTop - 18;
+    const chartHeight = height - 38;
     const gap = 2;
     const barWidth = width / values.length;
+    const sorted = isSorted();
 
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
@@ -419,12 +411,11 @@
       const h = Math.max(8, value * chartHeight);
       const y = height - h - 10;
       const active = activePair.indexOf(i) !== -1;
-      const isSorted = stepIndex >= steps.length;
 
       let fill = `hsl(${210 + value * 120}, 90%, 62%)`;
       if (active) {
         fill = "#f97316";
-      } else if (isSorted) {
+      } else if (sorted) {
         fill = "#34d399";
       }
 
@@ -434,8 +425,14 @@
   }
 
   function animate() {
-    if (stepIndex < steps.length) {
-      for (let i = 0; i < 2; i += 1) {
+    if (isSorted()) {
+      // Left alone, the piece moves on to the next algorithm by itself.
+      heldFrames += 1;
+      if (heldFrames >= HOLD_FRAMES) {
+        startAlgorithm(algorithmIndex + 1);
+      }
+    } else {
+      for (let i = 0; i < 2 && !isSorted(); i += 1) {
         applyNextStep();
       }
     }
@@ -443,7 +440,11 @@
     requestAnimationFrame(animate);
   }
 
+  buildLayout();
+  // The bar changes height when its controls wrap, which resizes the chart
+  // without resizing the window, so watch the chart itself.
+  new ResizeObserver(resizeCanvas).observe(chart);
   resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
+  startAlgorithm(0);
   animate();
 })();

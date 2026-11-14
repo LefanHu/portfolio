@@ -1,10 +1,5 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Lefan's Website",
-  description: "Portfolio website showcasing various projects & algorithms",
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// The 3D pages bring their own full-screen UI: no site header or footer here.
+// Titles and descriptions come from each page (or the root layout's defaults).
+export default function ThreeDLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

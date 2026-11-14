@@ -1,147 +1,49 @@
-"use client";
+import MediaGallery, { type GalleryImage } from "@/components/projects/MediaGallery";
+import ProjectPage, { Points, ProjectSection, Prose } from "@/components/projects/ProjectPage";
+import { projectMetadata } from "@/components/projects/metadata";
 
-import TechnologyBadge from "@/components/portfolio/TechnologyBadge";
-import { List } from "@mantine/core";
-import Image from "next/image";
+const SLUG = "stable-diffusion";
 
-export default function TaylorGeneratorProjectPage() {
-  const technologies = [
-    "Stable Diffusion XL",
-    "LoRA",
-    "Hugging Face Accelerate",
-    "React",
-    "NextJS",
-    "TailwindCSS",
-    "TypeScript",
-    "Hugging Face",
-    "Python",
-    "AWS",
-    "Docker",
-    "Scrapy",
-  ];
+export const metadata = projectMetadata(SLUG);
 
-  const overviewPoints = [
-    "Generates a photo of Taylor Swift based on the prompt entered to the application",
-    "Deployed through Hugging Face Serverless Inference to optimize cost and eliminate idle resource usage.",
-    "Fine-tuned a custom LoRA adapter for SDXL on an AWS G4DN GPU instance using Hugging Face Accelerate.",
-    "S3 bucket for hosting images",
-    "Scrapy for obtaining dataset of Taylor Swift images",
-    "NextJS frontend for user interaction",
-  ];
+const SAMPLE = { width: 1024, height: 1024, caption: "AI-generated sample" };
 
-  const galleryList = [
-    {
-      src: "/images/swift-beach.jpg",
-      alt: "taylor swift modeling on beach",
-      width: 1024,
-      height: 1024,
-    },
-    {
-      src: "/images/swift-castle.jpg",
-      alt: "taylor swift beach sand castle",
-      width: 1024,
-      height: 1024,
-    },
-    {
-      src: "/images/taylor-sand.jpg",
-      alt: "taylor swift swimming in sand",
-      width: 1024,
-      height: 1024,
-    },
-    {
-      src: "/images/swift-wine.jpg",
-      alt: "taylor swift drinking wine",
-      width: 1024,
-      height: 1024,
-    },
-    {
-      src: "/images/bucket-swift.jpg",
-      alt: "taylor swift in a bucket",
-      width: 1024,
-      height: 1024,
-    },
-    {
-      src: "/images/taylor-model.jpg",
-      alt: "taylor swift modeling",
-      width: 1024,
-      height: 1024,
-    },
-    {
-      src: "/images/taylor-artsy.jpg",
-      alt: "taylor swift artsy short hair curly",
-      width: 1024,
-      height: 1024,
-    },
-    {
-      src: "/images/swift-majestic.jpeg",
-      alt: "majestic taylor swift",
-      width: 1024,
-      height: 1024,
-    },
-  ];
+// Every picture is model output, and both the alt text and the caption say so.
+const samples: GalleryImage[] = [
+  { src: "/images/swift-beach.jpg", alt: "AI-generated image of Taylor Swift on a beach at sunset" },
+  { src: "/images/swift-castle.jpg", alt: "AI-generated image of Taylor Swift in front of a castle" },
+  { src: "/images/taylor-sand.jpg", alt: "AI-generated image of Taylor Swift lying in wet sand" },
+  { src: "/images/swift-wine.jpg", alt: "AI-generated image of Taylor Swift holding a glass of red wine" },
+  { src: "/images/bucket-swift.jpg", alt: "AI-generated illustration of Taylor Swift sitting in a metal bucket of water" },
+  { src: "/images/taylor-model.jpg", alt: "AI-generated portrait of Taylor Swift with her hands clasped under her chin" },
+  { src: "/images/taylor-artsy.jpg", alt: "AI-generated portrait of Taylor Swift with short curly hair" },
+  { src: "/images/swift-majestic.jpeg", alt: "AI-generated image of Taylor Swift with wings, in front of a glowing moon" },
+].map((sample) => ({ ...sample, ...SAMPLE }));
 
+export default function SdxlLoraProjectPage() {
   return (
-    <div className="flex-1 overflow-auto no-scrollbar bg-black">
-      <div className="mx-auto grid max-w-4xl grid-cols-1 items-center py-12 gap-y-8 sm:py-16 lg:max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-6xl">
-            SDXL LoRA Adapter
-          </h2>
-          <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
-          {/* technologies */}
-          <div className="flex flex-row flex-wrap gap-2 pt-2">
-            {technologies.map((tech) => <TechnologyBadge key={tech} tech={tech} />)}
-          </div>
-          <p className="mt-4 text-gray-300 mb-5">
-            A React web app for generating high-quality celebrity images from text
-            prompts, powered by a custom SDXL LoRA adapter. Originally inspired by
-            someone who loves all things Taylor Swift.
-          </p>
-          <p className="mb-5 text-sm text-gray-400">
-            Jan. 2024 - Apr. 2024 · Ottawa, ON
-          </p>
-
-          <div className="grid grid-cols-1 gap-4 p-4 bg-gray-800/90 rounded-2xl">
-            <div className="rounded-xl p-5 bg-gray-700">
-              <h3 className="text-2xl text-white font-bold">
-                Project Overview
-              </h3>
-              <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
-              <List size="md" listStyleType="disc">
-                {overviewPoints.map((point) => (
-                  <List.Item key={point} className="w-[95%]">
-                    {point}
-                  </List.Item>
-                ))}
-              </List>
-            </div>
-            <div className="p-5 gap-y-2 rounded-xl bg-gray-700">
-              <h3 className="text-2xl text-white font-bold">Example Images</h3>
-              <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
-              <div className="mt-2 gap-4 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4">
-                {galleryList.map((image) => (
-                  <Image
-                    key={image.src}
-                    src={image.src}
-                    alt={image.alt}
-                    width={image.width}
-                    height={image.height}
-                    className="rounded-lg border-2 border-white"
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <h3 className="text-2xl font-bold">Other Notes</h3>
-          <hr className="h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
-          <p className="mt-4 text-gray-300 mb-5">
-            The original interactive generator has been retired. This page now
-            serves as an archival overview with sample outputs.
-          </p>
-        </div>
-      </div>
-    </div>
+    <ProjectPage
+      slug={SLUG}
+      summary="A React web app that generated celebrity images from text prompts, powered by a custom LoRA adapter for Stable Diffusion XL. The interactive generator has been retired; this page is an archive with sample outputs."
+    >
+      <ProjectSection title="Overview">
+        <Points
+          items={[
+            "Collected a dataset of Taylor Swift images with Scrapy.",
+            "Fine-tuned a custom LoRA adapter for SDXL on an AWS G4DN GPU instance using Hugging Face Accelerate.",
+            "Deployed through Hugging Face Serverless Inference to optimize cost and eliminate idle resource usage.",
+            "Built a Next.js frontend that generated a photo of Taylor Swift from the prompt entered.",
+            "Hosted images in an S3 bucket.",
+            "Originally inspired by someone who loves all things Taylor Swift.",
+          ]}
+        />
+      </ProjectSection>
+      <ProjectSection title="Sample outputs">
+        <Prose className="mb-5">
+          <p>These pictures were produced by the fine-tuned model. They are AI-generated, not photographs.</p>
+        </Prose>
+        <MediaGallery images={samples} label="Sample outputs" />
+      </ProjectSection>
+    </ProjectPage>
   );
 }

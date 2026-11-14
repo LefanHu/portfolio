@@ -1,4 +1,5 @@
 import { STAGE_MS, WIRE_SEGMENT_MS, wireDelays } from "@/lib/altar/projection";
+import { THEME_KEY, storedTheme, type Theme } from "@/lib/theme";
 import { createWheelScroller } from "./panelScroll";
 import { WIRE_CSS } from "./wireCss";
 import { openExternalInNewTab, tagWireBlocks } from "./wireTags";
@@ -92,12 +93,31 @@ export function setFrameStage(doc: Document, stage: PanelStage): () => void {
 }
 
 /**
+ * Put the altar's theme on the frame's document. The framed site resolves its
+ * own theme from the same stored choice, so it usually matches already; this
+ * covers a switch made while a view is open and the altar's unsaved `?theme=`.
+ * Only <html> is touched (the site may not have hydrated yet).
+ */
+export function setFrameTheme(doc: Document, theme: Theme) {
+  const html = doc.documentElement;
+  const win = doc.defaultView;
+  if (html.getAttribute("data-theme") === theme) return;
+  // A saved switch: replay the storage event the frame is about to receive, so
+  // the site's own theme module (lib/theme.ts) makes the change: it cross-fades,
+  // and its components that read the theme in JS hear about it.
+  if (win && storedTheme() === theme) win.dispatchEvent(new win.StorageEvent("storage", { key: THEME_KEY }));
+  // Not saved, or the site is not listening yet: set the attribute itself.
+  if (html.getAttribute("data-theme") !== theme) html.setAttribute("data-theme", theme);
+}
+
+/**
  * Ready the frame's document: scroll to the anchor, inject the wire styles,
- * show the stage (tagging what is on screen for the wire draw-in), and route
- * its links and Escape. Call once for each document the frame shows (an
- * in-frame navigation is a whole new document), as soon as it is interactive;
- * returns the cleanup for the listeners it added. A document at /altar (the
- * altar itself, which must never nest) is not readied: it calls onEscape.
+ * set the theme, show the stage (tagging what is on screen for the wire
+ * draw-in), and route its links and Escape. Call once for each document the
+ * frame shows (an in-frame navigation is a whole new document), as soon as it
+ * is interactive; returns the cleanup for the listeners it added. A document
+ * at /altar (the altar itself, which must never nest) is not readied: it calls
+ * onEscape.
  *
  * Links: cross-origin http(s) opens in a new tab, /altar returns to the altar
  * (onEscape), other same-origin pages replace the frame's page (no history
@@ -106,7 +126,7 @@ export function setFrameStage(doc: Document, stage: PanelStage): () => void {
  */
 export function prepareFrame(
   frame: HTMLIFrameElement,
-  opts: { anchor: string | null; stage: PanelStage; onEscape(): void },
+  opts: { anchor: string | null; stage: PanelStage; theme: Theme; onEscape(): void },
 ): () => void {
   const doc = frame.contentDocument;
   const win = frame.contentWindow;
@@ -118,8 +138,11 @@ export function prepareFrame(
 
   const anchor = opts.anchor ? doc.getElementById(opts.anchor) : null;
   if (anchor) {
-    // only the site's own scroller ("nearest"); a browser without that option
-    // also scrolls the parent's ancestors of the frame, so those are put back
+    // The site scrolls its document under a sticky header and sets
+    // scroll-padding-top for it, which scrollIntoView honours: the section
+    // lands just below the header. Only the frame's own scroller moves
+    // ("nearest"); a browser without that option also scrolls the parent's
+    // ancestors of the frame, so those are put back.
     const options = { block: "start", behavior: "instant", container: "nearest" } as ScrollIntoViewOptions;
     keepScroll(frame, () => anchor.scrollIntoView(options));
   }
@@ -131,6 +154,7 @@ export function prepareFrame(
     doc.head.append(style);
   }
 
+  setFrameTheme(doc, opts.theme);
   const cancelStage = setFrameStage(doc, opts.stage);
   // Tag once the site has hydrated: React flags attributes added before it as
   // mismatches. Hydration keeps the frame busy, so its first idle moment is after.

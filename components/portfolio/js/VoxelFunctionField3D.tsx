@@ -1,9 +1,9 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import SceneCanvas, { type SceneProps, useSceneFrame } from "./SceneCanvas";
 
 const GRID = 14;
 const THRESHOLD = 0.08;
@@ -27,13 +27,13 @@ function VoxelField() {
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const color = useMemo(() => new THREE.Color(), []);
 
-  useFrame(({ clock }) => {
+  useSceneFrame((seconds) => {
     const mesh = meshRef.current;
     if (!mesh) {
       return;
     }
 
-    const time = clock.getElapsedTime() * 0.45;
+    const time = seconds * 0.45;
     let count = 0;
 
     for (let zi = 0; zi < GRID; zi += 1) {
@@ -78,7 +78,7 @@ function VoxelField() {
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, MAX_INSTANCES]}>
       <boxGeometry args={[0.95, 0.95, 0.95]} />
-      <meshStandardMaterial vertexColors roughness={0.35} metalness={0.08} />
+      <meshStandardMaterial roughness={0.35} metalness={0.08} />
     </instancedMesh>
   );
 }
@@ -106,32 +106,27 @@ function SceneCamera() {
   );
 }
 
-export default function VoxelFunctionField3D(props: { className?: string }) {
+export default function VoxelFunctionField3D(props: SceneProps) {
   return (
-    <div
-      className={props.className}
-      data-testid="voxel-function-field-3d"
-    >
-      <Canvas dpr={[1, 1.5]} shadows>
-        <color attach="background" args={["#121a2f"]} />
-        <fog attach="fog" args={["#121a2f", 22, 42]} />
-        <SceneCamera />
-        <ambientLight intensity={2.6} color="#dbeafe" />
-        <hemisphereLight
-          args={["#f8fbff", "#5b6b8a", 1.8]}
-        />
-        <directionalLight position={[10, 16, 14]} intensity={3.8} color="#fff8e7" />
-        <directionalLight position={[-12, 8, -10]} intensity={1.8} color="#9ec5ff" />
-        <group rotation={[0.62, 0.78, 0]}>
-          <VoxelField />
-        </group>
-        <OrbitControls
-          enablePan={false}
-          minDistance={12}
-          maxDistance={36}
-          target={[0, 0, 0]}
-        />
-      </Canvas>
-    </div>
+    <SceneCanvas {...props} testId="voxel-function-field-3d" shadows>
+      <color attach="background" args={["#121a2f"]} />
+      <fog attach="fog" args={["#121a2f", 22, 42]} />
+      <SceneCamera />
+      <ambientLight intensity={2.6} color="#dbeafe" />
+      <hemisphereLight
+        args={["#f8fbff", "#5b6b8a", 1.8]}
+      />
+      <directionalLight position={[10, 16, 14]} intensity={3.8} color="#fff8e7" />
+      <directionalLight position={[-12, 8, -10]} intensity={1.8} color="#9ec5ff" />
+      <group rotation={[0.62, 0.78, 0]}>
+        <VoxelField />
+      </group>
+      <OrbitControls
+        enablePan={false}
+        minDistance={12}
+        maxDistance={36}
+        target={[0, 0, 0]}
+      />
+    </SceneCanvas>
   );
 }

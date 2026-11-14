@@ -1,0 +1,53 @@
+/* The lightbox opens with a short scale and fade; its scrim fades with it. */
+.lightbox[open] {
+  animation: lightbox-in 220ms var(--ease-swift) both;
+}
+
+/* A scrim behind a picture: fixed and dark in both themes so the picture, not the page, is what is lit. */
+.lightbox::backdrop {
+  background-color: rgb(3 8 22 / 0.82);
+}
+
+.lightbox[open]::backdrop {
+  animation: scrim-in 220ms ease-out both;
+}
+
+/* Moving to another picture: the new one fades in. */
+.frame {
+  animation: scrim-in 180ms ease-out both;
+}
+
+/* The page behind a modal must not scroll; the gutter stays so nothing shifts sideways. */
+:global(html):has(.lightbox[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* The global reduced-motion rule does not reach ::backdrop. */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox[open],
+  .lightbox[open]::backdrop,
+  .frame {
+    animation: none;
+  }
+}

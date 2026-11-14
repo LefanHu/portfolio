@@ -1,12 +1,13 @@
 import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
 import { useStore } from "zustand";
+import { setTheme as setSiteTheme, type Theme } from "@/lib/theme";
 import { matchRecipe, type ItemId, type SectionId } from "./recipes";
 import { RELICS } from "./relics";
 import { ALL_VIEWS, type ViewId } from "./views";
 
 export type Phase = "idle" | "revealing" | "viewing" | "returning";
-export type Theme = "light" | "dark";
+export type { Theme };
 
 /** The scene calls evaluate() after this many ms without contents changing. */
 export const SETTLE_MS = 400;
@@ -19,6 +20,12 @@ export interface AltarState {
   unlocked: ViewId[];
   ejectNonce: number;
   resetNonce: number;
+  /**
+   * A mirror of the site's one theme preference (lib/theme.ts), kept here so
+   * the scene and the UI can select it like any other state. It is not persisted
+   * with the altar's progress: setTheme / toggleTheme change the shared
+   * preference, and themeSync.ts brings changes made elsewhere back in.
+   */
   theme: Theme;
   /** Recipe whose items the board is hovering; the scene lights them up. */
   highlight: SectionId | null;
@@ -43,11 +50,13 @@ export interface AltarState {
 
 const VIEW_IDS = new Set<string>(ALL_VIEWS);
 
-/** Persisted state is untrusted (stale schema, tampering): keep only values the app understands. */
+/**
+ * Persisted state is untrusted (stale schema, tampering): keep only values the
+ * app understands. A `theme` saved by an earlier version is ignored.
+ */
 function sanitize(persisted: unknown, current: AltarState): Partial<AltarState> {
-  const p = (persisted ?? {}) as { theme?: unknown; unlocked?: unknown };
+  const p = (persisted ?? {}) as { unlocked?: unknown };
   return {
-    theme: p.theme === "light" || p.theme === "dark" ? p.theme : current.theme,
     unlocked: Array.isArray(p.unlocked)
       ? p.unlocked.filter((id): id is ViewId => typeof id === "string" && VIEW_IDS.has(id))
       : current.unlocked,
@@ -154,8 +163,13 @@ export function createAltarStore(initialTheme: Theme = "dark") {
               ? { phase: "idle", contents: [], activeSection: null }
               : s,
           ),
-        setTheme: (t) => set({ theme: t }),
-        toggleTheme: () => set((s) => ({ theme: s.theme === "dark" ? "light" : "dark" })),
+        setTheme: (t) => {
+          // The shared preference first (it flips <html data-theme> and is
+          // remembered), then the mirror.
+          setSiteTheme(t);
+          set((s) => (s.theme === t ? s : { theme: t }));
+        },
+        toggleTheme: () => get().setTheme(get().theme === "dark" ? "light" : "dark"),
         setHighlight: (id) => set((s) => (s.phase !== "idle" ? s : { highlight: id })),
         summonRecipe: (id) =>
           set((s) =>
@@ -173,7 +187,7 @@ export function createAltarStore(initialTheme: Theme = "dark") {
       {
         name: "altar",
         storage: createJSONStorage(() => safeStorage),
-        partialize: (s) => ({ unlocked: s.unlocked, theme: s.theme }),
+        partialize: (s) => ({ unlocked: s.unlocked }),
         merge: (persisted, current) => ({ ...current, ...sanitize(persisted, current) }),
       },
     ),

@@ -17,8 +17,12 @@
   function resizeCanvas() {
     width = container.clientWidth;
     height = container.clientHeight;
-    canvas.width = width;
-    canvas.height = height;
+
+    // Size the backing store for the screen (capped at 2x) and keep drawing in CSS pixels.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   function drawBackground() {

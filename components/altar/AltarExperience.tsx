@@ -6,7 +6,8 @@ import { CameraControls, CameraControlsImpl, PerformanceMonitor } from "@react-t
 import { Physics } from "@react-three/rapier";
 import { CAMERA_HOME, ORBIT_LIMITS, RELAXED_LIMITS } from "@/lib/altar/layout";
 import { useAltarStore } from "@/lib/altar/store";
-import { CAMERA, RENDERER, THEMES, initialTheme } from "@/lib/altar/theme";
+import { CAMERA, RENDERER, THEMES } from "@/lib/altar/theme";
+import { applyInitialTheme, followSiteTheme } from "@/lib/altar/themeSync";
 import { registerCameraControls } from "./cameraControls";
 import Items from "./items/Items";
 import Projection from "./projection/Projection";
@@ -22,26 +23,6 @@ import Overlay from "./ui/Overlay";
 import RecipeBoardInScene from "./ui/RecipeBoardInScene";
 
 const { ACTION } = CameraControlsImpl;
-
-/**
- * Pick the starting theme before the scene mounts: an explicit `?theme=` wins
- * (handy for screenshots), then a persisted choice, then the OS preference.
- */
-function applyInitialTheme() {
-  const { setTheme } = useAltarStore.getState();
-  const q = new URLSearchParams(window.location.search).get("theme");
-  if (q === "dark" || q === "light") {
-    setTheme(q);
-    return;
-  }
-  let persisted = false;
-  try {
-    persisted = sessionStorage.getItem("altar") !== null;
-  } catch {
-    // storage unavailable: fall through to the OS preference
-  }
-  if (!persisted) setTheme(initialTheme(window.matchMedia.bind(window)));
-}
 
 const ORBIT_BUTTONS = { left: ACTION.ROTATE, middle: ACTION.DOLLY, right: ACTION.NONE, wheel: ACTION.DOLLY };
 const ORBIT_TOUCHES = { one: ACTION.TOUCH_ROTATE, two: ACTION.TOUCH_DOLLY, three: ACTION.NONE };
@@ -88,13 +69,17 @@ function CameraRig() {
 }
 
 export default function AltarExperience() {
-  useState(applyInitialTheme);
+  // The theme is the site's (lib/altar/themeSync.ts): settled before the first
+  // render so the scene never fades in from the wrong one, then followed.
+  useState(() => applyInitialTheme());
+  useEffect(() => followSiteTheme(), []);
   const theme = useAltarStore((s) => s.theme);
   // Controlled: Canvas re-applies its dpr prop on every render, so an imperative
   // setDpr(1) would be undone by the next theme toggle or resize.
   const [dpr, setDpr] = useState<number | [number, number]>(RENDERER.dpr);
 
   return (
+    // A scene colour (the middle of its sky gradient), not a site token.
     <div className="fixed inset-0" style={{ background: THEMES[theme].sky[1] }}>
       <Canvas
         shadows={RENDERER.shadows}

@@ -1,22 +1,55 @@
-import Link from "next/link";
-import { acceleratorProject, projectCardId, projects } from "@/lib/portfolioProjects";
+import type { Metadata } from "next";
+import ProjectCard from "@/components/projects/ProjectCard";
+import { CONTAINER } from "@/components/ui/layout";
+import { allProjects, extraWriteups, projectCardId } from "@/lib/portfolioProjects";
 
-export default function Projects() {
+const DESCRIPTION = "Projects in hardware acceleration, AI, and systems engineering.";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description: DESCRIPTION,
+  alternates: { canonical: "/project-gallery" },
+  // A page's openGraph replaces the root layout's, so the site name is repeated here.
+  openGraph: {
+    type: "website",
+    siteName: "Lefan Hu",
+    title: "Projects",
+    description: DESCRIPTION,
+    url: "/project-gallery",
+  },
+};
+
+export default function ProjectGallery() {
+  // The lead card has no photograph, so the first cover that is a file is the one to load eagerly.
+  const firstPicture = allProjects.findIndex((project) => "imgSrc" in project);
+
   return (
-    <div className="flex-1 overflow-auto no-scrollbar">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-extrabold text-white">Project Gallery</h1>
-        <p className="mt-4 text-slate-300">Projects in hardware acceleration, AI, and systems engineering.</p>
-        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {[acceleratorProject, ...projects].map((project) => (
-            <Link key={project.name} id={projectCardId(project.slug)} href={project.href} className="rounded-2xl border border-white/10 bg-slate-900 p-6 transition-colors hover:border-sky-300/50">
-              <h2 className="text-2xl font-bold text-white">{project.name}</h2>
-              <p className="mt-4 leading-7 text-slate-300">{project.description}</p>
-              <span className="mt-6 inline-block font-semibold text-sky-300">View project →</span>
-            </Link>
-          ))}
-        </div>
-      </div>
+    <div className={`${CONTAINER} pb-12 pt-10 sm:pb-16 sm:pt-16`}>
+      <header className="max-w-2xl">
+        <h1 className="rise text-title font-bold tracking-tight">Projects</h1>
+        <p className="rise mt-4 text-lead text-mute" style={{ "--i": 1 } as React.CSSProperties}>
+          {DESCRIPTION} Some have a write-up here; the others open where they live.
+        </p>
+      </header>
+      {/* Eight cards: the lead card is two columns wide at lg, so the rows of three
+          come out even; at two columns it is a normal card and the rows are even too. */}
+      <ul className="mt-8 grid gap-5 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
+        {allProjects.map((project, index) => (
+          <li key={project.slug} className={index === 0 ? "lg:col-span-2" : ""}>
+            <ProjectCard
+              project={project}
+              id={projectCardId(project.slug)}
+              featured={index === 0}
+              eager={index === firstPicture}
+            />
+          </li>
+        ))}
+        {extraWriteups.map((writeup) => (
+          <li key={writeup.slug}>
+            <ProjectCard project={writeup} />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

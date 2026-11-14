@@ -1,9 +1,9 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import SceneCanvas, { type SceneProps, useSceneFrame } from "./SceneCanvas";
 
 function TunnelRings() {
   const groupRef = useRef<THREE.Group>(null);
@@ -19,8 +19,7 @@ function TunnelRings() {
     []
   );
 
-  useFrame(({ clock }) => {
-    const time = clock.getElapsedTime();
+  useSceneFrame((time) => {
     if (groupRef.current) {
       groupRef.current.rotation.z = Math.sin(time * 0.3) * 0.12;
     }
@@ -60,19 +59,17 @@ function TunnelRings() {
   );
 }
 
-export default function NeonTunnel3D(props: { className?: string }) {
+export default function NeonTunnel3D(props: SceneProps) {
   return (
-    <div className={props.className} data-testid="neon-tunnel-3d">
-      <Canvas dpr={[1, 1.5]}>
-        <color attach="background" args={["#030712"]} />
-        <fog attach="fog" args={["#030712", 12, 44]} />
-        <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={42} />
-        <ambientLight intensity={0.9} />
-        <pointLight position={[0, 0, 8]} intensity={40} color="#60a5fa" />
-        <pointLight position={[0, 0, -10]} intensity={24} color="#f472b6" />
-        <TunnelRings />
-        <OrbitControls enablePan={false} minDistance={8} maxDistance={18} />
-      </Canvas>
-    </div>
+    <SceneCanvas {...props} testId="neon-tunnel-3d">
+      <color attach="background" args={["#030712"]} />
+      <fog attach="fog" args={["#030712", 12, 44]} />
+      <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={42} />
+      <ambientLight intensity={0.9} />
+      <pointLight position={[0, 0, 8]} intensity={40} color="#60a5fa" />
+      <pointLight position={[0, 0, -10]} intensity={24} color="#f472b6" />
+      <TunnelRings />
+      <OrbitControls enablePan={false} minDistance={8} maxDistance={18} />
+    </SceneCanvas>
   );
 }

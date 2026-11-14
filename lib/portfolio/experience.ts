@@ -17,12 +17,48 @@ export type ExperienceBranch = {
   roles: ExperienceRole[];
 };
 
+// Display order: the branch holding the most recent role comes first, and
+// roles run newest first inside a branch. The section renders this as written.
 export const experienceBranches: ExperienceBranch[] = [
+  {
+    id: "developer-productivity",
+    title: "Developer Productivity",
+    subtitle: "Internal tooling, diagnostics, and faster workflows for engineering teams",
+    period: "2024 – 2026",
+    tags: ["Internal Tools", "AI", "Automation"],
+    roles: [
+      {
+        id: "capital-one",
+        title: "Capital One",
+        subtitle: "Software Developer, The 6ix Team",
+        location: "Toronto, ON",
+        period: "May 2026 – Aug. 2026",
+        tags: ["AI Automation", "Figma MCP", "Astro"],
+        highlights: [
+          "Developed an AI-automated Figma-to-Astro framework for product pages, reducing implementation time from two weeks to one day.",
+          "Integrated Figma MCP to extract layout, spacing, and design-token context for production workflows, minimizing manual intervention.",
+        ],
+      },
+      {
+        id: "ciena",
+        title: "Ciena",
+        subtitle: "Software Developer, Technological Innovation Team",
+        location: "Ottawa, ON",
+        period: "Jan. 2024 – Apr. 2024",
+        tags: ["JupyterLab", "Splunk", "Diagnostics"],
+        highlights: [
+          "Developed major releases of a data aggregator tool used by hundreds of engineers within Ciena, saving hundreds of engineering hours.",
+          "Built Splunk search queries that identified common hardware device errors 80% faster.",
+          "Used JupyterLab to automate complex log archive workflows, increasing efficiency by 30%.",
+        ],
+      },
+    ],
+  },
   {
     id: "robotics-and-automation",
     title: "Robotics and Automation",
     subtitle: "Applied ML, deployment, and cross-team enablement for physical systems",
-    period: "2025 - 2026",
+    period: "2025 – 2026",
     tags: ["Robotics", "ML", "AWS"],
     roles: [
       {
@@ -30,7 +66,7 @@ export const experienceBranches: ExperienceBranch[] = [
         title: "Amazon Robotics",
         subtitle: "Software Developer, AR Human Workcell Interface Team",
         location: "Toronto, ON",
-        period: "Sept. 2025 - Apr. 2026",
+        period: "Sept. 2025 – Apr. 2026",
         tags: ["Planning Pipelines", "CDK", "Workcells"],
         highlights: [
           "Designed, developed, and deployed ML planning pipelines for robotic movement drive units across 1,200+ fulfillment centers worldwide.",
@@ -44,15 +80,15 @@ export const experienceBranches: ExperienceBranch[] = [
     id: "platform-and-security",
     title: "Platform and Security",
     subtitle: "Reliability, compliance, and operational tooling at service scale",
-    period: "2023 - 2025",
+    period: "2023 – 2025",
     tags: ["Infrastructure", "Monitoring", "Compliance"],
     roles: [
       {
         id: "adentro",
         title: "Adentro",
         subtitle: "DevOps Engineer, Security and DevOps Team",
-        location: "San Francisco, California",
-        period: "May 2025 - Aug. 2025",
+        location: "San Francisco, CA",
+        period: "May 2025 – Aug. 2025",
         tags: ["ECS", "Observability", "SOC 2"],
         highlights: [
           "Developed and maintained resilient monitoring systems for large-scale ECS clusters supporting 400+ services.",
@@ -65,47 +101,13 @@ export const experienceBranches: ExperienceBranch[] = [
         title: "TELUS",
         subtitle: "Software Developer, RCOE Team",
         location: "Toronto, ON",
-        period: "May 2023 - Aug. 2023",
+        period: "May 2023 – Aug. 2023",
         tags: ["Spring Boot", "Docker", "GCP Pub/Sub"],
         highlights: [
           "Contributed to ACMP, an auto-call management service for automatic dispatching of field technicians.",
           "Built, tested, and deployed production images of the ACMP service to customer-facing Docker swarms.",
           "Adopted a GCP Pub/Sub model to facilitate secure communication and enable internal database access through Google services.",
           "Developed a Java Spring Boot chat service with a serverless architecture, reducing compute cost by 20x.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "developer-productivity",
-    title: "Developer Productivity",
-    subtitle: "Internal tooling, diagnostics, and faster workflows for engineering teams",
-    period: "2024 - 2026",
-    tags: ["Internal Tools", "AI", "Automation"],
-    roles: [
-      {
-        id: "capital-one",
-        title: "Capital One",
-        subtitle: "Software Developer, The 6ix Team",
-        location: "Toronto, ON",
-        period: "May 2026 - Aug. 2026",
-        tags: ["AI Automation", "Figma MCP", "Astro"],
-        highlights: [
-          "Developed an AI-automated Figma-to-Astro framework for product pages, reducing implementation time from two weeks to one day.",
-          "Integrated Figma MCP to extract layout, spacing, and design-token context for production workflows, minimizing manual intervention.",
-        ],
-      },
-      {
-        id: "ciena",
-        title: "CIENA Corporation",
-        subtitle: "Software Developer, Technological Innovation Team",
-        location: "Ottawa, ON",
-        period: "Jan. 2024 - Apr. 2024",
-        tags: ["JupyterLab", "Splunk", "Diagnostics"],
-        highlights: [
-          "Developed major releases of a data aggregator tool used by hundreds of engineers within CIENA, saving hundreds of engineering hours.",
-          "Built Splunk search queries that identified common hardware device errors 80% faster.",
-          "Used JupyterLab to automate complex log archive workflows, increasing efficiency by 30%.",
         ],
       },
     ],

@@ -4,11 +4,13 @@ import SitePanel, { REVEAL_ANYWAY_MS, type PanelStage } from "@/components/altar
 import { frameNavigation } from "@/components/altar/projection/siteFrame";
 import { contact } from "@/lib/portfolio/contact";
 import { RELICS } from "@/lib/altar/relics";
+import { THEMES } from "@/lib/altar/theme";
+import type { Theme } from "@/lib/altar/store";
 import type { ViewId } from "@/lib/altar/views";
 
 /** A stand-in for the real site: what the frame would load at `/`. */
 const FIXTURE = `
-  <nav><a id="home" href="/">Home</a></nav>
+  <nav><a id="home" href="/">Home</a><button id="site-toggle" data-theme-toggle>Theme</button></nav>
   <main>
     <h1>Lefan's Portfolio</h1>
     <a id="altar" href="/altar">Try the 3D version</a>
@@ -28,8 +30,8 @@ const FIXTURE = `
 
 let rendered: ReturnType<typeof render> | null = null;
 
-function mount(view: ViewId = "experience", stage: PanelStage = "wire") {
-  rendered = render(<SitePanel view={view} stage={stage} />);
+function mount(view: ViewId = "experience", stage: PanelStage = "wire", theme?: Theme) {
+  rendered = render(<SitePanel view={view} stage={stage} theme={theme} />);
   const frame = rendered.container.querySelector("iframe")!;
   const win = frame.contentWindow as Window & typeof globalThis;
   const doc = frame.contentDocument!;
@@ -166,6 +168,72 @@ describe("SitePanel", () => {
     expect(doc.documentElement.dataset.apStage).toBe("dissolve");
   });
 
+  describe("theme", () => {
+    afterEach(() => localStorage.clear());
+
+    it("the framed site is put in the altar's theme at load, and follows a later switch", () => {
+      const { frame, doc, rerender } = mount("experience", "filled", "light");
+      fireEvent.load(frame);
+      expect(doc.documentElement.getAttribute("data-theme")).toBe("light");
+      rerender(<SitePanel view="experience" stage="filled" theme="dark" />);
+      expect(doc.documentElement.getAttribute("data-theme")).toBe("dark");
+      // the stage attribute is untouched by it
+      expect(doc.documentElement.dataset.apStage).toBe("filled");
+    });
+
+    it("overrides the theme the site picked for itself (an unsaved ?theme= on the altar)", () => {
+      localStorage.setItem("theme", "dark");
+      const { frame, doc, win } = mount("experience", "wire", "light");
+      doc.documentElement.setAttribute("data-theme", "dark");
+      const storage = vi.fn();
+      win.addEventListener("storage", storage);
+      fireEvent.load(frame);
+      expect(doc.documentElement.getAttribute("data-theme")).toBe("light");
+      // nothing saved says light: the site's own theme module is not asked
+      expect(storage).not.toHaveBeenCalled();
+    });
+
+    it("hands a saved switch to the site's own theme module, as the storage event it listens for", () => {
+      const { frame, doc, win, rerender } = mount("experience", "filled", "dark");
+      fireEvent.load(frame);
+      // the site's module (lib/theme.ts) re-reads the saved choice on a storage event
+      const keys: (string | null)[] = [];
+      win.addEventListener("storage", (e) => {
+        keys.push((e as StorageEvent).key);
+        doc.documentElement.setAttribute("data-theme", localStorage.getItem("theme")!);
+      });
+      localStorage.setItem("theme", "light");
+      rerender(<SitePanel view="experience" stage="filled" theme="light" />);
+      expect(keys).toEqual(["theme"]);
+      expect(doc.documentElement.getAttribute("data-theme")).toBe("light");
+    });
+
+    it("a saved switch still lands when the site is not listening (not hydrated yet)", () => {
+      const { frame, doc, rerender } = mount("experience", "filled", "dark");
+      fireEvent.load(frame);
+      localStorage.setItem("theme", "light");
+      rerender(<SitePanel view="experience" stage="filled" theme="light" />);
+      expect(doc.documentElement.getAttribute("data-theme")).toBe("light");
+    });
+
+    it("while framed, the site's own theme toggle is hidden (the altar's switch is beside the pane)", () => {
+      const { frame, doc, win } = mount("experience", "filled");
+      const toggle = doc.getElementById("site-toggle")!;
+      expect(win.getComputedStyle(toggle).display).not.toBe("none");
+      fireEvent.load(frame);
+      expect(win.getComputedStyle(toggle).display).toBe("none");
+    });
+
+    it("the wire is drawn in the theme's own line colour", () => {
+      const { frame, doc, win, rerender } = mount("experience", "wire", "dark");
+      fireEvent.load(frame);
+      const wire = () => win.getComputedStyle(doc.documentElement).getPropertyValue("--ap-wire").trim();
+      expect(wire()).toBe(THEMES.dark.projection.line);
+      rerender(<SitePanel view="experience" stage="wire" theme="light" />);
+      expect(wire()).toBe(THEMES.light.projection.line);
+    });
+  });
+
   it("the frame is hidden and unclickable until its first load", () => {
     const { frame } = mount();
     expect(frame).not.toBeVisible();
@@ -244,6 +312,16 @@ describe("SitePanel", () => {
       expect(esc.keys).toEqual(["Escape"]);
       // a later page starts at its top: the view's anchor was for the first page only
       expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    });
+
+    it("starts in the altar's theme", () => {
+      const { frame, win } = mount("projects", "filled", "light");
+      fireEvent.load(frame);
+      const { next, setReadyState } = navigate(frame, win);
+      next.documentElement.setAttribute("data-theme", "dark");
+      setReadyState("interactive");
+      frames(1);
+      expect(next.documentElement.getAttribute("data-theme")).toBe("light");
     });
 
     it("stops watching after a while; load still prepares it", () => {

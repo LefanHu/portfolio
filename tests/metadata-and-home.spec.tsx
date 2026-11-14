@@ -15,9 +15,14 @@ vi.mock("@/components/ContactForm", () => ({
   default: () => <div data-testid="contact-form">contact</div>,
 }));
 
+// A canvas backdrop; jsdom has no 2D context.
+vi.mock("@/components/site/Constellation", () => ({
+  default: () => null,
+}));
+
 describe("root metadata", () => {
   it("exposes the expected title and icons", () => {
-    expect(metadata.title).toBe("Lefan's Website");
+    expect(metadata.title).toEqual({ default: "Lefan Hu | Portfolio", template: "%s | Lefan Hu" });
     expect(metadata.icons).toEqual({
       icon: "/icon.png",
       shortcut: "/icon.png",
@@ -30,7 +35,8 @@ describe("home page structure", () => {
   it("renders the primary homepage sections", () => {
     render(<HomePage />);
 
-    expect(screen.getByText("Lefan's Portfolio")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Lefan Hu" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /explore this portfolio in 3d/i })).toHaveAttribute("href", "/altar");
     expect(screen.getByTestId("fav-projects")).toBeInTheDocument();
     expect(screen.getByTestId("deferred-sections")).toBeInTheDocument();
     expect(screen.getByTestId("contact-form")).toBeInTheDocument();

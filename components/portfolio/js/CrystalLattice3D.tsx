@@ -1,9 +1,9 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import SceneCanvas, { type SceneProps, useSceneFrame } from "./SceneCanvas";
 
 const GRID = 7;
 const COUNT = GRID * GRID * GRID;
@@ -13,13 +13,12 @@ function Lattice() {
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const color = useMemo(() => new THREE.Color(), []);
 
-  useFrame(({ clock }) => {
+  useSceneFrame((time) => {
     const mesh = meshRef.current;
     if (!mesh) {
       return;
     }
 
-    const time = clock.getElapsedTime();
     let index = 0;
 
     for (let z = 0; z < GRID; z += 1) {
@@ -53,7 +52,6 @@ function Lattice() {
     <instancedMesh ref={meshRef} args={[undefined, undefined, COUNT]}>
       <octahedronGeometry args={[1, 0]} />
       <meshStandardMaterial
-        vertexColors
         roughness={0.18}
         metalness={0.3}
         emissive="#67e8f9"
@@ -63,19 +61,17 @@ function Lattice() {
   );
 }
 
-export default function CrystalLattice3D(props: { className?: string }) {
+export default function CrystalLattice3D(props: SceneProps) {
   return (
-    <div className={props.className} data-testid="crystal-lattice-3d">
-      <Canvas dpr={[1, 1.5]}>
-        <color attach="background" args={["#08121b"]} />
-        <fog attach="fog" args={["#08121b", 18, 34]} />
-        <PerspectiveCamera makeDefault position={[12, 10, 16]} fov={40} />
-        <ambientLight intensity={1.6} />
-        <hemisphereLight args={["#ecfeff", "#0f172a", 1.2]} />
-        <directionalLight position={[10, 14, 10]} intensity={2.8} />
-        <Lattice />
-        <OrbitControls enablePan={false} minDistance={9} maxDistance={24} />
-      </Canvas>
-    </div>
+    <SceneCanvas {...props} testId="crystal-lattice-3d">
+      <color attach="background" args={["#08121b"]} />
+      <fog attach="fog" args={["#08121b", 18, 34]} />
+      <PerspectiveCamera makeDefault position={[12, 10, 16]} fov={40} />
+      <ambientLight intensity={1.6} />
+      <hemisphereLight args={["#ecfeff", "#0f172a", 1.2]} />
+      <directionalLight position={[10, 14, 10]} intensity={2.8} />
+      <Lattice />
+      <OrbitControls enablePan={false} minDistance={9} maxDistance={24} />
+    </SceneCanvas>
   );
 }

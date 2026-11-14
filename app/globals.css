@@ -1,38 +1,392 @@
 @import "tailwindcss";
 
+/*
+ * Design system for the classic (2D) site.
+ *
+ * It borrows its material from the 3D altar so both halves read as one place:
+ * the page is the altar's sky (night navy / daylight blue), cards are its
+ * panes (deep glass / parchment), the accent is the rune glow, and the four
+ * home sections carry the altar's recipe colours as diamond sigils.
+ *
+ * Use the tokens through Tailwind utilities, never raw palette classes:
+ *   surfaces  bg-sky  bg-pane  bg-pane-raise
+ *   text      text-ink (headings)  text-body  text-mute
+ *   lines     border-line  border-line-strong
+ *   accent    text-rune  bg-rune text-rune-ink  bg-rune-wash  text-ember
+ *   sections  text-sig-projects | -experience | -coding | -contact
+ *   status    text-ok  text-warn  text-bad
+ *   shape     rounded-chip  rounded-control  rounded-card  shadow-card  shadow-lift
+ *   type      font-display  font-sans  text-display  text-title  text-heading  text-lead
+ *
+ * The theme is the `data-theme` attribute on <html> (lib/theme.ts).
+ */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Registered so a theme switch can cross-fade them (see [data-theme-fade]). */
+@property --sky { syntax: "<color>"; inherits: true; initial-value: #081230; }
+@property --sky-glow { syntax: "<color>"; inherits: true; initial-value: #1b2c63; }
+@property --pane { syntax: "<color>"; inherits: true; initial-value: #0e2142; }
+@property --pane-raise { syntax: "<color>"; inherits: true; initial-value: #15305a; }
+@property --ink { syntax: "<color>"; inherits: true; initial-value: #eef8ff; }
+@property --body { syntax: "<color>"; inherits: true; initial-value: #c5d8ea; }
+@property --mute { syntax: "<color>"; inherits: true; initial-value: #8ea7c2; }
+@property --line { syntax: "<color>"; inherits: true; initial-value: #6fe6ff33; }
+@property --line-strong { syntax: "<color>"; inherits: true; initial-value: #6fe6ff73; }
+@property --rune { syntax: "<color>"; inherits: true; initial-value: #6fe6ff; }
+@property --rune-strong { syntax: "<color>"; inherits: true; initial-value: #a8f1ff; }
+@property --rune-ink { syntax: "<color>"; inherits: true; initial-value: #04222f; }
+@property --rune-wash { syntax: "<color>"; inherits: true; initial-value: #6fe6ff14; }
+@property --ember { syntax: "<color>"; inherits: true; initial-value: #ffb35c; }
+@property --sig-projects { syntax: "<color>"; inherits: true; initial-value: #b78cff; }
+@property --sig-experience { syntax: "<color>"; inherits: true; initial-value: #ff7d60; }
+@property --sig-coding { syntax: "<color>"; inherits: true; initial-value: #7dff8a; }
+@property --sig-contact { syntax: "<color>"; inherits: true; initial-value: #ffe45c; }
+@property --ok { syntax: "<color>"; inherits: true; initial-value: #5ee08a; }
+@property --warn { syntax: "<color>"; inherits: true; initial-value: #ffb35c; }
+@property --bad { syntax: "<color>"; inherits: true; initial-value: #ff7a70; }
+@property --star { syntax: "<color>"; inherits: true; initial-value: #bcd2ff8c; }
+
+/* Day: the altar's daylight sky with parchment panes and ink. */
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  color-scheme: light;
+  --sky: #e8f0f8;
+  --sky-glow: #c3dbf2;
+  --pane: #fbf8f1;
+  --pane-raise: #f2ecdf;
+  --ink: #14202c;
+  --body: #2e3d4d;
+  --mute: #506274;
+  --line: #1b283629;
+  --line-strong: #1b283657;
+  --rune: #0a6f8a;
+  --rune-strong: #075a71;
+  --rune-ink: #ffffff;
+  --rune-wash: #0a6f8a14;
+  --ember: #9a5a12;
+  --sig-projects: #6c5c9f;
+  --sig-experience: #a5483a;
+  --sig-coding: #2f7d47;
+  --sig-contact: #7a6a14;
+  --ok: #2f7d47;
+  --warn: #a2620c;
+  --bad: #b3392f;
+  --star: #1b283626;
+
+  --shadow-card-value: 0 1px 2px rgb(27 40 54 / 0.07), 0 14px 30px -18px rgb(27 40 54 / 0.35);
+  --shadow-lift-value: 0 2px 4px rgb(27 40 54 / 0.08), 0 24px 44px -20px rgb(27 40 54 / 0.45);
+
+  /* Sticky header height; also the scroll offset for anchors. */
+  --nav-h: 4rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+/* Night: the altar's night sky with glass panes and rune light. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --sky: #081230;
+  --sky-glow: #1b2c63;
+  --pane: #0e2142;
+  --pane-raise: #15305a;
+  --ink: #eef8ff;
+  --body: #c5d8ea;
+  --mute: #8ea7c2;
+  --line: #6fe6ff33;
+  --line-strong: #6fe6ff73;
+  --rune: #6fe6ff;
+  --rune-strong: #a8f1ff;
+  --rune-ink: #04222f;
+  --rune-wash: #6fe6ff14;
+  --ember: #ffb35c;
+  --sig-projects: #b78cff;
+  --sig-experience: #ff7d60;
+  --sig-coding: #7dff8a;
+  --sig-contact: #ffe45c;
+  --ok: #5ee08a;
+  --warn: #ffb35c;
+  --bad: #ff7a70;
+  --star: #bcd2ff66;
+
+  --shadow-card-value: 0 1px 0 rgb(111 230 255 / 0.06) inset, 0 18px 40px -22px rgb(2 6 23 / 0.9);
+  --shadow-lift-value: 0 1px 0 rgb(111 230 255 / 0.1) inset, 0 0 0 1px rgb(111 230 255 / 0.12),
+    0 26px 50px -22px rgb(2 6 23 / 0.95);
+}
+
+@theme inline {
+  --color-sky: var(--sky);
+  --color-sky-glow: var(--sky-glow);
+  --color-pane: var(--pane);
+  --color-pane-raise: var(--pane-raise);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-mute: var(--mute);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-rune: var(--rune);
+  --color-rune-strong: var(--rune-strong);
+  --color-rune-ink: var(--rune-ink);
+  --color-rune-wash: var(--rune-wash);
+  --color-ember: var(--ember);
+  --color-sig-projects: var(--sig-projects);
+  --color-sig-experience: var(--sig-experience);
+  --color-sig-coding: var(--sig-coding);
+  --color-sig-contact: var(--sig-contact);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+
+  /* next/font defines --font-body and --font-heading on <html> (app/layout.tsx). */
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-heading), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --shadow-card: var(--shadow-card-value);
+  --shadow-lift: var(--shadow-lift-value);
+}
+
+@theme {
+  --ease-swift: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --radius-chip: 0.375rem;
+  --radius-control: 0.625rem;
+  --radius-card: 0.875rem;
+
+  /* The text face runs small, so the body sizes sit a notch above Tailwind's. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.45;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.65;
+  --text-lead: clamp(1.125rem, 1.04rem + 0.45vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+  --text-heading: 1.4375rem;
+  --text-heading--line-height: 1.22;
+  --text-title: clamp(2rem, 1.45rem + 2.4vw, 2.875rem);
+  --text-title--line-height: 1.06;
+  --text-display: clamp(3.25rem, 1.6rem + 7.4vw, 6rem);
+  --text-display--line-height: 0.92;
+
+  --animate-rise: rise 0.7s var(--ease-swift) both;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-drop: drop 0.22s var(--ease-swift) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.6rem);
+    }
+  }
+  @keyframes drop {
+    from {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes shimmer {
+    from {
+      background-position: 180% 0;
+    }
+    to {
+      background-position: -80% 0;
+    }
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  min-height: 100vh;
+@layer base {
+  html {
+    /* Anchors (/#experience) and keyboard focus must not land under the sticky header. */
+    scroll-padding-top: calc(var(--nav-h) + 1.25rem);
+    scrollbar-color: var(--line-strong) transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--sky);
+    color: var(--body);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    font-variant-numeric: lining-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* The sky: a soft glow at the zenith, fixed behind everything. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 70% at 50% -15%, var(--sky-glow), transparent 62%),
+      radial-gradient(60% 45% at 100% 105%, color-mix(in srgb, var(--sky-glow) 55%, transparent), transparent 70%);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  h4,
+  h5,
+  h6 {
+    color: var(--ink);
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  a {
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: from-font;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--rune);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--rune) 32%, transparent);
+    color: var(--ink);
+  }
+
+  /* Interactive things move quickly and together. */
+  a,
+  button,
+  summary,
+  [role="button"] {
+    transition:
+      color 150ms var(--ease-swift),
+      background-color 150ms var(--ease-swift),
+      border-color 150ms var(--ease-swift),
+      box-shadow 200ms var(--ease-swift),
+      transform 200ms var(--ease-swift),
+      opacity 150ms var(--ease-swift);
+  }
 }
 
-@layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
+@layer components {
+  /* Body-copy link: the one link style for running text. */
+  .link {
+    color: var(--rune);
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(in srgb, var(--rune) 45%, transparent);
+    font-weight: 500;
+  }
+  .link:hover {
+    color: var(--rune-strong);
+    text-decoration-color: currentColor;
+  }
+
+  /* Loading placeholder; give it a size with utilities. */
+  .skeleton {
+    border-radius: var(--radius-chip);
+    background-color: var(--pane-raise);
+    background-image: linear-gradient(
+      100deg,
+      transparent 30%,
+      color-mix(in srgb, var(--ink) 9%, transparent) 50%,
+      transparent 70%
+    );
+    background-size: 220% 100%;
+    background-repeat: no-repeat;
+    animation: var(--animate-shimmer);
+  }
+
+  /* Lets the hero's island dissolve into the sky at its edges. */
+  .island-mask {
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 52%, transparent 97%);
+    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 52%, transparent 97%);
+  }
+
+  /* Page-load entrance. Stagger with style={{ "--i": n }}. Use it once per page, in the header. */
+  .rise {
+    animation: var(--animate-rise);
+    animation-delay: calc(var(--i, 0) * 85ms);
+  }
+}
+
+/* Theme switch: cross-fade the tokens. The flag exists only during a switch (lib/theme.ts). */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-theme-fade] {
+    transition:
+      --sky 0.5s ease,
+      --sky-glow 0.5s ease,
+      --pane 0.5s ease,
+      --pane-raise 0.5s ease,
+      --ink 0.5s ease,
+      --body 0.5s ease,
+      --mute 0.5s ease,
+      --line 0.5s ease,
+      --line-strong 0.5s ease,
+      --rune 0.5s ease,
+      --rune-strong 0.5s ease,
+      --rune-ink 0.5s ease,
+      --rune-wash 0.5s ease,
+      --ember 0.5s ease,
+      --sig-projects 0.5s ease,
+      --sig-experience 0.5s ease,
+      --sig-coding 0.5s ease,
+      --sig-contact 0.5s ease,
+      --ok 0.5s ease,
+      --warn 0.5s ease,
+      --bad 0.5s ease,
+      --star 0.5s ease;
+  }
+
+  /* Route changes (React <ViewTransition>): a short cross-fade. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 240ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  body::before {
     display: none;
   }
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+  [data-site-header],
+  [data-site-footer],
+  [data-constellation] {
+    display: none !important;
   }
 }

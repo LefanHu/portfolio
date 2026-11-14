@@ -1,9 +1,9 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import SceneCanvas, { type SceneProps, useSceneFrame } from "./SceneCanvas";
 
 const GRID = 34;
 const COUNT = GRID * GRID;
@@ -13,13 +13,12 @@ function WavePoints() {
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const color = useMemo(() => new THREE.Color(), []);
 
-  useFrame(({ clock }) => {
+  useSceneFrame((time) => {
     const mesh = meshRef.current;
     if (!mesh) {
       return;
     }
 
-    const time = clock.getElapsedTime();
     let index = 0;
 
     for (let z = 0; z < GRID; z += 1) {
@@ -50,22 +49,20 @@ function WavePoints() {
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, COUNT]}>
       <sphereGeometry args={[1, 12, 12]} />
-      <meshStandardMaterial vertexColors emissive="#0ea5e9" emissiveIntensity={0.12} />
+      <meshStandardMaterial emissive="#0ea5e9" emissiveIntensity={0.12} />
     </instancedMesh>
   );
 }
 
-export default function ParticleWave3D(props: { className?: string }) {
+export default function ParticleWave3D(props: SceneProps) {
   return (
-    <div className={props.className} data-testid="particle-wave-3d">
-      <Canvas dpr={[1, 1.5]}>
-        <color attach="background" args={["#07111f"]} />
-        <PerspectiveCamera makeDefault position={[0, 12, 22]} fov={42} />
-        <ambientLight intensity={1.8} />
-        <directionalLight position={[8, 10, 6]} intensity={2.4} />
-        <WavePoints />
-        <OrbitControls enablePan={false} minDistance={14} maxDistance={30} />
-      </Canvas>
-    </div>
+    <SceneCanvas {...props} testId="particle-wave-3d">
+      <color attach="background" args={["#07111f"]} />
+      <PerspectiveCamera makeDefault position={[0, 12, 22]} fov={42} />
+      <ambientLight intensity={1.8} />
+      <directionalLight position={[8, 10, 6]} intensity={2.4} />
+      <WavePoints />
+      <OrbitControls enablePan={false} minDistance={14} maxDistance={30} />
+    </SceneCanvas>
   );
 }

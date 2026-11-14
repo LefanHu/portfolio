@@ -1,0 +1,69 @@
+/* Styles the LeetCode section cannot express with utilities. */
+
+/*
+ * Data arrival: a gauge arc draws from empty to its value, once. The path has
+ * pathLength="100", so its resting stroke-dashoffset is (100 - percent).
+ * Duration and easing match the count-up in AnimatedCounter.tsx; the global
+ * reduced-motion rule shortens it to nothing.
+ */
+.sweep {
+  animation: sweep 500ms var(--ease-swift) both;
+}
+
+@keyframes sweep {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+/*
+ * Heat-map colours, from the tokens so they follow the theme (and its
+ * cross-fade). The empty cell has to read against the panel in both themes;
+ * the four active levels climb from it to the status green.
+ */
+.calendar {
+  --cal-0: color-mix(in srgb, var(--ink) 14%, var(--pane));
+  --cal-1: color-mix(in srgb, var(--ok) 34%, var(--cal-0));
+  --cal-2: color-mix(in srgb, var(--ok) 56%, var(--cal-0));
+  --cal-3: color-mix(in srgb, var(--ok) 78%, var(--cal-0));
+  --cal-4: var(--ok);
+}
+
+/*
+ * The library scrolls inside itself, with no way to name the scroller or make
+ * it focusable. Its own scrolling is switched off (it sets these inline, hence
+ * !important) and `.scroller`, which we render, scrolls instead.
+ */
+.scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.scroller :global(.react-activity-calendar) {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.scroller :global(.react-activity-calendar__scroll-container) {
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+/*
+ * Fill the panel on wide screens; below the minimum the grid keeps a readable
+ * cell size and the region scrolls. `.placeholder` is the loading block with
+ * the same footprint (53 weeks by 7 days plus the month labels).
+ */
+.scroller :global(.react-activity-calendar__calendar),
+.placeholder {
+  width: 100%;
+  min-width: 50rem;
+}
+
+.scroller :global(.react-activity-calendar__calendar) {
+  height: auto;
+}
+
+.placeholder {
+  aspect-ratio: 844 / 130;
+}

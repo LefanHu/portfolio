@@ -1,4 +1,4 @@
-import Link from "next/link";
+import ButtonLink from "@/components/ui/ButtonLink";
 
 export type DesktopOnlyReason = "phone" | "no-webgl" | "error";
 
@@ -17,15 +17,20 @@ const COPY: Record<DesktopOnlyReason, { heading: string; body: string }> = {
   },
 };
 
+/**
+ * Shown in place of the altar when it cannot run (a phone, no WebGL 2, or a
+ * crash). A plain page in the site's tokens, so it follows the theme like the
+ * classic site it points back to.
+ */
 export default function DesktopOnly({ reason = "phone" }: { reason?: DesktopOnlyReason }) {
   const { heading, body } = COPY[reason];
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center gap-4 bg-black px-6 text-center text-white">
-      <h1 className="text-3xl font-bold">{heading}</h1>
-      <p className="max-w-md text-neutral-300">{body}</p>
-      <Link href="/" className="text-sky-300 underline underline-offset-4 hover:text-sky-200">
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-5 bg-sky px-5 py-10 text-center sm:px-8">
+      <h1 className="font-display text-title font-bold text-ink">{heading}</h1>
+      <p className="max-w-md text-body">{body}</p>
+      <ButtonLink href="/" variant="primary">
         Visit the regular portfolio
-      </Link>
-    </div>
+      </ButtonLink>
+    </main>
   );
 }

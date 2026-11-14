@@ -6,6 +6,9 @@
  *
  * The board is em-based: RecipeBoardInScene sets its width and base font so it
  * renders 1:1 from the home camera. The overlay is px-based.
+ *
+ * Type is the site's: --font-heading (titles) and --font-body are the
+ * next/font variables on <html> (app/layout.tsx).
  */
 
 @property --au-line { syntax: "<color>"; inherits: true; initial-value: #6fe6ff; }
@@ -21,7 +24,7 @@
 
 .au-themed {
   color: var(--au-text);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   line-height: 1.4;
   -webkit-font-smoothing: antialiased;
   transition:
@@ -178,7 +181,7 @@
 }
 .au-board__title {
   margin-top: 0.15em;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-heading), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: 1.32em;
   font-weight: 600;
   line-height: 1.15;
@@ -269,7 +272,7 @@
   font-weight: 700;
 }
 .au-recipe__title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-heading), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: 1.06em;
   font-weight: 600;
   line-height: 1.25;
@@ -569,7 +572,7 @@
 }
 .au-drawer__title {
   margin-top: 3px;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-heading), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: 24px;
   font-weight: 600;
   line-height: 1.15;
@@ -644,7 +647,7 @@
   gap: 1px;
 }
 .au-entry__title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-heading), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: 17px;
   font-weight: 600;
   line-height: 1.2;

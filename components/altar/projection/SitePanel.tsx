@@ -6,7 +6,7 @@ import type { Theme } from "@/lib/altar/store";
 import { THEMES } from "@/lib/altar/theme";
 import { viewAccent, viewKicker, viewTarget, viewTitle, type ViewId } from "@/lib/altar/views";
 import { contact } from "@/lib/portfolio/contact";
-import { prepareFrame, setFrameStage, type PanelStage } from "./siteFrame";
+import { prepareFrame, setFrameStage, setFrameTheme, type PanelStage } from "./siteFrame";
 import { openExternalInNewTab } from "./wireTags";
 import "./projection.css";
 
@@ -27,7 +27,8 @@ const NEXT_PAGE_WATCH_MS = 10_000;
 
 /**
  * One view as a projected page: the themed frame header over the live site
- * in a same-origin iframe, at the view's page and scrolled to its section.
+ * in a same-origin iframe, at the view's page, scrolled to its section and in
+ * the altar's theme.
  * Sized by its parent (Projection sets the pixel size and base font).
  */
 export default function SitePanel({ view, stage, theme = "dark" }: { view: ViewId; stage: PanelStage; theme?: Theme }) {
@@ -38,6 +39,7 @@ export default function SitePanel({ view, stage, theme = "dark" }: { view: ViewI
   const prepared = useRef<Document | null>(null);
   const stopWatching = useRef<(() => void) | null>(null);
   const stageNow = useRef(stage);
+  const themeNow = useRef(theme);
   /** The first document has been prepared (scrolled to the anchor, wire-tagged). */
   const [loaded, setLoaded] = useState(false);
   const [overdue, setOverdue] = useState(false);
@@ -47,13 +49,20 @@ export default function SitePanel({ view, stage, theme = "dark" }: { view: ViewI
 
   useLayoutEffect(() => {
     stageNow.current = stage;
-  }, [stage]);
+    themeNow.current = theme;
+  }, [stage, theme]);
 
   // Stage changes after load reach the frame's document.
   useEffect(() => {
     const doc = frame.current?.contentDocument;
     if (loaded && doc) return setFrameStage(doc, stage);
   }, [loaded, stage]);
+
+  // So does a theme switch made while the view is open.
+  useEffect(() => {
+    const doc = frame.current?.contentDocument;
+    if (loaded && doc) setFrameTheme(doc, theme);
+  }, [loaded, theme]);
 
   useEffect(() => {
     const id = setTimeout(() => setOverdue(true), REVEAL_ANYWAY_MS);
@@ -89,7 +98,12 @@ export default function SitePanel({ view, stage, theme = "dark" }: { view: ViewI
     // the view's section on its first page only: a page navigated to in the frame starts at its top
     const target = prepared.current ? null : anchor;
     prepared.current = doc;
-    const releaseFrame = prepareFrame(el, { anchor: target, stage: stageNow.current, onEscape: escapeToAltar });
+    const releaseFrame = prepareFrame(el, {
+      anchor: target,
+      stage: stageNow.current,
+      theme: themeNow.current,
+      onEscape: escapeToAltar,
+    });
     const onLeave = () => watchNextPage(doc);
     win.addEventListener("pagehide", onLeave);
     release.current = () => {

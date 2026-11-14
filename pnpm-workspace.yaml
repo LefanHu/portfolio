@@ -1,10 +1,5 @@
 # Native build tools used by Next.js and the test toolchain.
 allowBuilds:
-  '@tsparticles/engine': false
   esbuild: true
   sharp: true
   unrs-resolver: true
-
-# refractor pins an older PrismJS; use the patched compatible release.
-overrides:
-  "refractor>prismjs": "1.30.0"

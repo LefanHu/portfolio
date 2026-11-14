@@ -1,137 +1,134 @@
-import { experienceBranches, type ExperienceBranch } from "@/lib/portfolio/experience";
+import { experienceBranches, type ExperienceBranch, type ExperienceRole } from "@/lib/portfolio/experience";
 import { SITE_ANCHORS } from "@/lib/portfolioProjects";
+import Panel from "@/components/ui/Panel";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Sigil from "@/components/ui/Sigil";
+import { TagList } from "@/components/ui/Tag";
+import TechnicalSkills from "./TechnicalSkills";
+import styles from "./ExperienceTree.module.css";
 
 export { experienceBranches };
 
-function Tag({ tag, tone }: { tag: string; tone: "sky" | "amber" | "emerald" }) {
-  const styles =
-    tone === "amber"
-      ? "border-amber-300/25 bg-amber-300/10 text-amber-100"
-      : tone === "emerald"
-        ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"
-        : "border-sky-300/25 bg-sky-300/10 text-sky-100";
+const TITLE_ID = "experience-title";
 
+/** "2023 – 2026": the first and last year mentioned in any role's period. */
+function yearSpan(roles: ExperienceRole[]) {
+  const years = roles.flatMap((role) => role.period.match(/\d{4}/g) ?? []).map(Number);
+  return `${Math.min(...years)} – ${Math.max(...years)}`;
+}
+
+/** A piece of the trunk: the track and the part of it the reader has scrolled past. */
+function Rail() {
   return (
-    <span className={`rounded-md border px-2.5 py-1 text-xs font-semibold ${styles}`}>
-      {tag}
+    <span aria-hidden="true" className={styles.rail}>
+      <span className={styles.railFill} />
     </span>
   );
 }
 
-function BranchCard({ branch }: { branch: ExperienceBranch }) {
+function RoleCard({ role }: { role: ExperienceRole }) {
+  const headingId = `experience-${role.id}`;
   return (
-    <article className="relative grid w-full min-w-0 gap-6 rounded-[30px] border border-white/10 bg-slate-950/70 p-4 shadow-[0_25px_80px_rgba(2,6,23,0.45)] backdrop-blur sm:p-6 xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-8">
-      <div className="min-w-0">
-        <div className="mb-4 flex flex-wrap items-start gap-3">
+    <li className={`relative ${styles.role}`}>
+      <Rail />
+      <span aria-hidden="true" className={`${styles.mark} ${styles.roleMark}`}>
+        <span className={styles.twig}>
+          <span className={styles.twigFill} />
+        </span>
+        <span className={styles.dot} />
+      </span>
+      <Panel as="article" aria-labelledby={headingId} className="p-4 sm:p-6">
+        <div className="flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="bg-gradient-to-r from-cyan-200 via-sky-100 to-indigo-200 bg-clip-text text-xs font-bold uppercase tracking-[0.28em] text-transparent">
-              Branch
-            </p>
-            <h3 className="mt-2 text-2xl font-black text-white">{branch.title}</h3>
+            <h4 id={headingId} className="font-display text-lead font-bold leading-tight text-ink">
+              {role.title}
+            </h4>
+            <p className="mt-1 text-sm font-medium text-body">{role.subtitle}</p>
           </div>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-200">
-            {branch.period}
-          </span>
+          <p className="shrink-0 text-sm text-mute sm:text-right">
+            <span className="whitespace-nowrap text-body">{role.period}</span>
+            <span aria-hidden="true" className="sm:hidden">
+              {" · "}
+            </span>
+            <span className="sr-only">, </span>
+            <span className="whitespace-nowrap sm:block">{role.location}</span>
+          </p>
         </div>
-
-        <p className="text-sm leading-6 text-slate-300">{branch.subtitle}</p>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {branch.tags.map((tag) => (
-            <Tag key={tag} tag={tag} tone="sky" />
+        <div className="mt-3">
+          <TagList label={`Focus areas at ${role.title}`} tags={role.tags} />
+        </div>
+        <ul className="mt-3 max-w-prose list-disc space-y-1.5 pl-4 text-sm text-body marker:text-sig-experience sm:mt-4 sm:space-y-2 sm:pl-5">
+          {role.highlights.map((highlight) => (
+            <li key={highlight}>{highlight}</li>
           ))}
-        </div>
-      </div>
-
-      <div className="relative flex min-w-0 flex-col gap-4 border-l border-white/10 pl-5">
-        {branch.roles.map((role) => (
-          <div key={role.id} className="relative">
-            <div className="absolute -left-[21px] top-6 h-px w-4 bg-white/20" />
-            <div className="absolute -left-[27px] top-[21px] h-3 w-3 rounded-full border border-slate-950 bg-emerald-300 shadow-[0_0_20px_rgba(52,211,153,0.75)]" />
-            <div className="rounded-2xl border border-emerald-300/15 bg-emerald-300/8 p-4">
-              <div className="mb-3 flex flex-col items-start gap-3 lg:flex-row lg:justify-between">
-                <div>
-                  <h4 className="text-lg font-bold text-white">{role.title}</h4>
-                  <p className="text-sm text-emerald-100/90">{role.subtitle}</p>
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                    {role.location}
-                  </p>
-                </div>
-                <span className="shrink-0 rounded-full border border-white/10 bg-slate-900/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-200">
-                  {role.period}
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {role.tags.map((tag) => (
-                  <Tag key={`${role.id}-${tag}`} tag={tag} tone="emerald" />
-                ))}
-              </div>
-              <ul className="mt-4 space-y-2 text-sm leading-6 text-slate-200">
-                {role.highlights.map((highlight) => (
-                  <li key={highlight} className="flex gap-2">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" />
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
-      </div>
-    </article>
+        </ul>
+      </Panel>
+    </li>
   );
 }
 
-export default function Experiences() {
-  const totalRoles = experienceBranches.reduce(
-    (count, branch) => count + branch.roles.length,
-    0
+function Branch({ branch }: { branch: ExperienceBranch }) {
+  const headingId = `experience-${branch.id}`;
+  return (
+    <li className={`relative ${styles.branch}`}>
+      <div className={styles.head}>
+        <Rail />
+        <span aria-hidden="true" className={`${styles.mark} ${styles.branchMark}`}>
+          <Sigil section="experience" />
+        </span>
+        <div className={styles.headText}>
+          <h3 id={headingId} className="text-heading font-bold">
+            {branch.title}
+          </h3>
+          {/* One line in a single column; stacked beside the trunk in two. */}
+          <p className="mt-1 max-w-prose text-sm text-body">
+            <span className="whitespace-nowrap text-mute lg:block">{branch.period}</span>
+            <span aria-hidden="true" className="text-mute lg:hidden">
+              {" · "}
+            </span>
+            <span className="sr-only">: </span>
+            <span className="lg:mt-2 lg:block">{branch.subtitle}</span>
+          </p>
+          <div className="mt-3">
+            <TagList label={`${branch.title} themes`} tags={branch.tags} />
+          </div>
+        </div>
+      </div>
+      <ol role="list" aria-labelledby={headingId} className={styles.roles}>
+        {branch.roles.map((role) => (
+          <RoleCard key={role.id} role={role} />
+        ))}
+      </ol>
+    </li>
   );
+}
+
+/**
+ * Work experience as a tree: one trunk down the section, a diamond on it for
+ * each branch (a kind of system), and each role hanging off its branch as a
+ * card. Branches and roles render in the order of the data, newest first.
+ */
+export default function Experiences() {
+  const roles = experienceBranches.flatMap((branch) => branch.roles);
 
   return (
-    <section id={SITE_ANCHORS.experience} className="relative flex w-full flex-col gap-8 overflow-hidden rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(251,191,36,0.14),transparent_24%),linear-gradient(180deg,rgba(3,7,18,0.96),rgba(15,23,42,0.93))] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div className="absolute left-10 top-10 h-32 w-32 rounded-full bg-cyan-400/10 blur-3xl" />
-      <div className="absolute bottom-8 right-8 h-40 w-40 rounded-full bg-amber-300/10 blur-3xl" />
+    <section id={SITE_ANCHORS.experience} aria-labelledby={TITLE_ID}>
+      <SectionHeading section="experience" title="Experience" id={TITLE_ID}>
+        Internships where I shipped production systems, grouped by the kinds of systems I like building.
+      </SectionHeading>
+      <p className="mt-4 text-sm text-mute">
+        {roles.length} roles <span aria-hidden="true">·</span> {yearSpan(roles)} <span aria-hidden="true">·</span>{" "}
+        {experienceBranches.length} branches: {experienceBranches.map((branch) => branch.title).join(", ")}
+      </p>
 
-      <div className="relative z-10 flex flex-col gap-4 lg:max-w-3xl">
-        <span className="w-fit rounded-full border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-cyan-100">
-          Experience Tree
-        </span>
-        <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">
-          Work experience grouped by the kinds of systems I like building.
-        </h2>
-        <p className="max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-          AI automation, robotics, platform engineering, and internal tooling work
-          across internships where I shipped production systems and made complex
-          workflows faster for other teams.
-        </p>
-      </div>
+      <ol role="list" className={`${styles.tree} mt-6 sm:mt-10`}>
+        {experienceBranches.map((branch) => (
+          <Branch key={branch.id} branch={branch} />
+        ))}
+      </ol>
 
-      <div className="relative z-10 rounded-[32px] border border-white/10 bg-slate-950/45 p-4 sm:p-6 lg:p-8">
-        <div className="mx-auto mb-10 flex max-w-xl flex-col items-center text-center">
-          <div className="rounded-[28px] border border-cyan-300/25 bg-[linear-gradient(160deg,rgba(15,23,42,0.96),rgba(30,41,59,0.92))] px-6 py-5 shadow-[0_24px_70px_rgba(59,130,246,0.2)]">
-            <p className="bg-gradient-to-r from-cyan-200 via-sky-100 to-indigo-300 bg-clip-text text-xs font-bold uppercase tracking-[0.32em] text-transparent">
-              Overview
-            </p>
-            <h3 className="mt-2 text-3xl font-black text-white">Career Journey</h3>
-            <p className="mt-3 text-sm leading-6 text-slate-300">
-              A focused timeline across {totalRoles} engineering roles spanning
-              robotics, platform reliability, and developer productivity.
-            </p>
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
-              <Tag tag="2023 - 2026" tone="amber" />
-              <Tag tag={`${experienceBranches.length} branches`} tone="sky" />
-              <Tag tag={`${totalRoles} experiences`} tone="emerald" />
-            </div>
-          </div>
-          <div className="h-10 w-px bg-gradient-to-b from-cyan-300/80 to-white/0" />
-        </div>
-
-        <div className="relative flex flex-col gap-6">
-          {experienceBranches.map((branch) => (
-            <BranchCard key={branch.id} branch={branch} />
-          ))}
-        </div>
+      <div className="mt-8 sm:mt-14">
+        <TechnicalSkills />
       </div>
     </section>
   );

@@ -1,0 +1,29 @@
+/*
+ * The altar deep-links to a card (/project-gallery#project-hive-hq). The card
+ * that was meant gets a ring that fades once it has been seen. It is drawn as
+ * an outline, so it steps aside while the card has keyboard focus (the focus
+ * ring uses the outline too and must not be faded away).
+ */
+.card:target:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+  animation: landed 1.6s var(--ease-swift);
+}
+
+@keyframes landed {
+  0%,
+  55% {
+    outline-color: var(--rune);
+  }
+  100% {
+    outline-color: transparent;
+  }
+}
+
+/* Without motion there is no fade to say "this one": the ring simply stays. */
+@media (prefers-reduced-motion: reduce) {
+  .card:target:not(:focus-visible) {
+    animation: none;
+    outline-color: var(--rune);
+  }
+}

@@ -13,6 +13,9 @@ import { CAMERA } from "@/lib/altar/theme";
 
 beforeEach(() => {
   sessionStorage.clear();
+  // the theme switch writes the site's shared preference (lib/theme.ts)
+  localStorage.clear();
+  document.documentElement.removeAttribute("data-theme");
   useAltarStore.setState({
     phase: "idle",
     activeSection: null,
@@ -397,6 +400,16 @@ describe("Overlay", () => {
     expect(btn).toHaveAccessibleName("Switch to dark theme");
     fireEvent.click(btn);
     expect(useAltarStore.getState().theme).toBe("dark");
+  });
+
+  it("the theme button switches the whole site, not just the altar, and saves the choice", () => {
+    render(<Overlay />);
+    fireEvent.click(screen.getByRole("button", { name: "Switch to light theme" }));
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+    expect(localStorage.getItem("theme")).toBe("light");
+    fireEvent.click(screen.getByRole("button", { name: "Switch to dark theme" }));
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+    expect(localStorage.getItem("theme")).toBe("dark");
   });
 
   it("shows a first-visit hint that can open the logbook or be dismissed", () => {

@@ -43,7 +43,8 @@ export default function HoverTip({
           border: `1px solid color-mix(in srgb, ${colors.line} 55%, transparent)`,
           boxShadow: `0 0 14px color-mix(in srgb, ${colors.line} ${theme === "dark" ? 35 : 12}%, transparent)`,
           color: colors.text,
-          fontFamily: "Georgia, 'Iowan Old Style', serif",
+          // the site's title face (next/font variable on <html>), then the old stack
+          fontFamily: "var(--font-heading), Georgia, 'Iowan Old Style', serif",
           lineHeight: 1.3,
           userSelect: "none",
         }}

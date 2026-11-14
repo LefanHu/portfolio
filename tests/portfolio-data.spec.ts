@@ -10,7 +10,7 @@ describe("portfolio data", () => {
     const titles = experienceBranches.flatMap((b) => b.roles.map((r) => r.title));
     expect(titles).toHaveLength(5);
     expect(titles).toEqual(
-      expect.arrayContaining(["Amazon Robotics", "Adentro", "TELUS", "Capital One", "CIENA Corporation"]),
+      expect.arrayContaining(["Amazon Robotics", "Adentro", "TELUS", "Capital One", "Ciena"]),
     );
   });
 

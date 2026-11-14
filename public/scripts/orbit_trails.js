@@ -8,6 +8,7 @@
   let centerX = 0;
   let centerY = 0;
   let time = 0;
+  let dpr = 1;
 
   const satellites = Array.from({ length: 18 }, (_, index) => ({
     orbit: 30 + index * 18,
@@ -22,8 +23,12 @@
     height = container.clientHeight;
     centerX = width / 2;
     centerY = height / 2;
-    canvas.width = width;
-    canvas.height = height;
+
+    // Size the backing store for the screen (capped at 2x) and keep drawing in CSS pixels.
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   function animate() {
@@ -49,7 +54,8 @@
       ctx.beginPath();
       ctx.arc(x, y, satellite.size, 0, Math.PI * 2);
       ctx.fillStyle = satellite.color;
-      ctx.shadowBlur = 18;
+      // The blur radius is not scaled by the canvas transform.
+      ctx.shadowBlur = 18 * dpr;
       ctx.shadowColor = satellite.color;
       ctx.fill();
     }

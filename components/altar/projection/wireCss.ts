@@ -12,9 +12,12 @@ import { THEMES } from "@/lib/altar/theme";
 //   data-ap-fade             set briefly on entering "filled": everything
 //                            fades from the wire look to the real page.
 //   data-ap-stage="dissolve" back to outlines and bars (the panel itself fades out).
-// The site is dark in both altar themes, so the wire uses the dark line color.
+// The framed site wears the altar's theme (data-theme on its <html>, see
+// setFrameTheme), so the wire is drawn in that theme's line colour on the
+// site's own sky. While it is framed, at any stage, the site also loses its
+// own theme toggle (the altar's is beside the pane, and two would fight) and
+// its root scrollbar (the pane scrolls by wheel, see panelScroll.ts).
 
-const LINE = THEMES.dark.projection.line;
 /** Stages that show the wire layers (outlines, bars); the fade lets them fade out. */
 const LAYERS = 'html:where([data-ap-stage="wire"], [data-ap-stage="dissolve"], [data-ap-fade])';
 const WIRE = 'html[data-ap-stage="wire"]';
@@ -28,10 +31,22 @@ export const WIRE_CSS = `
   initial-value: transparent;
 }
 html {
-  --ap-wire: ${LINE};
+  --ap-wire: ${THEMES.dark.projection.line};
   --ap-seg: ${WIRE_SEGMENT_MS}ms;
   --ap-fill: ${STAGE_MS.fill}ms;
   --ap-dissolve: ${STAGE_MS.dissolve}ms;
+}
+html[data-theme="light"] {
+  --ap-wire: ${THEMES.light.projection.line};
+}
+html[data-ap-stage] {
+  scrollbar-width: none;
+}
+html[data-ap-stage]::-webkit-scrollbar {
+  display: none;
+}
+html[data-ap-stage] [data-theme-toggle] {
+  display: none;
 }
 /* the outline layers overhang their boxes by a pixel: no scrollbars for that (the scroll offsets stay) */
 ${LAYERS} {
@@ -101,10 +116,17 @@ ${BLANK} body * {
   color: transparent !important;
   text-shadow: none !important;
 }
+/* list markers the site colours on their own */
+${BLANK} body ::marker {
+  color: transparent !important;
+}
 ${WIRE} body * {
   border-color: transparent !important;
-  background-color: transparent !important;
   box-shadow: none !important;
+}
+/* the site's sticky header keeps its backing: what has scrolled beneath it stays hidden, as on the settled page */
+${WIRE} body :not([data-site-header]) {
+  background-color: transparent !important;
 }
 /* pictures and icons have no text color to blank; gradient-clipped text keeps its fill */
 ${BLANK} body :is(img, svg, canvas, video, [class*="bg-clip-text"]),

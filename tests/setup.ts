@@ -22,6 +22,12 @@ vi.mock("next/link", () => ({
     React.createElement("a", { href, ...props }, children),
 }));
 
+// next/font is resolved by the Next compiler; under Vitest it is a plain stub.
+vi.mock("next/font/google", () => {
+  const font = () => ({ className: "font-mock", variable: "font-mock-variable", style: { fontFamily: "mock" } });
+  return { Alegreya: font, Alegreya_Sans: font };
+});
+
 vi.mock("next/script", () => ({
   default: () => null,
 }));

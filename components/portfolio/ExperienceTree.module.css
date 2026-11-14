@@ -1,0 +1,278 @@
+/*
+ * The experience tree: its skeleton (trunk, nodes, twigs) and the one
+ * scroll-linked animation on the site.
+ *
+ * The trunk is drawn in pieces, one per branch header and one per role, laid
+ * end to end. Each piece is a static track with a coloured fill on top. That
+ * keeps the line exact without measuring anything: the first piece starts at
+ * the first node and the last one stops at the last node, whatever the cards'
+ * heights are.
+ *
+ * Below 64rem the trunk runs down the left edge and everything hangs to its
+ * right. From 64rem the trunk sits between two columns: branch headers on the
+ * left, role cards on the right.
+ *
+ * Nothing here uses ::before/::after: the altar's wire stage owns those on
+ * list items and cards, so every line and dot is a real element.
+ */
+
+/* 1 = lit. Registered so it can be animated and so the default is "drawn". */
+@property --exp-lit {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+.tree,
+.skills {
+  /* Width of the branch-header column in the two-column layout. */
+  --head: 17rem;
+  /* From the trunk's centre line to the edge of a role card. */
+  --reach: 0.9375rem;
+}
+
+.tree {
+  --role-gap: 0.875rem;
+  --branch-gap: 2rem;
+  /* Centre of a branch title's first line, from the top of the branch. */
+  --branch-y: 0.875rem;
+  /* Centre of a role's employer line, from the top of its card. */
+  --role-y: 1.875rem;
+  /*
+   * In one column the trunk runs straight down from the section title's
+   * sigil: the sigil is 0.7em wide, so its centre is 0.35 of the title size
+   * (text-title in app/globals.css; keep the two in step).
+   */
+  --axis: calc(0.35 * clamp(2rem, 1.45rem + 2.4vw, 2.875rem));
+  /* Trunk centre line, measured from the left edge of the content column. */
+  --trunk-x: calc(-1 * var(--reach));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--branch-gap);
+  padding-left: calc(var(--axis) + var(--reach));
+}
+
+.head {
+  position: relative;
+  /* Padding, not a gap, so the header's piece of trunk spans it. */
+  padding-bottom: 0.875rem;
+}
+
+.roles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--role-gap);
+}
+
+/* A piece of trunk: the track. */
+.rail {
+  position: absolute;
+  left: calc(var(--trunk-x) - 1px);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--line-strong);
+}
+
+/* The drawn part of that piece. */
+.railFill {
+  position: absolute;
+  inset: 0;
+  background-color: var(--sig-experience);
+  transform-origin: top;
+}
+
+/* The header's piece restarts just below its diamond, so the hollow diamond has no line through it. */
+.head > .rail {
+  top: calc(var(--branch-y) * 2);
+}
+
+/* A role's piece runs on through the gap to the next role, or to the next branch. */
+.role > .rail {
+  bottom: calc(-1 * var(--role-gap));
+}
+.role:last-child > .rail {
+  bottom: calc(-1 * var(--branch-gap));
+}
+.branch:last-child .role:last-child > .rail {
+  bottom: auto;
+  height: var(--role-y);
+}
+
+/* A node's anchor on the trunk; it carries the lit state for its dot and twig. */
+.mark {
+  position: absolute;
+  pointer-events: none;
+}
+
+.branchMark {
+  left: calc(var(--trunk-x) - 0.5625rem);
+  top: calc(var(--branch-y) - 0.5625rem);
+  width: 1.125rem;
+  height: 1.125rem;
+}
+.branchMark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* The Sigil primitive is hollow until filled; here the lit state fills it. */
+.branchMark path {
+  fill-opacity: var(--exp-lit);
+}
+
+.roleMark {
+  left: var(--trunk-x);
+  top: calc(var(--role-y) - 0.375rem);
+  width: var(--reach);
+  height: 0.75rem;
+}
+
+.twig {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 1px);
+  height: 2px;
+  background-color: var(--line-strong);
+}
+.twigFill {
+  position: absolute;
+  inset: 0;
+  background-color: var(--sig-experience);
+  transform-origin: left;
+  transform: scaleX(var(--exp-lit));
+}
+
+.dot {
+  position: absolute;
+  left: -0.3125rem;
+  top: calc(50% - 0.3125rem);
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, var(--sig-experience) calc(var(--exp-lit) * 100%), var(--mute));
+  scale: calc(0.6 + 0.4 * var(--exp-lit));
+}
+
+@media (min-width: 40rem) {
+  .tree,
+  .skills {
+    --reach: 1.5rem;
+  }
+
+  .tree {
+    --role-gap: 1.25rem;
+    --branch-gap: 3rem;
+    /* Cards have more padding from here up. */
+    --role-y: 2.4375rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .tree,
+  .skills {
+    --reach: 2rem;
+  }
+
+  .tree {
+    /* Clear trunk between a branch's diamond and its first role. */
+    --lead-in: 3rem;
+    padding-left: 0;
+  }
+
+  .branch,
+  .skills {
+    display: grid;
+    grid-template-columns: var(--head) minmax(0, 1fr);
+    column-gap: calc(var(--reach) * 2);
+  }
+
+  /* The header's trunk piece and diamond now hang off the branch itself (the trunk is outside the header's column). */
+  .head {
+    position: static;
+    padding-bottom: 0;
+  }
+  .head > .rail {
+    left: calc(var(--head) + var(--reach) - 1px);
+    bottom: auto;
+    height: calc(var(--lead-in) - var(--branch-y) * 2);
+  }
+  .head > .branchMark {
+    left: calc(var(--head) + var(--reach) - 0.5625rem);
+  }
+
+  /*
+   * The branch's title follows the reader down its (much taller) column of
+   * roles, so the left column always says which branch is on screen.
+   */
+  .headText {
+    position: sticky;
+    top: calc(var(--nav-h) + 1.5rem);
+  }
+
+  .roles {
+    padding-top: var(--lead-in);
+  }
+}
+
+/*
+ * Scroll-linked drawing. The reading line sits a little below the middle of
+ * the viewport: the trunk's fill follows it down, and each node lights as the
+ * line reaches it. Without support, or when the reader asks for less motion,
+ * none of this applies and the tree is simply drawn.
+ */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .rail {
+      view-timeline: --exp-rail block;
+      /* Shrinks the "viewport" to a thin band at the reading line. */
+      view-timeline-inset: 55% 44%;
+    }
+    .railFill {
+      animation: exp-grow linear both;
+      animation-timeline: --exp-rail;
+    }
+
+    /*
+     * A node flips to lit the moment it meets the reading line. The flip is a
+     * step, so the dot and twig below can answer it with a timed transition
+     * instead of being scrubbed by the scrollbar.
+     */
+    .mark {
+      animation: exp-light step-start both;
+      animation-timeline: view(block 55% 44%);
+    }
+    .dot {
+      transition:
+        scale 380ms cubic-bezier(0.34, 1.8, 0.64, 1),
+        background-color 200ms var(--ease-swift);
+    }
+    .twigFill {
+      transition: transform 280ms var(--ease-swift);
+    }
+    .branchMark svg {
+      scale: calc(0.82 + 0.18 * var(--exp-lit));
+      transition: scale 380ms cubic-bezier(0.34, 1.8, 0.64, 1);
+    }
+  }
+}
+
+@keyframes exp-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes exp-light {
+  from {
+    --exp-lit: 0;
+  }
+  to {
+    --exp-lit: 1;
+  }
+}

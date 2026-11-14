@@ -1,9 +1,9 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import SceneCanvas, { type SceneProps, useSceneFrame } from "./SceneCanvas";
 
 function OrbitSystem() {
   const groupRef = useRef<THREE.Group>(null);
@@ -19,8 +19,7 @@ function OrbitSystem() {
     []
   );
 
-  useFrame(({ clock }) => {
-    const time = clock.getElapsedTime();
+  useSceneFrame((time) => {
     if (groupRef.current) {
       groupRef.current.rotation.y = time * 0.16;
     }
@@ -63,18 +62,16 @@ function OrbitSystem() {
   );
 }
 
-export default function OrbitalNodes3D(props: { className?: string }) {
+export default function OrbitalNodes3D(props: SceneProps) {
   return (
-    <div className={props.className} data-testid="orbital-nodes-3d">
-      <Canvas dpr={[1, 1.5]}>
-        <color attach="background" args={["#090b16"]} />
-        <PerspectiveCamera makeDefault position={[0, 8, 18]} fov={42} />
-        <ambientLight intensity={1.2} />
-        <pointLight position={[0, 0, 0]} intensity={70} color="#f59e0b" />
-        <directionalLight position={[8, 12, 8]} intensity={1.8} />
-        <OrbitSystem />
-        <OrbitControls enablePan={false} minDistance={10} maxDistance={26} />
-      </Canvas>
-    </div>
+    <SceneCanvas {...props} testId="orbital-nodes-3d">
+      <color attach="background" args={["#090b16"]} />
+      <PerspectiveCamera makeDefault position={[0, 8, 18]} fov={42} />
+      <ambientLight intensity={1.2} />
+      <pointLight position={[0, 0, 0]} intensity={70} color="#f59e0b" />
+      <directionalLight position={[8, 12, 8]} intensity={1.8} />
+      <OrbitSystem />
+      <OrbitControls enablePan={false} minDistance={10} maxDistance={26} />
+    </SceneCanvas>
   );
 }

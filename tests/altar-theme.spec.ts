@@ -1,25 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { THEMES, THEME_TRANSITION_S, PALETTE, initialTheme } from "@/lib/altar/theme";
-
-describe("initialTheme", () => {
-  it("returns dark when the dark scheme matches", () => {
-    expect(initialTheme(() => ({ matches: true }))).toBe("dark");
-  });
-  it("returns light when it does not", () => {
-    expect(initialTheme(() => ({ matches: false }))).toBe("light");
-  });
-  it("defaults to dark without matchMedia", () => {
-    expect(initialTheme(undefined)).toBe("dark");
-  });
-  it("queries prefers-color-scheme: dark", () => {
-    let q = "";
-    initialTheme((query) => {
-      q = query;
-      return { matches: true };
-    });
-    expect(q).toBe("(prefers-color-scheme: dark)");
-  });
-});
+import { THEMES, THEME_TRANSITION_S, PALETTE } from "@/lib/altar/theme";
 
 describe("THEMES", () => {
   it("lantern is on only in dark", () => {

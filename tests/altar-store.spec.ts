@@ -1,9 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createAltarStore } from "@/lib/altar/store";
+import { THEME_KEY, readTheme } from "@/lib/theme";
 
 beforeEach(() => {
-  sessionStorage.clear();
   vi.restoreAllMocks();
+  sessionStorage.clear();
+  // the theme actions write the site's shared preference (lib/theme.ts)
+  localStorage.clear();
+  document.documentElement.removeAttribute("data-theme");
 });
 
 describe("altar store", () => {
@@ -137,8 +141,21 @@ describe("altar store", () => {
     expect(s.getState().theme).toBe("dark");
   });
 
-  it("uses the initial theme when nothing is persisted", () => {
+  it("starts on the theme it is given", () => {
     expect(createAltarStore("light").getState().theme).toBe("light");
+  });
+
+  it("changing the theme changes the site's shared preference, and remembers it there", () => {
+    const s = createAltarStore();
+    s.getState().toggleTheme();
+    expect(s.getState().theme).toBe("light");
+    expect(readTheme()).toBe("light");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+    expect(localStorage.getItem(THEME_KEY)).toBe("light");
+    s.getState().setTheme("dark");
+    expect(s.getState().theme).toBe("dark");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+    expect(localStorage.getItem(THEME_KEY)).toBe("dark");
   });
 });
 
@@ -232,14 +249,14 @@ describe("altar store summon and highlight", () => {
 });
 
 describe("altar store persistence", () => {
-  it("persists only unlocked and theme", () => {
+  it("persists only unlocked (the theme is the site's, kept in its own storage)", () => {
     const s = createAltarStore();
     s.getState().itemEntered("fpgaChip");
     s.getState().setHighlight("coding");
     s.getState().summonRecipe("projects");
     s.getState().openSection("projects");
     const saved = JSON.parse(sessionStorage.getItem("altar")!);
-    expect(Object.keys(saved.state).sort()).toEqual(["theme", "unlocked"]);
+    expect(Object.keys(saved.state)).toEqual(["unlocked"]);
     expect(saved.state.unlocked).toEqual(["projects"]);
   });
 
@@ -252,9 +269,19 @@ describe("altar store persistence", () => {
     expect(s2.getState().activeSection).toBeNull();
   });
 
-  it("persisted theme wins over the argument", () => {
-    createAltarStore("dark").getState().setTheme("light");
-    expect(createAltarStore("dark").getState().theme).toBe("light");
+  it("a theme change is not written to the altar's own storage", () => {
+    const s = createAltarStore("dark");
+    s.getState().openSection("projects");
+    s.getState().setTheme("light");
+    expect(JSON.parse(sessionStorage.getItem("altar")!).state).toEqual({ unlocked: ["projects"] });
+    expect(createAltarStore("dark").getState().theme).toBe("dark");
+  });
+
+  it("ignores a theme persisted by an earlier version", () => {
+    sessionStorage.setItem("altar", JSON.stringify({ state: { theme: "light", unlocked: ["projects"] }, version: 0 }));
+    const s = createAltarStore("dark");
+    expect(s.getState().theme).toBe("dark");
+    expect(s.getState().unlocked).toEqual(["projects"]);
   });
 
   it("drops invalid persisted values", () => {
@@ -281,14 +308,14 @@ describe("altar store persistence", () => {
     s.getState().itemEntered("drone");
     s.getState().evaluate();
     const saved = JSON.parse(sessionStorage.getItem("altar")!);
-    expect(Object.keys(saved.state).sort()).toEqual(["theme", "unlocked"]);
+    expect(Object.keys(saved.state)).toEqual(["unlocked"]);
     expect(saved.state.unlocked).toEqual(["drone"]);
   });
 
   it("ignores a persisted unlocked that is not an array", () => {
     sessionStorage.setItem("altar", JSON.stringify({ state: { theme: "dark", unlocked: "projects" }, version: 0 }));
     const s = createAltarStore("light");
-    expect(s.getState().theme).toBe("dark");
+    expect(s.getState().theme).toBe("light");
     expect(s.getState().unlocked).toEqual([]);
   });
 
@@ -311,5 +338,15 @@ describe("altar store persistence", () => {
     const s = createAltarStore();
     expect(() => s.getState().toggleTheme()).not.toThrow();
     expect(s.getState().theme).toBe("light");
+  });
+
+  it("the theme still switches for this page when localStorage is denied", () => {
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("denied");
+    });
+    const s = createAltarStore();
+    expect(() => s.getState().toggleTheme()).not.toThrow();
+    expect(s.getState().theme).toBe("light");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
   });
 });

@@ -1,93 +1,97 @@
 (function () {
+  const canvas = document.getElementById("jsCanvas");
+  const container = document.getElementById("canvasContainer");
+  const ctx = canvas.getContext("2d");
 
-    var canvas = document.getElementById("jsCanvas");
-    var container = document.getElementById("canvasContainer")
-    var ctx = canvas.getContext("2d");
+  // 100 balls suited the 1030 x 770 stage this was written for. Keep that
+  // density on other sizes, so a phone-sized stage is not a solid mass.
+  const AREA_PER_BALL = 8000;
+  const MIN_BALLS = 12;
+  const MAX_BALLS = 100;
 
-    const FRAMES_PER_SEC = 60;
+  let width = 0;
+  let height = 0;
+  let balls = [];
 
-    let balls = [];
-
-    // ctx.canvas.width = window.innerWidth;
-    // ctx.canvas.height = window.innerHeight;
-
-    ctx.canvas.width = container.clientWidth;
-    ctx.canvas.height = container.clientHeight;
-
-
-    class Ball {
-        constructor(radius) {
-            this.radius = radius;
-            this.posX =
-                Math.floor(Math.random() * (canvas.width - 2 * radius)) + radius;
-            this.posY =
-                Math.floor(Math.random() * (canvas.height - 2 * radius)) + radius;
-            this.colour = "#" + Math.floor(Math.random() * 16777215).toString(16);
-            this.dx = Math.ceil(Math.random() * 2.5) * (Math.random() < 0.5 ? -1 : 1);
-            this.dy = Math.ceil(Math.random() * 2.5) * (Math.random() < 0.5 ? -1 : 1);
-        }
+  class Ball {
+    constructor(radius) {
+      this.radius = radius;
+      this.posX = Math.floor(Math.random() * (width - 2 * radius)) + radius;
+      this.posY = Math.floor(Math.random() * (height - 2 * radius)) + radius;
+      // Padded to six digits: a shorter string is not a valid colour.
+      this.colour =
+        "#" +
+        Math.floor(Math.random() * 0x1000000)
+          .toString(16)
+          .padStart(6, "0");
+      this.dx = Math.ceil(Math.random() * 2.5) * (Math.random() < 0.5 ? -1 : 1);
+      this.dy = Math.ceil(Math.random() * 2.5) * (Math.random() < 0.5 ? -1 : 1);
     }
+  }
 
-    function draw() {
-        // ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-        // ctx.fillRect(0, 0, canvas.width, canvas.height);
+  function draw() {
+    // A translucent wash instead of a clear, so each ball drags a fading trail.
+    ctx.fillStyle = "rgba(5, 7, 15, 0.2)";
+    ctx.fillRect(0, 0, width, height);
 
-        for (var i = 0; i < balls.length; i++) {
-            ball = balls[i];
-            ctx.beginPath();
-            ctx.arc(ball.posX, ball.posY, ball.radius, 2 * Math.PI, false);
-            ctx.fillStyle = ball.colour;
-            ctx.fill();
-            ctx.closePath();
-        }
+    for (const ball of balls) {
+      ctx.beginPath();
+      ctx.arc(ball.posX, ball.posY, ball.radius, 0, Math.PI * 2);
+      ctx.fillStyle = ball.colour;
+      ctx.fill();
     }
+  }
 
-    function update() {
-        for (var i = 0; i < balls.length; i++) {
-            ball = balls[i];
-            ball.posX += ball.dx;
-            ball.posY += ball.dy;
+  function update() {
+    for (const ball of balls) {
+      ball.posX += ball.dx;
+      ball.posY += ball.dy;
 
-            radius = ball.radius;
-
-            //collision with canvas edge
-            if (ball.posX + radius > canvas.width || ball.posX - radius < 0) {
-                ball.dx *= -1;
-            }
-            if (ball.posY + radius > canvas.height || ball.posY - radius < 0) {
-                ball.dy *= -1;
-            }
-        }
+      // collision with canvas edge
+      if (ball.posX + ball.radius > width || ball.posX - ball.radius < 0) {
+        ball.dx *= -1;
+      }
+      if (ball.posY + ball.radius > height || ball.posY - ball.radius < 0) {
+        ball.dy *= -1;
+      }
     }
+  }
 
-    function game() {
-        draw();
-        update();
+  function start() {
+    const numBalls = Math.max(
+      MIN_BALLS,
+      Math.min(MAX_BALLS, Math.round((width * height) / AREA_PER_BALL))
+    );
+
+    balls = [];
+    for (let i = 0; i < numBalls; i++) {
+      const radius = Math.floor(Math.random() * (40 - 5) + 5);
+      balls.push(new Ball(radius));
     }
+  }
 
-    function start() {
-        balls = []
-        numBalls = 100;
-        for (var i = 0; i < numBalls; i++) {
-            radius = Math.floor(Math.random() * (40 - 5) + 5);
-            balls.push(new Ball(radius, canvas.width, canvas.height));
-        }
-    }
+  function resizeCanvas() {
+    width = container.clientWidth;
+    height = container.clientHeight;
 
-    // resizing the canvas
-    function resizeCanvas() {
-        var container = document.getElementById("canvasContainer")
+    // Size the backing store for the screen (capped at 2x) and keep drawing in CSS pixels.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-        // Update the canvas size to match the window size
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
-
-        // restart
-        start()
-    }
-
-    window.addEventListener("resize", resizeCanvas);
-
+    // restart
     start();
-    setInterval(game, 1000 / FRAMES_PER_SEC);
+  }
+
+  function game() {
+    draw();
+    update();
+    requestAnimationFrame(game);
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+
+  resizeCanvas();
+  game();
 })();

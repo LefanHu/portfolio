@@ -182,11 +182,6 @@ export const SHADOWS = {
 
 export const THEME_TRANSITION_S = 1.5;
 
-export function initialTheme(matchMedia?: (q: string) => { matches: boolean }): Theme {
-  if (!matchMedia) return "dark";
-  return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
-
 /** postprocessing ToneMappingMode.ACES_FILMIC. The ToneMapping effect must be last in the composer. */
 export const TONE_MAPPING_MODE = 6;
 

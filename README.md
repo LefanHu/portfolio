@@ -27,7 +27,7 @@ The app uses the Next.js App Router with route groups to separate different site
 
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript + React 19
-- **Styling/UI:** Tailwind CSS, Mantine, NextUI, Framer Motion
+- **Styling/UI:** Tailwind CSS v4 with a small token-based design system (`app/globals.css`), Framer Motion
 - **3D/Graphics:** Three.js, @react-three/fiber, @react-three/drei
 - **Cloud:** AWS S3 (presigned uploads)
 
@@ -38,11 +38,31 @@ app/
   (portfolio)/         Main portfolio pages
   (portfolio-3D)/      3D-focused pages
   api/                 Backend route handlers
-components/            Reusable UI and 3D components
-lib/                   Shared utilities and Three.js helpers
+components/
+  ui/                  Shared primitives (buttons, tags, panels, section headings, icons)
+  site/                Header, footer, theme toggle, page transition, sky backdrop
+  portfolio/           Home page sections
+  projects/            Project page template, media gallery
+  playground/          The /js experiment runner
+  altar/               The 3D altar
+lib/                   Shared data and utilities (lib/theme.ts is the theme)
 models/                Local model/component definitions
 public/                Static assets (images, models)
 ```
+
+## Design system and themes
+
+The classic site and the 3D altar share one look and one light/dark theme.
+
+- **Tokens:** colours, type scale, radii, shadows and motion live in `app/globals.css`
+  and are used through Tailwind utilities (`bg-pane`, `text-ink`, `border-line`,
+  `rounded-card`, `text-title`, ...). Components do not use raw palette classes.
+- **Theme:** `data-theme="light|dark"` on `<html>`. A visitor's choice is stored in
+  `localStorage["theme"]`; without one the site follows the operating system. An inline
+  script in the root layout sets it before first paint. `lib/theme.ts` is the only place
+  that reads or writes it; the altar's store mirrors it.
+- **Primitives:** build pages from `components/ui/*` so cards, tags, buttons and headings
+  stay consistent.
 
 ## Getting started
 
@@ -95,7 +115,7 @@ Open [http://localhost:3000](http://localhost:3000).
 The repository includes a small smoke-test suite using Vitest and Testing Library.
 
 - `tests/module-smoke.spec.ts` imports every page module and every component module to catch broken imports and dependency graph regressions.
-- `tests/render-smoke.spec.tsx` renders a stable subset of UI surfaces such as the root layout, navbar, contact form, and not-found page.
+- `tests/render-smoke.spec.tsx` renders a stable subset of UI surfaces such as the root layout, site header and footer, contact section, and not-found page.
 
 Run the suite with:
 

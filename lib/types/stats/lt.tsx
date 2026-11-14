@@ -1,256 +1,51 @@
-/*
-[
-    {
-        "title": "Divide Players Into Teams of Equal Skill",
-        "titleSlug": "divide-players-into-teams-of-equal-skill",
-        "timestamp": "1728010082",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Divide Players Into Teams of Equal Skill",
-        "titleSlug": "divide-players-into-teams-of-equal-skill",
-        "timestamp": "1728010050",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Divide Players Into Teams of Equal Skill",
-        "titleSlug": "divide-players-into-teams-of-equal-skill",
-        "timestamp": "1728009692",
-        "statusDisplay": "Wrong Answer",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Divide Players Into Teams of Equal Skill",
-        "titleSlug": "divide-players-into-teams-of-equal-skill",
-        "timestamp": "1728009457",
-        "statusDisplay": "Runtime Error",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Divide Players Into Teams of Equal Skill",
-        "titleSlug": "divide-players-into-teams-of-equal-skill",
-        "timestamp": "1728009340",
-        "statusDisplay": "Wrong Answer",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Divide Players Into Teams of Equal Skill",
-        "titleSlug": "divide-players-into-teams-of-equal-skill",
-        "timestamp": "1728009282",
-        "statusDisplay": "Wrong Answer",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Divide Players Into Teams of Equal Skill",
-        "titleSlug": "divide-players-into-teams-of-equal-skill",
-        "timestamp": "1728009161",
-        "statusDisplay": "Runtime Error",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Make Sum Divisible by P",
-        "titleSlug": "make-sum-divisible-by-p",
-        "timestamp": "1727929187",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Make Sum Divisible by P",
-        "titleSlug": "make-sum-divisible-by-p",
-        "timestamp": "1727927423",
-        "statusDisplay": "Time Limit Exceeded",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Make Sum Divisible by P",
-        "titleSlug": "make-sum-divisible-by-p",
-        "timestamp": "1727927351",
-        "statusDisplay": "Time Limit Exceeded",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Make Sum Divisible by P",
-        "titleSlug": "make-sum-divisible-by-p",
-        "timestamp": "1727927249",
-        "statusDisplay": "Wrong Answer",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Make Sum Divisible by P",
-        "titleSlug": "make-sum-divisible-by-p",
-        "timestamp": "1727927221",
-        "statusDisplay": "Runtime Error",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Make Sum Divisible by P",
-        "titleSlug": "make-sum-divisible-by-p",
-        "timestamp": "1727926701",
-        "statusDisplay": "Wrong Answer",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Make Sum Divisible by P",
-        "titleSlug": "make-sum-divisible-by-p",
-        "timestamp": "1727925522",
-        "statusDisplay": "Runtime Error",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Rank Transform of an Array",
-        "titleSlug": "rank-transform-of-an-array",
-        "timestamp": "1727828295",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Rank Transform of an Array",
-        "titleSlug": "rank-transform-of-an-array",
-        "timestamp": "1727828287",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Rank Transform of an Array",
-        "titleSlug": "rank-transform-of-an-array",
-        "timestamp": "1727828088",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Check If Array Pairs Are Divisible by k",
-        "titleSlug": "check-if-array-pairs-are-divisible-by-k",
-        "timestamp": "1727823599",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Check If Array Pairs Are Divisible by k",
-        "titleSlug": "check-if-array-pairs-are-divisible-by-k",
-        "timestamp": "1727823589",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    },
-    {
-        "title": "Edit Distance",
-        "titleSlug": "edit-distance",
-        "timestamp": "1727819647",
-        "statusDisplay": "Accepted",
-        "lang": "cpp",
-        "__typename": "SubmissionDumpNode"
-    }
-]
-*/
+// What GET /api/leetcode/profile returns: LeetCode's GraphQL reply, limited to
+// the fields the home page reads. The upstream API is unofficial and changes
+// without notice, so every level is optional; components/portfolio/lt/profile.ts
+// turns this into the checked shape the components render.
 
-export interface LTSubmissionStatResponse {
-  data: {
-    matchedUser: {
-      username: string;
-      submitStats: {
-        acSubmissionNum: {
-          difficulty: string;
-          count: number;
-          submissions: number;
-        }[];
-      };
-    };
-  };
+export type LTDifficulty = "All" | "Easy" | "Medium" | "Hard";
+
+export type LTSkillLevel = "fundamental" | "intermediate" | "advanced";
+
+export interface LTCount {
+  difficulty?: string | null;
+  count?: number | null;
+}
+
+export interface LTBeats {
+  difficulty?: string | null;
+  percentage?: number | null;
+}
+
+export interface LTSkill {
+  tagName?: string | null;
+  tagSlug?: string | null;
+  problemsSolved?: number | null;
+}
+
+export interface LTSubmission {
+  title?: string | null;
+  titleSlug?: string | null;
+  /** Unix seconds, as a string. */
+  timestamp?: string | null;
+  statusDisplay?: string | null;
+  lang?: string | null;
 }
 
 export interface LTProfileResponse {
-  data: {
-    allQuestionsCount: {
-      difficulty: string;
-      count: number;
-    }[];
-    matchedUser: {
-      contributions: {
-        points: number;
-      };
-      problemsSolvedBeatsStats: {
-        difficulty: string;
-        percentage: number;
-      }[];
-      profile: {
-        reputation: number;
-        ranking: number;
-      };
-      submissionCalendar: string;
-      submitStats: {
-        acSubmissionNum: {
-          difficulty: string;
-          count: number;
-          submissions: number;
-        }[];
-        totalSubmissionNum: {
-          difficulty: string;
-          count: number;
-          submissions: number;
-        }[];
-      };
-      submitStatsGlobal: {
-        acSubmissionNum: {
-          difficulty: string;
-          count: number;
-        }[];
-      };
-      tagProblemCounts: {
-        advanced: {
-          tagName: string;
-          tagSlug: string;
-          problemsSolved: number;
-        }[];
-        intermediate: {
-          tagName: string;
-          tagSlug: string;
-          problemsSolved: number;
-        }[];
-        fundamental: {
-          tagName: string;
-          tagSlug: string;
-          problemsSolved: number;
-        }[];
-      };
-      userCalendar: {
-        activeYears: number[];
-        streak: number;
-        totalActiveDays: number;
-        dccBadges: {
-          timestamp: number;
-          badge: {
-            name: string;
-            icon: string;
-          };
-        }[];
-      };
-    };
-    recentSubmissionList: {
-      title: string;
-      titleSlug: string;
-      timestamp: string;
-      statusDisplay: string;
-      lang: string;
-    }[];
-  };
+  data?: {
+    /** Problems that exist on LeetCode, per difficulty. */
+    allQuestionsCount?: LTCount[] | null;
+    matchedUser?: {
+      /** JSON object: unix seconds (UTC midnight) -> submissions that day, for the past year. */
+      submissionCalendar?: string | null;
+      tagProblemCounts?: Partial<Record<LTSkillLevel, LTSkill[] | null>> | null;
+      /** Share of LeetCode users who solved fewer problems, per difficulty. */
+      problemsSolvedBeatsStats?: LTBeats[] | null;
+      submitStatsGlobal?: {
+        acSubmissionNum?: LTCount[] | null;
+      } | null;
+    } | null;
+    recentSubmissionList?: LTSubmission[] | null;
+  } | null;
 }
