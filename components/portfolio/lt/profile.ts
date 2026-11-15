@@ -169,8 +169,9 @@ function toRecent(data: Data, now: number): SolvedProblem[] {
     seen.add(titleSlug);
 
     const time = Number(submission.timestamp) * 1000;
-    const dated = submission.timestamp != null && Number.isFinite(time) && time > 0;
-    const date = dated ? new Date(time) : null;
+    // A timestamp beyond what a Date can hold makes an invalid one, and toISOString() throws on it.
+    const parsed = submission.timestamp != null && Number.isFinite(time) && time > 0 ? new Date(time) : null;
+    const date = parsed && !Number.isNaN(parsed.getTime()) ? parsed : null;
     const lang = typeof submission.lang === "string" ? submission.lang : "";
 
     recent.push({

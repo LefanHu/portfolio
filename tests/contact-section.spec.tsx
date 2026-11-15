@@ -67,20 +67,28 @@ describe("contact section", () => {
     expect(screen.getByRole("status")).toBeEmptyDOMElement();
   });
 
-  it("stays quiet when the clipboard refuses", async () => {
+  it("says so when the clipboard refuses, and keeps the address on the page to select", async () => {
+    vi.useFakeTimers();
     stubClipboard(vi.fn().mockRejectedValue(new Error("denied")));
     render(<ContactForm />);
 
     await clickCopy();
 
+    expect(screen.getByRole("status")).toHaveTextContent("Copy failed");
+    expect(screen.getByRole("button", { name: "Copy address" })).toBeInTheDocument();
+    expect(screen.getByText(contact.email)).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(2500);
+    });
     expect(screen.getByRole("status")).toBeEmptyDOMElement();
   });
 
-  it("stays quiet when there is no clipboard", async () => {
+  it("says so when there is no clipboard", async () => {
     render(<ContactForm />);
 
     await clickCopy();
 
-    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+    expect(screen.getByRole("status")).toHaveTextContent("Copy failed");
   });
 });

@@ -1,12 +1,18 @@
 import React from "react";
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import SiteHeader from "@/components/site/SiteHeader";
 import { THEME_KEY } from "@/lib/theme";
+
+// The header only needs the path; tests move it to stand in for a navigation.
+const route = vi.hoisted(() => ({ pathname: "/" }));
+vi.mock("next/navigation", () => ({ usePathname: () => route.pathname }));
 
 describe("site header", () => {
   beforeEach(() => {
     window.localStorage.clear();
     document.documentElement.removeAttribute("data-theme");
+    route.pathname = "/";
+    window.history.replaceState(null, "", "/");
   });
 
   it("links to the four home sections, the playground and the 3D altar", () => {
@@ -58,6 +64,41 @@ describe("site header", () => {
     fireEvent.click(within(menu).getByRole("link", { name: "Experience" }));
 
     expect(menu).toHaveAttribute("hidden");
+  });
+
+  it("does not come back open when the visitor returns to the page it was opened on", () => {
+    route.pathname = "/js";
+    const { rerender } = render(<SiteHeader />);
+    const button = screen.getByRole("button", { name: "Open menu" });
+    fireEvent.click(button);
+    expect(button).toHaveAttribute("aria-expanded", "true");
+
+    // Back to the home page, then Forward again.
+    route.pathname = "/";
+    rerender(<SiteHeader />);
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    route.pathname = "/js";
+    rerender(<SiteHeader />);
+
+    expect(button).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("closes the menu when the keyboard moves on into the page", () => {
+    render(
+      <>
+        <SiteHeader />
+        <a href="#after">After the header</a>
+      </>,
+    );
+    const button = screen.getByRole("button", { name: "Open menu" });
+    fireEvent.click(button);
+    const menu = document.getElementById(button.getAttribute("aria-controls")!)!;
+
+    act(() => within(menu).getByRole("link", { name: "Playground" }).focus());
+    expect(button).toHaveAttribute("aria-expanded", "true");
+
+    act(() => screen.getByRole("link", { name: "After the header" }).focus());
+    expect(button).toHaveAttribute("aria-expanded", "false");
   });
 
   describe("current section", () => {
@@ -112,6 +153,38 @@ describe("site header", () => {
 
       scrollTo(4100, [-3400, -2200, -900, 369]);
 
+      await waitFor(() => expect(currentLink()).toHaveTextContent("Contact"));
+    });
+
+    it("gives a short section near the end its turn before the last one", async () => {
+      render(<SiteHeader />);
+      scrollHeight = 5000;
+
+      // 300px from the bottom: the reading line has sunk to 600, past Coding but not Contact.
+      scrollTo(3800, [-3100, -1900, 500, 700]);
+      await waitFor(() => expect(currentLink()).toHaveTextContent("Coding"));
+
+      scrollTo(4100, [-3400, -2200, 200, 400]);
+      await waitFor(() => expect(currentLink()).toHaveTextContent("Contact"));
+    });
+
+    it("keeps the section the address asks for while its heading is on screen", async () => {
+      render(<SiteHeader />);
+      scrollHeight = 5000;
+      window.history.replaceState(null, "", "/#coding");
+
+      // A tall window at the bottom of the page: Coding and Contact are both in view.
+      scrollTo(4100, [-3400, -2200, 200, 400]);
+      await waitFor(() => expect(currentLink()).toHaveTextContent("Coding"));
+
+      // Picking Contact from there moves nothing; only the address changes.
+      window.history.replaceState(null, "", "/#contact");
+      fireEvent(window, new HashChangeEvent("hashchange"));
+      await waitFor(() => expect(currentLink()).toHaveTextContent("Contact"));
+
+      // Once the asked-for heading has scrolled away, the reading line decides again.
+      window.history.replaceState(null, "", "/#experience");
+      scrollTo(4100, [-3400, -2200, 200, 400]);
       await waitFor(() => expect(currentLink()).toHaveTextContent("Contact"));
     });
   });

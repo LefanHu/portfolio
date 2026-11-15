@@ -417,6 +417,28 @@ describe("toProfileView", () => {
   });
 });
 
+describe("toProfileView, given a timestamp no date can hold", () => {
+  it("lists the problem without a date instead of losing the whole profile", () => {
+    const view = toProfileView(
+      {
+        data: {
+          ...profilePayload.data,
+          recentSubmissionList: [
+            accepted("Far Future", "far-future", "99999999999999"),
+            accepted("Dated", "dated", day(2026, 11, 13)),
+          ],
+        },
+      },
+      NOW,
+    );
+
+    expect(view?.recent.map((problem) => [problem.title, problem.dateTime === null])).toEqual([
+      ["Far Future", true],
+      ["Dated", false],
+    ]);
+  });
+});
+
 describe("SubmissionCalendar", () => {
   const year = toSubmissionYear(profilePayload.data.matchedUser.submissionCalendar, NOW) as SubmissionYear;
 

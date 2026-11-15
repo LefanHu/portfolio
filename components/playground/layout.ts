@@ -18,3 +18,6 @@ export const PLAYGROUND_GRID =
 
 /** The stage's dark frame: 4:3 on small screens, the height the page has left on large ones. */
 export const STAGE_FRAME = "aspect-[4/3] max-h-[65svh] w-full lg:aspect-auto lg:max-h-none lg:min-h-88 lg:flex-1";
+
+/** Text on the stage's fixed dark background, so it does not follow the theme either. */
+export const STAGE_INK = "#c9d6f0";

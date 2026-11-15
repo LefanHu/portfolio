@@ -3,3 +3,13 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
+
+# Supply-chain guard: never resolve a version published less than 7 days ago
+# (most malicious releases are caught and unpublished within that window).
+minimumReleaseAge: 10080
+
+# typescript-estree (lint tooling) pins minimatch 10, which has a denial-of-service
+# advisory (GHSA-g3hv-75wg-m249) fixed only in 11. It calls a single function that
+# 11 keeps, so use the patched major.
+overrides:
+  "@typescript-eslint/typescript-estree>minimatch": "^11.0.5"

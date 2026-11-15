@@ -45,7 +45,9 @@
     ctx.beginPath();
     ctx.moveTo(0, height);
 
-    for (let x = 0; x <= width; x += 8) {
+    // Steps of 8 rarely land on the right edge, so the last point is pinned to it.
+    for (let step = 0, x = 0; x < width; step += 8) {
+      x = Math.min(step, width);
       const y =
         baseY +
         Math.sin(x * layer.wavelength + tick * layer.speed) * layer.amplitude +

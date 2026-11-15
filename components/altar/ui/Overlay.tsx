@@ -50,6 +50,20 @@ export default function Overlay() {
     if (phase === "revealing") backButton.current?.focus();
   }, [phase]);
 
+  // Closing a section removes whatever had focus (Back, or something in the
+  // framed page). Rather than leave the keyboard nowhere, it goes to the
+  // Logbook, the way back to every section.
+  const sectionWasOpen = useRef(false);
+  useEffect(() => {
+    const closed = sectionWasOpen.current && !sectionOpen;
+    sectionWasOpen.current = sectionOpen;
+    // `.ap-root` is the projected page (SitePanel): it is still dissolving, and its frame may hold focus.
+    const focused = document.activeElement;
+    if (closed && (!focused || focused === document.body || focused.closest(".ap-root"))) {
+      logbookButton.current?.focus();
+    }
+  }, [sectionOpen]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       // A held key repeats keydown; one press must not close the drawer and then the section.

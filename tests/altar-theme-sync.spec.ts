@@ -199,4 +199,23 @@ describe("?theme= override", () => {
     expect(readTheme()).toBe("dark");
     expect(localStorage.getItem(THEME_KEY)).toBe("dark");
   });
+
+  it("survives the altar mounting twice, as React does in development", () => {
+    mockSystem("dark");
+    setTheme("dark");
+    // AltarExperience: settle before first render, then on every mount settle again and follow.
+    applyInitialTheme("?theme=light");
+    applyInitialTheme("?theme=light");
+    followSiteTheme()();
+    applyInitialTheme("?theme=light");
+    stop = followSiteTheme();
+
+    expect(readTheme()).toBe("light");
+    expect(storeTheme()).toBe("light");
+    expect(localStorage.getItem(THEME_KEY)).toBe("dark");
+
+    stop();
+    stop = null;
+    expect(readTheme()).toBe("dark");
+  });
 });

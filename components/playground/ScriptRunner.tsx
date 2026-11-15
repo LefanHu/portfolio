@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { STAGE_BACKGROUND } from "./layout";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { STAGE_BACKGROUND, STAGE_INK } from "./layout";
 
 // Frames played in one go to make the picture a paused piece holds (see the harness).
 const STILL_FRAMES = 30;
@@ -20,6 +20,7 @@ const harness = (scriptSrc: string) => `(function () {
   var nextId = 1;
   var scheduled = false;
   var loaded = false;
+  var failed = false;
   var settled = false;
   var running = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -92,12 +93,19 @@ const harness = (scriptSrc: string) => `(function () {
 
   var script = document.createElement("script");
   script.src = ${JSON.stringify(scriptSrc)};
-  // Fires as soon as the script has run (or failed to load), with nothing in
-  // between: the size it measured is the size now.
-  script.onload = script.onerror = function () {
+  // Fires as soon as the script has run, with nothing in between: the size it
+  // measured is the size now.
+  script.onload = function () {
     loaded = true;
     noteSize();
     settle();
+    announce();
+  };
+  // The file did not arrive (offline, a stale page after a deploy): say so
+  // rather than report an empty canvas as ready.
+  script.onerror = function () {
+    loaded = true;
+    failed = true;
     announce();
   };
 
@@ -112,7 +120,7 @@ const harness = (scriptSrc: string) => `(function () {
   }).observe(container);
 
   function announce() {
-    window.parent.postMessage({ source: "playground-frame", ready: true }, "*");
+    window.parent.postMessage({ source: "playground-frame", ready: true, failed: failed }, "*");
   }
 
   window.addEventListener("message", function (event) {
@@ -183,7 +191,7 @@ interface ScriptRunnerProps {
   title: string;
   /** False holds the animation on its current frame. */
   running?: boolean;
-  /** Called once, when the script has loaded and drawn its first frame. */
+  /** Called once, when the script has loaded and drawn its first frame, or has failed to load. */
   onReady?: () => void;
   className?: string;
 }
@@ -200,11 +208,14 @@ function post(frame: HTMLIFrameElement | null, message: { hello: true } | { runn
  *
  * The frame says when it is ready (script loaded, first frame drawn) and is
  * then told whether to animate. The component also asks once when it starts
- * listening, for a frame that finished loading before that.
+ * listening, for a frame that finished loading before that. A script that
+ * cannot be fetched is reported too, and a notice takes the frame's place.
  */
 export default function ScriptRunner({ scriptSrc, title, running = true, onReady, className }: ScriptRunnerProps) {
   const frame = useRef<HTMLIFrameElement>(null);
   const ready = useRef(false);
+  // The script that failed to load, so a different one starts with a clean slate.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const srcDoc = useMemo(() => buildDocument(scriptSrc), [scriptSrc]);
 
   // The handlers below outlive a render; these keep them on the latest props.
@@ -218,6 +229,7 @@ export default function ScriptRunner({ scriptSrc, title, running = true, onReady
       if (event.source !== frame.current?.contentWindow || event.data?.source !== "playground-frame") return;
       const first = !ready.current;
       ready.current = true;
+      if (event.data.failed === true) setFailedSrc(scriptSrc);
       // `initial` marks the state the piece starts in: paused from the start means "show a still".
       post(frame.current, { running: latest.current.running, initial: true });
       if (first) latest.current.onReady?.();
@@ -233,6 +245,18 @@ export default function ScriptRunner({ scriptSrc, title, running = true, onReady
     // Before the frame is ready nobody is listening; it is told the state when it reports in.
     if (ready.current) post(frame.current, { running, initial: false });
   }, [running]);
+
+  if (failedSrc === scriptSrc) {
+    return (
+      <p
+        role="alert"
+        className="flex h-full items-center justify-center px-6 text-center text-sm"
+        style={{ color: STAGE_INK }}
+      >
+        This experiment could not load. Check the connection, then press restart.
+      </p>
+    );
+  }
 
   return (
     <iframe

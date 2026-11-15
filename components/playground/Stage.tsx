@@ -10,7 +10,7 @@ import ExperimentLink from "./ExperimentLink";
 import { EXPERIMENTS, neighbour, type Experiment, type SceneName } from "./experiments";
 import { useDocumentVisible, useFullscreen, useInView, usePrefersReducedMotion } from "./hooks";
 import { CodeIcon, ExitFullscreenIcon, FullscreenIcon } from "./icons";
-import { STAGE_BACKGROUND, STAGE_FRAME } from "./layout";
+import { STAGE_BACKGROUND, STAGE_FRAME, STAGE_INK } from "./layout";
 import ScriptRunner from "./ScriptRunner";
 
 // The three.js scenes load on demand, so the canvas scripts never ship three.
@@ -21,9 +21,6 @@ const SCENES: Record<SceneName, ComponentType<SceneProps>> = {
   OrbitalNodes3D: dynamic(() => import("@/components/portfolio/js/OrbitalNodes3D"), { ssr: false }),
   CrystalLattice3D: dynamic(() => import("@/components/portfolio/js/CrystalLattice3D"), { ssr: false }),
 };
-
-// Text on the stage's fixed dark background (see STAGE_BACKGROUND), so it does not follow the theme either.
-const STAGE_INK = "#c9d6f0";
 
 /** How long a new experiment takes to fade in over the one before it. */
 const FADE_MS = 200;
@@ -79,7 +76,14 @@ class RunnerBoundary extends Component<{ children: ReactNode; onError: () => voi
 }
 
 interface Layer {
-  key: string;
+  /**
+   * Unique for the life of the stage. The experiment alone cannot be the key:
+   * going away and coming straight back puts a fresh copy of a piece over the
+   * old copy of itself.
+   */
+  serial: number;
+  /** The experiment and restart this layer was made for. */
+  request: string;
   experiment: Experiment;
   /** Loaded and drawing, so it may be shown. */
   ready: boolean;
@@ -93,12 +97,13 @@ interface Layer {
  * empty frame.
  */
 function useLayers(experiment: Experiment, restarts: number) {
-  const key = `${experiment.id}:${restarts}`;
-  const [layers, setLayers] = useState<Layer[]>(() => [{ key, experiment, ready: false }]);
+  const request = `${experiment.id}:${restarts}`;
+  const [layers, setLayers] = useState<Layer[]>(() => [{ serial: 0, request, experiment, ready: false }]);
 
-  if (layers[layers.length - 1].key !== key) {
+  if (layers[layers.length - 1].request !== request) {
     // Layers that never became ready were never seen; a quick series of picks keeps at most three alive.
-    setLayers([...layers.filter((layer) => layer.ready).slice(-2), { key, experiment, ready: false }]);
+    const serial = Math.max(...layers.map((layer) => layer.serial)) + 1;
+    setLayers([...layers.filter((layer) => layer.ready).slice(-2), { serial, request, experiment, ready: false }]);
   }
 
   const top = layers[layers.length - 1];
@@ -107,14 +112,15 @@ function useLayers(experiment: Experiment, restarts: number) {
   useEffect(() => {
     if (!covered) return;
     const timer = setTimeout(() => {
-      setLayers((current) => current.slice(current.findIndex((layer) => layer.key === top.key)));
+      // Everything under the layer now showing. (Not found: only the newest is kept.)
+      setLayers((current) => current.slice(current.findIndex((layer) => layer.serial === top.serial)));
     }, FADE_MS + 50);
     return () => clearTimeout(timer);
-  }, [covered, top.key]);
+  }, [covered, top.serial]);
 
-  const markReady = useCallback((readyKey: string) => {
+  const markReady = useCallback((serial: number) => {
     setLayers((current) =>
-      current.map((layer) => (layer.key === readyKey && !layer.ready ? { ...layer, ready: true } : layer)),
+      current.map((layer) => (layer.serial === serial && !layer.ready ? { ...layer, ready: true } : layer)),
     );
   }, []);
 
@@ -196,7 +202,7 @@ export default function Stage({ experiment }: { experiment: Experiment }) {
             // Animated from script rather than a CSS transition: a piece that is ready within a frame of
             // mounting has never been painted transparent, and a transition would skip straight to the end.
             <motion.div
-              key={layer.key}
+              key={layer.serial}
               inert={!isTop}
               aria-hidden={!isTop}
               initial={{ opacity: 0 }}
@@ -204,12 +210,12 @@ export default function Stage({ experiment }: { experiment: Experiment }) {
               transition={{ duration: reducedMotion ? 0 : FADE_MS / 1000, ease: "easeOut" }}
               className="absolute inset-0"
             >
-              <RunnerBoundary onError={() => markReady(layer.key)}>
+              <RunnerBoundary onError={() => markReady(layer.serial)}>
                 <Runner
                   experiment={layer.experiment}
                   // The outgoing piece keeps moving until its replacement is ready to cover it.
                   running={running && (isTop || !top.ready)}
-                  onReady={() => markReady(layer.key)}
+                  onReady={() => markReady(layer.serial)}
                 />
               </RunnerBoundary>
             </motion.div>

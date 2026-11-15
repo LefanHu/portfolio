@@ -72,7 +72,12 @@ export default function AltarExperience() {
   // The theme is the site's (lib/altar/themeSync.ts): settled before the first
   // render so the scene never fades in from the wrong one, then followed.
   useState(() => applyInitialTheme());
-  useEffect(() => followSiteTheme(), []);
+  useEffect(() => {
+    // Again on (re)mount: releasing the theme hands back a `?theme=` override,
+    // and React's development double-mount releases it once before the altar is seen.
+    applyInitialTheme();
+    return followSiteTheme();
+  }, []);
   const theme = useAltarStore((s) => s.theme);
   // Controlled: Canvas re-applies its dpr prop on every render, so an imperative
   // setDpr(1) would be undone by the next theme toggle or resize.

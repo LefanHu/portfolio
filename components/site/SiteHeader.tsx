@@ -22,11 +22,18 @@ const SECTIONS: { key: SectionKey; label: string }[] = [
 const PLAYGROUND = { href: "/js", label: "Playground" };
 const ALTAR = { href: "/altar", label: "3D altar" };
 
+/** The share of the viewport height at which a section counts as being read. */
+const READING_LINE = 0.34;
+
 /**
  * Which home section the reader is in: the last one whose top has passed a
- * reading line a third of the way down the viewport. The final section can
- * never scroll that high, so reaching the bottom of the page selects it. Null
- * above the first section and off the home page.
+ * reading line a third of the way down the viewport. The sections at the end
+ * of the page can never scroll that high, so over the last stretch of the page
+ * the line sinks to the bottom of the viewport and each of them gets its turn.
+ * Where several qualify at once, the one the address asks for (`#coding`) wins
+ * while its heading is still on screen: a visitor who picks "Coding" on a tall
+ * window is not told they are in "Contact". Null above the first section and
+ * off the home page.
  */
 function useActiveSection(enabled: boolean): SectionKey | null {
   const [active, setActive] = useState<SectionKey | null>(null);
@@ -36,18 +43,22 @@ function useActiveSection(enabled: boolean): SectionKey | null {
     let frame = 0;
     const measure = () => {
       frame = 0;
-      const line = window.innerHeight * 0.34;
+      const viewport = window.innerHeight;
+      const remaining = document.documentElement.scrollHeight - viewport - window.scrollY;
+      // Not before the first scroll: a page shorter than the window would open on its last section.
+      const line =
+        window.scrollY > 0 ? Math.max(viewport * READING_LINE, viewport - remaining) : viewport * READING_LINE;
       let current: SectionKey | null = null;
-      let last: SectionKey | null = null;
+      let asked: SectionKey | null = null;
       for (const { key } of SECTIONS) {
         const element = document.getElementById(SITE_ANCHORS[key]);
         if (!element) continue;
-        last = key;
-        if (element.getBoundingClientRect().top <= line) current = key;
+        const top = element.getBoundingClientRect().top;
+        if (top > line) continue;
+        current = key;
+        if (top >= 0 && window.location.hash === `#${SITE_ANCHORS[key]}`) asked = key;
       }
-      const scrolled = window.scrollY > 0;
-      const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
-      setActive(scrolled && atBottom ? last : current);
+      setActive(asked ?? current);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(measure);
@@ -58,11 +69,18 @@ function useActiveSection(enabled: boolean): SectionKey | null {
     window.addEventListener("resize", schedule);
     const resizeObserver = new ResizeObserver(schedule);
     resizeObserver.observe(document.body);
+    // Picking a section that is already in place changes the address without a scroll.
+    // (A link's pushState fires no hashchange; the Navigation API reports it where there is one.)
+    window.addEventListener("hashchange", schedule);
+    const navigation = (window as { navigation?: EventTarget }).navigation;
+    navigation?.addEventListener("currententrychange", schedule);
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
       resizeObserver.disconnect();
+      window.removeEventListener("hashchange", schedule);
+      navigation?.removeEventListener("currententrychange", schedule);
     };
   }, [enabled]);
 
@@ -75,8 +93,10 @@ export default function SiteHeader() {
   const inProjects = pathname.startsWith("/projects") || pathname.startsWith("/project-gallery");
   const activeSection = useActiveSection(onHome);
   // The menu belongs to the page it was opened on, so any navigation (a link,
-  // Back, Forward) closes it without an effect.
+  // Back, Forward) closes it. Forgotten at once, not just hidden: coming back
+  // to that page later must not find it open again.
   const [menuOpenOn, setMenuOpenOn] = useState<string | null>(null);
+  if (menuOpenOn !== null && menuOpenOn !== pathname) setMenuOpenOn(null);
   const menuOpen = menuOpenOn === pathname;
   const menuId = useId();
   const headerRef = useRef<HTMLElement>(null);
@@ -96,6 +116,10 @@ export default function SiteHeader() {
     const onPointerDown = (event: PointerEvent) => {
       if (!headerRef.current?.contains(event.target as Node)) setMenuOpenOn(null);
     };
+    // Tabbing out of the last item moves on into the page; the menu must not stay open over it.
+    const onFocusIn = (event: FocusEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) setMenuOpenOn(null);
+    };
     // The menu only exists below the desktop breakpoint; don't leave it open behind the full nav.
     const desktop = window.matchMedia("(min-width: 64rem)");
     const onDesktop = () => {
@@ -103,10 +127,12 @@ export default function SiteHeader() {
     };
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("focusin", onFocusIn);
     desktop.addEventListener?.("change", onDesktop);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("focusin", onFocusIn);
       desktop.removeEventListener?.("change", onDesktop);
     };
   }, [menuOpen]);

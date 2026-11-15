@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteFooter from "@/components/site/SiteFooter";
 import SiteHeader from "@/components/site/SiteHeader";
+import SkipLink from "@/components/site/SkipLink";
 import ButtonLink from "@/components/ui/ButtonLink";
 import { CONTAINER } from "@/components/ui/layout";
 
@@ -13,8 +14,13 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div className="flex min-h-dvh flex-col">
+      <SkipLink />
       <SiteHeader />
-      <main id="main" className={`${CONTAINER} flex flex-1 flex-col items-start justify-center py-24`}>
+      <main
+        id="main"
+        tabIndex={-1}
+        className={`${CONTAINER} flex flex-1 flex-col items-start justify-center py-24 outline-none`}
+      >
         <p className="font-display text-display font-extrabold text-rune" aria-hidden="true">
           404
         </p>

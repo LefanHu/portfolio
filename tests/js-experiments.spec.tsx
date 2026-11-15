@@ -191,6 +191,37 @@ describe("sandboxed script runner", () => {
   });
 });
 
+describe("a script that cannot be fetched", () => {
+  it("is reported by the harness instead of being announced as ready and blank", () => {
+    render(<ScriptRunner scriptSrc="/scripts/balls.js" title="Balls" />);
+    const harness = screen.getByTitle("Balls").getAttribute("srcdoc")!;
+
+    expect(harness).toContain("script.onerror = function");
+    expect(harness).not.toContain("script.onload = script.onerror");
+    expect(harness).toContain("failed: failed");
+  });
+
+  it("puts a notice in place of the frame and still frees the stage", () => {
+    const onReady = vi.fn();
+    render(<ScriptRunner scriptSrc="/scripts/balls.js" title="Balls" onReady={onReady} />);
+    const frame = screen.getByTitle("Balls") as HTMLIFrameElement;
+    vi.spyOn(frame.contentWindow!, "postMessage").mockImplementation(() => {});
+
+    act(() => {
+      window.dispatchEvent(
+        new MessageEvent("message", {
+          data: { source: "playground-frame", ready: true, failed: true },
+          source: frame.contentWindow,
+        }),
+      );
+    });
+
+    expect(onReady).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("alert")).toHaveTextContent("This experiment could not load");
+    expect(screen.queryByTitle("Balls")).not.toBeInTheDocument();
+  });
+});
+
 describe("playground page", () => {
   it("has a title, a description and a single top-level heading", () => {
     expect(metadata.title).toBe("Playground");
@@ -343,6 +374,38 @@ describe("playground page", () => {
       expect(outgoing).not.toBeInTheDocument();
       expect(incoming).toBeInTheDocument();
     } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("never stacks copies of a piece when the visitor steps away and straight back", () => {
+    vi.useFakeTimers();
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      visit("?script=starfield-warp");
+      render(<Playground />);
+      const starfield = findExperiment("starfield-warp")!;
+      const stage = topFrame(starfield.title).closest("[aria-busy]")!;
+      announceReady(topFrame(starfield.title));
+
+      // Away and back before the neighbour has loaded, several times over.
+      for (let round = 0; round < 4; round += 1) {
+        fireEvent.click(screen.getByRole("link", { name: `Next experiment: ${neighbour(starfield, 1).title}` }));
+        fireEvent.click(screen.getByRole("link", { name: `Previous experiment: ${starfield.title}` }));
+      }
+      // The copy on show plus the one loading over it, however often that happened.
+      expect(stage.querySelectorAll("iframe")).toHaveLength(2);
+
+      announceReady(topFrame(starfield.title));
+      act(() => {
+        vi.advanceTimersByTime(400);
+      });
+      expect(stage.querySelectorAll("iframe")).toHaveLength(1);
+      expect(stage).toHaveAttribute("aria-busy", "false");
+      // React reports two children with the same key through console.error.
+      expect(errors).not.toHaveBeenCalled();
+    } finally {
+      errors.mockRestore();
       vi.useRealTimers();
     }
   });
