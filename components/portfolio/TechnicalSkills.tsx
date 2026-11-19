@@ -1,10 +1,10 @@
 import { skillGroups } from "@/lib/portfolio/about";
 import { TagList } from "@/components/ui/Tag";
-import styles from "./ExperienceTree.module.css";
+import styles from "./ExperienceTimeline.module.css";
 
 /**
  * The skills summary that closes the experience section. On wide screens it
- * takes the tree's two columns (title left, groups right) so the section
+ * takes the timeline's two columns (title left, groups right) so the section
  * keeps one set of edges.
  */
 export default function TechnicalSkills() {

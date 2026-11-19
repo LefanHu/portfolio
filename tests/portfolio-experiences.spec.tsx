@@ -1,10 +1,8 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
-import Experiences, { experienceBranches } from "@/components/portfolio/PortfolioExperiences";
+import Experiences, { experienceRoles as roles } from "@/components/portfolio/PortfolioExperiences";
 import { skillGroups } from "@/lib/portfolio/about";
 import { SITE_ANCHORS } from "@/lib/portfolioProjects";
-
-const roles = experienceBranches.flatMap((branch) => branch.roles);
 
 /** A sortable number for the month a period starts in ("Sept. 2025 – Apr. 2026" -> 2025 * 12 + 8). */
 function startMonth(period: string) {
@@ -15,40 +13,40 @@ function startMonth(period: string) {
 }
 
 describe("experience data", () => {
-  it("puts the most recent role first, and roles newest first inside each branch", () => {
-    const newest = Math.max(...roles.map((role) => startMonth(role.period)));
-    expect(startMonth(experienceBranches[0].roles[0].period)).toBe(newest);
-
-    for (const branch of experienceBranches) {
-      const starts = branch.roles.map((role) => startMonth(role.period));
-      expect(starts).toEqual([...starts].sort((a, b) => b - a));
-    }
-  });
-
-  it("orders the branches by their most recent role", () => {
-    const latest = experienceBranches.map((branch) => startMonth(branch.roles[0].period));
-    expect(latest).toEqual([...latest].sort((a, b) => b - a));
+  it("runs newest first, by the month each role starts", () => {
+    const starts = roles.map((role) => startMonth(role.period));
+    expect(starts).toEqual([...starts].sort((a, b) => b - a));
+    // No two roles start together, so the order is never a judgement call.
+    expect(new Set(starts).size).toBe(starts.length);
   });
 
   it("writes every date range with an en dash", () => {
-    const periods = [...experienceBranches.map((branch) => branch.period), ...roles.map((role) => role.period)];
-    for (const period of periods) {
-      expect(period).toMatch(/ – /);
-      expect(period).not.toMatch(/-/);
+    for (const role of roles) {
+      expect(role.period).toMatch(/ – /);
+      expect(role.period).not.toMatch(/-/);
     }
   });
 
-  it("holds the upcoming roles in their own branch, with dates and a place but no highlights yet", () => {
+  it("leads with the upcoming roles, which have dates and a place but no highlights yet", () => {
     const upcoming = roles.filter((role) => role.upcoming);
     expect(upcoming.map((role) => [role.title, role.period, role.location])).toEqual([
       ["Aven Financial", "May 2027 – Aug. 2027", "San Jose, CA"],
       ["ATOMS", "Jan. 2027 – Apr. 2027", "San Francisco, CA"],
     ]);
-    expect(experienceBranches[0].roles).toEqual(upcoming);
+    expect(roles.slice(0, upcoming.length)).toEqual(upcoming);
     for (const role of roles) {
       // A role has something to show for itself exactly when it has happened.
       expect(role.highlights.length === 0).toBe(Boolean(role.upcoming));
     }
+  });
+
+  it("gives every role that has happened one of a few themes", () => {
+    for (const role of roles) {
+      expect(Boolean(role.theme)).toBe(!role.upcoming);
+    }
+    expect(new Set(roles.flatMap((role) => role.theme ?? []))).toEqual(
+      new Set(["Developer Productivity", "Robotics and Automation", "Platform and Security"]),
+    );
   });
 
   it("writes every location as City, two-letter region", () => {
@@ -68,38 +66,20 @@ describe("experience section", () => {
     expect(within(section).getByRole("heading", { level: 2, name: "Experience" })).toBeInTheDocument();
   });
 
-  it("renders every branch as a level-3 heading, in data order, with its period", () => {
+  it("renders every role as a card in one list, in data order", () => {
     render(<Experiences />);
 
-    const headings = screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent);
-    expect(headings.slice(0, experienceBranches.length)).toEqual(experienceBranches.map((branch) => branch.title));
-
-    for (const branch of experienceBranches) {
-      const item = screen.getByRole("heading", { level: 3, name: branch.title }).closest("li");
-      expect(item).not.toBeNull();
-      expect(within(item!).getByText(branch.period)).toBeInTheDocument();
-      expect(within(item!).getByText(branch.subtitle)).toBeInTheDocument();
-      const tags = within(item!).getByRole("list", { name: `${branch.title} themes` });
-      expect(within(tags).getAllByRole("listitem").map((tag) => tag.textContent)).toEqual(branch.tags);
-    }
-  });
-
-  it("renders every role as a card under its branch, in data order", () => {
-    render(<Experiences />);
-
-    const cards = screen.getAllByRole("article");
-    expect(cards.map((card) => within(card).getByRole("heading", { level: 4 }).textContent)).toEqual(
+    const list = screen.getByRole("list", { name: "Roles, newest first" });
+    expect(list.children).toHaveLength(roles.length);
+    const cards = within(list).getAllByRole("article");
+    expect(cards.map((card) => within(card).getByRole("heading", { level: 3 }).textContent)).toEqual(
       roles.map((role) => role.title),
     );
-
-    for (const branch of experienceBranches) {
-      // The list of roles is named by the branch heading.
-      const list = screen.getByRole("list", { name: branch.title });
-      expect(within(list).getAllByRole("article")).toHaveLength(branch.roles.length);
-    }
+    // Every card on the page is in that one list.
+    expect(screen.getAllByRole("article")).toHaveLength(roles.length);
   });
 
-  it("shows each role's team, period, location, tags and every highlight", () => {
+  it("shows each role's team, period, location, theme, tags and every highlight", () => {
     render(<Experiences />);
 
     for (const role of roles) {
@@ -107,6 +87,9 @@ describe("experience section", () => {
       expect(within(card).getByText(role.subtitle)).toBeInTheDocument();
       expect(within(card).getByText(role.period)).toBeInTheDocument();
       expect(within(card).getByText(role.location)).toBeInTheDocument();
+      if (role.theme) {
+        expect(within(card).getByText(role.theme)).toBeInTheDocument();
+      }
 
       const tags = within(card).getByRole("list", { name: `Focus areas at ${role.title}` });
       expect(within(tags).getAllByRole("listitem").map((tag) => tag.textContent)).toEqual(role.tags);
@@ -129,15 +112,11 @@ describe("experience section", () => {
     }
   });
 
-  it("summarises the tree in one line computed from the data", () => {
+  it("summarises the timeline in one line computed from the data", () => {
     render(<Experiences />);
 
     const summary = screen.getByText(new RegExp(`^${roles.length} roles`));
     expect(summary).toHaveTextContent("2023 – 2027");
-    expect(summary).toHaveTextContent(`${experienceBranches.length} branches`);
-    for (const branch of experienceBranches) {
-      expect(summary).toHaveTextContent(branch.title);
-    }
   });
 
   it("keeps headings in order: no level is skipped and nothing outranks the section title", () => {
@@ -154,12 +133,12 @@ describe("experience section", () => {
     });
   });
 
-  it("hides the drawn tree (trunk, nodes, twigs) from assistive technology", () => {
+  it("hides the drawn timeline (trunk, nodes, twigs) from assistive technology", () => {
     const { container } = render(<Experiences />);
 
     const decorations = container.querySelectorAll("ol span[aria-hidden='true']");
-    // One trunk piece and one node per branch and per role.
-    expect(decorations.length).toBeGreaterThanOrEqual((experienceBranches.length + roles.length) * 2);
+    // One trunk piece and one node per role.
+    expect(decorations.length).toBeGreaterThanOrEqual(roles.length * 2);
     for (const decoration of decorations) {
       expect(decoration.textContent?.trim() ?? "").toMatch(/^·?$/);
     }

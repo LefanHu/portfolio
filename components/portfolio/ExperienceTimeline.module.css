@@ -1,16 +1,15 @@
 /*
- * The experience tree: its skeleton (trunk, nodes, twigs) and the one
+ * The experience timeline: its skeleton (trunk, nodes, twigs) and the one
  * scroll-linked animation on the site.
  *
- * The trunk is drawn in pieces, one per branch header and one per role, laid
- * end to end. Each piece is a static track with a coloured fill on top. That
- * keeps the line exact without measuring anything: the first piece starts at
- * the first node and the last one stops at the last node, whatever the cards'
- * heights are.
+ * The trunk is drawn in pieces, one per role, laid end to end. Each piece is
+ * a static track with a coloured fill on top. That keeps the line exact
+ * without measuring anything: the first piece starts at the first node and
+ * the last one stops at the last node, whatever the cards' heights are.
  *
- * Below 64rem the trunk runs down the left edge and everything hangs to its
- * right. From 64rem the trunk sits between two columns: branch headers on the
- * left, role cards on the right.
+ * Below 64rem the trunk runs down the left edge: each role's dates sit beside
+ * its node and its card hangs underneath. From 64rem the trunk sits between
+ * two columns: dates on the left, cards on the right.
  *
  * Nothing here uses ::before/::after: the altar's wire stage owns those on
  * list items and cards, so every line and dot is a real element.
@@ -23,21 +22,18 @@
   initial-value: 1;
 }
 
-.tree,
+.timeline,
 .skills {
-  /* Width of the branch-header column in the two-column layout. */
-  --head: 17rem;
-  /* From the trunk's centre line to the edge of a role card. */
+  /* Width of the dates column in the two-column layout. */
+  --head: 13rem;
+  /* From the trunk's centre line to the edge of a role's content. */
   --reach: 0.9375rem;
 }
 
-.tree {
-  --role-gap: 0.875rem;
-  --branch-gap: 2rem;
-  /* Centre of a branch title's first line, from the top of the branch. */
-  --branch-y: 0.875rem;
-  /* Centre of a role's employer line, from the top of its card. */
-  --role-y: 1.875rem;
+.timeline {
+  --role-gap: 1.5rem;
+  /* Centre of the line a role's node sits on (its dates), from the top of the role. */
+  --role-y: 0.625rem;
   /*
    * In one column the trunk runs straight down from the section title's
    * sigil: the sigil is 0.7em wide, so its centre is 0.35 of the title size
@@ -49,30 +45,36 @@
 
   display: flex;
   flex-direction: column;
-  gap: var(--branch-gap);
+  gap: var(--role-gap);
   padding-left: calc(var(--axis) + var(--reach));
 }
 
-.head {
+.role {
   position: relative;
-  /* Padding, not a gap, so the header's piece of trunk spans it. */
-  padding-bottom: 0.875rem;
 }
 
-.roles {
+.entry {
   display: flex;
   flex-direction: column;
-  gap: var(--role-gap);
+  gap: 0.625rem;
 }
 
-/* A piece of trunk: the track. */
+/* A piece of trunk: the track. It runs on through the gap to the next role. */
 .rail {
   position: absolute;
   left: calc(var(--trunk-x) - 1px);
   top: 0;
-  bottom: 0;
+  bottom: calc(-1 * var(--role-gap));
   width: 2px;
   background-color: var(--line-strong);
+}
+/* The trunk starts at the first node and stops at the last. */
+.role:first-child > .rail {
+  top: var(--role-y);
+}
+.role:last-child > .rail {
+  bottom: auto;
+  height: var(--role-y);
 }
 
 /* The drawn part of that piece. */
@@ -83,53 +85,19 @@
   transform-origin: top;
 }
 
-/* The header's piece restarts just below its diamond, so the hollow diamond has no line through it. */
-.head > .rail {
-  top: calc(var(--branch-y) * 2);
-}
-
-/* A role's piece runs on through the gap to the next role, or to the next branch. */
-.role > .rail {
-  bottom: calc(-1 * var(--role-gap));
-}
-.role:last-child > .rail {
-  bottom: calc(-1 * var(--branch-gap));
-}
-.branch:last-child .role:last-child > .rail {
-  bottom: auto;
-  height: var(--role-y);
-}
-
 /* A node's anchor on the trunk; it carries the lit state for its dot and twig. */
 .mark {
   position: absolute;
-  pointer-events: none;
-}
-
-.branchMark {
-  left: calc(var(--trunk-x) - 0.5625rem);
-  top: calc(var(--branch-y) - 0.5625rem);
-  width: 1.125rem;
-  height: 1.125rem;
-}
-.branchMark svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-/* The Sigil primitive is hollow until filled; here the lit state fills it. */
-.branchMark path {
-  fill-opacity: var(--exp-lit);
-}
-
-.roleMark {
   left: var(--trunk-x);
   top: calc(var(--role-y) - 0.375rem);
   width: var(--reach);
   height: 0.75rem;
+  pointer-events: none;
 }
 
+/* The line from a node to its card. In one column the dates sit there instead. */
 .twig {
+  display: none;
   position: absolute;
   left: 0;
   right: 0;
@@ -157,63 +125,48 @@
 }
 
 @media (min-width: 40rem) {
-  .tree,
+  .timeline,
   .skills {
     --reach: 1.5rem;
   }
 
-  .tree {
-    --role-gap: 1.25rem;
-    --branch-gap: 3rem;
-    /* Cards have more padding from here up. */
-    --role-y: 2.4375rem;
+  .timeline {
+    --role-gap: 1.75rem;
   }
 }
 
 @media (min-width: 64rem) {
-  .tree,
+  .timeline,
   .skills {
     --reach: 2rem;
   }
 
-  .tree {
-    /* Clear trunk between a branch's diamond and its first role. */
-    --lead-in: 3rem;
+  .timeline {
+    --role-gap: 1.25rem;
+    /* The node moves level with the employer's name: its centre, from the top of the card. */
+    --role-y: 2.4375rem;
+    --trunk-x: calc(var(--head) + var(--reach));
     padding-left: 0;
   }
 
-  .branch,
+  .entry,
   .skills {
     display: grid;
     grid-template-columns: var(--head) minmax(0, 1fr);
     column-gap: calc(var(--reach) * 2);
   }
 
-  /* The header's trunk piece and diamond now hang off the branch itself (the trunk is outside the header's column). */
-  .head {
-    position: static;
-    padding-bottom: 0;
-  }
-  .head > .rail {
-    left: calc(var(--head) + var(--reach) - 1px);
-    bottom: auto;
-    height: calc(var(--lead-in) - var(--branch-y) * 2);
-  }
-  .head > .branchMark {
-    left: calc(var(--head) + var(--reach) - 0.5625rem);
+  .entry {
+    align-items: start;
   }
 
-  /*
-   * The branch's title follows the reader down its (much taller) column of
-   * roles, so the left column always says which branch is on screen.
-   */
-  .headText {
-    position: sticky;
-    top: calc(var(--nav-h) + 1.5rem);
+  /* Puts the first line of the dates on the node's line (half a text-sm line above its centre). */
+  .when {
+    padding-top: calc(var(--role-y) - 0.625rem);
   }
 
-  .roles {
-    padding-top: var(--lead-in);
+  .twig {
+    display: block;
   }
 }
 
@@ -221,7 +174,7 @@
  * Scroll-linked drawing. The reading line sits a little below the middle of
  * the viewport: the trunk's fill follows it down, and each node lights as the
  * line reaches it. Without support, or when the reader asks for less motion,
- * none of this applies and the tree is simply drawn.
+ * none of this applies and the timeline is simply drawn.
  */
 @supports (animation-timeline: view()) {
   @media screen and (prefers-reduced-motion: no-preference) {
@@ -251,10 +204,6 @@
     }
     .twigFill {
       transition: transform 280ms var(--ease-swift);
-    }
-    .branchMark svg {
-      scale: calc(0.82 + 0.18 * var(--exp-lit));
-      transition: scale 380ms cubic-bezier(0.34, 1.8, 0.64, 1);
     }
   }
 }
