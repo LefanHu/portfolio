@@ -5,7 +5,10 @@ export type ExperienceRole = {
   location: string;
   period: string;
   tags: string[];
+  /** Empty for a role that has not started. */
   highlights: string[];
+  /** An accepted role that has not started: its card says so and has no highlights yet. */
+  upcoming?: boolean;
 };
 
 export type ExperienceBranch = {
@@ -20,6 +23,36 @@ export type ExperienceBranch = {
 // Display order: the branch holding the most recent role comes first, and
 // roles run newest first inside a branch. The section renders this as written.
 export const experienceBranches: ExperienceBranch[] = [
+  // Roles move out of here into a branch of their own kind once they have highlights to show.
+  {
+    id: "up-next",
+    title: "Up Next",
+    subtitle: "Software engineering co-op terms lined up for 2027",
+    period: "Jan. – Aug. 2027",
+    tags: ["Co-op", "Winter 2027", "Spring 2027"],
+    roles: [
+      {
+        id: "aven-financial",
+        title: "Aven Financial",
+        subtitle: "Software Development Engineer",
+        location: "San Jose, CA",
+        period: "May 2027 – Aug. 2027",
+        tags: ["Spring 2027", "Co-op"],
+        highlights: [],
+        upcoming: true,
+      },
+      {
+        id: "atoms",
+        title: "ATOMS",
+        subtitle: "Software Development Engineer",
+        location: "San Francisco, CA",
+        period: "Jan. 2027 – Apr. 2027",
+        tags: ["Winter 2027", "Co-op"],
+        highlights: [],
+        upcoming: true,
+      },
+    ],
+  },
   {
     id: "developer-productivity",
     title: "Developer Productivity",

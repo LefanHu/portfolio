@@ -3,7 +3,7 @@ import { SITE_ANCHORS } from "@/lib/portfolioProjects";
 import Panel from "@/components/ui/Panel";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Sigil from "@/components/ui/Sigil";
-import { TagList } from "@/components/ui/Tag";
+import Tag, { TagList } from "@/components/ui/Tag";
 import TechnicalSkills from "./TechnicalSkills";
 import styles from "./ExperienceTree.module.css";
 
@@ -40,9 +40,13 @@ function RoleCard({ role }: { role: ExperienceRole }) {
       <Panel as="article" aria-labelledby={headingId} className="p-4 sm:p-6">
         <div className="flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h4 id={headingId} className="font-display text-lead font-bold leading-tight text-ink">
-              {role.title}
-            </h4>
+            {/* The status sits beside the heading, not in it, so the card is still named by the employer alone. */}
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <h4 id={headingId} className="font-display text-lead font-bold leading-tight text-ink">
+                {role.title}
+              </h4>
+              {role.upcoming ? <Tag tone="accent">Upcoming</Tag> : null}
+            </div>
             <p className="mt-1 text-sm font-medium text-body">{role.subtitle}</p>
           </div>
           <p className="shrink-0 text-sm text-mute sm:text-right">
@@ -57,11 +61,13 @@ function RoleCard({ role }: { role: ExperienceRole }) {
         <div className="mt-3">
           <TagList label={`Focus areas at ${role.title}`} tags={role.tags} />
         </div>
-        <ul className="mt-3 max-w-prose list-disc space-y-1.5 pl-4 text-sm text-body marker:text-sig-experience sm:mt-4 sm:space-y-2 sm:pl-5">
-          {role.highlights.map((highlight) => (
-            <li key={highlight}>{highlight}</li>
-          ))}
-        </ul>
+        {role.highlights.length > 0 ? (
+          <ul className="mt-3 max-w-prose list-disc space-y-1.5 pl-4 text-sm text-body marker:text-sig-experience sm:mt-4 sm:space-y-2 sm:pl-5">
+            {role.highlights.map((highlight) => (
+              <li key={highlight}>{highlight}</li>
+            ))}
+          </ul>
+        ) : null}
       </Panel>
     </li>
   );
@@ -114,7 +120,8 @@ export default function Experiences() {
   return (
     <section id={SITE_ANCHORS.experience} aria-labelledby={TITLE_ID}>
       <SectionHeading section="experience" title="Experience" id={TITLE_ID}>
-        Internships where I shipped production systems, grouped by the kinds of systems I like building.
+        Internships where I shipped production systems, grouped by the kinds of systems I like building, with the
+        next two co-op terms up top.
       </SectionHeading>
       <p className="mt-4 text-sm text-mute">
         {roles.length} roles <span aria-hidden="true">·</span> {yearSpan(roles)} <span aria-hidden="true">·</span>{" "}

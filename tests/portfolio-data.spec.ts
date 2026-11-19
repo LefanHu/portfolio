@@ -6,11 +6,19 @@ import { interests } from "@/lib/portfolio/interests";
 
 describe("portfolio data", () => {
   it("has experience branches and roles", () => {
-    expect(experienceBranches).toHaveLength(3);
+    expect(experienceBranches).toHaveLength(4);
     const titles = experienceBranches.flatMap((b) => b.roles.map((r) => r.title));
-    expect(titles).toHaveLength(5);
+    expect(titles).toHaveLength(7);
     expect(titles).toEqual(
-      expect.arrayContaining(["Amazon Robotics", "Adentro", "TELUS", "Capital One", "Ciena"]),
+      expect.arrayContaining([
+        "Aven Financial",
+        "ATOMS",
+        "Amazon Robotics",
+        "Adentro",
+        "TELUS",
+        "Capital One",
+        "Ciena",
+      ]),
     );
   });
 

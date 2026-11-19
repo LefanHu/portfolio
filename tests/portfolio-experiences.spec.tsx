@@ -38,6 +38,19 @@ describe("experience data", () => {
     }
   });
 
+  it("holds the upcoming roles in their own branch, with dates and a place but no highlights yet", () => {
+    const upcoming = roles.filter((role) => role.upcoming);
+    expect(upcoming.map((role) => [role.title, role.period, role.location])).toEqual([
+      ["Aven Financial", "May 2027 – Aug. 2027", "San Jose, CA"],
+      ["ATOMS", "Jan. 2027 – Apr. 2027", "San Francisco, CA"],
+    ]);
+    expect(experienceBranches[0].roles).toEqual(upcoming);
+    for (const role of roles) {
+      // A role has something to show for itself exactly when it has happened.
+      expect(role.highlights.length === 0).toBe(Boolean(role.upcoming));
+    }
+  });
+
   it("writes every location as City, two-letter region", () => {
     for (const role of roles) {
       expect(role.location).toMatch(/^[A-Z][A-Za-z .]+, [A-Z]{2}$/);
@@ -104,11 +117,23 @@ describe("experience section", () => {
     }
   });
 
+  it("marks the upcoming roles, and only those, and gives them no empty list of highlights", () => {
+    render(<Experiences />);
+
+    for (const role of roles) {
+      const card = screen.getByRole("article", { name: role.title });
+      const marked = within(card).queryByText("Upcoming") !== null;
+      expect(marked).toBe(Boolean(role.upcoming));
+      // The tag list is always there; a list of highlights only when there are some.
+      expect(within(card).getAllByRole("list")).toHaveLength(role.highlights.length > 0 ? 2 : 1);
+    }
+  });
+
   it("summarises the tree in one line computed from the data", () => {
     render(<Experiences />);
 
     const summary = screen.getByText(new RegExp(`^${roles.length} roles`));
-    expect(summary).toHaveTextContent("2023 – 2026");
+    expect(summary).toHaveTextContent("2023 – 2027");
     expect(summary).toHaveTextContent(`${experienceBranches.length} branches`);
     for (const branch of experienceBranches) {
       expect(summary).toHaveTextContent(branch.title);
