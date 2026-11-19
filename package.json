@@ -49,7 +49,7 @@
     "os": false,
     "path": false
   },
-  "packageManager": "pnpm@10.34.6",
+  "packageManager": "pnpm@12.21.0",
   "engines": {
     "node": ">=24"
   }
