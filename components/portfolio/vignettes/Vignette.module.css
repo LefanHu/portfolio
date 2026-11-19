@@ -1,0 +1,96 @@
+/*
+ * A role's animated figure and where it sits on the card.
+ *
+ * On a phone the card is one column: the role's heading, the figure as a wide
+ * strip, then the highlights. From 40rem the figure moves to a column of its
+ * own on the right, beside everything else.
+ */
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "head"
+    "figure"
+    "body";
+  row-gap: 0.875rem;
+}
+
+.head {
+  grid-area: head;
+}
+
+.body {
+  grid-area: body;
+}
+
+.figure {
+  grid-area: figure;
+}
+
+/* No WebGL, or the engine did not load: the card goes back to text alone. */
+.figure[data-state="off"] {
+  display: none;
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 400ms var(--ease-swift);
+}
+
+.figure[data-state="live"] .canvas {
+  opacity: 1;
+}
+
+@media (min-width: 40rem) {
+  .card {
+    /* The figure sets its own width, so its column closes up if the figure is removed. */
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "head figure"
+      "body figure";
+    column-gap: 1.5rem;
+    row-gap: 0;
+  }
+
+  .figure {
+    width: 15rem;
+  }
+
+  .stage {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* A card with little text (a role that has not started) takes a smaller figure, so it is not mostly empty. */
+  .compact .figure {
+    width: 12rem;
+  }
+}
+
+/* Room to spare beside the text: a larger figure. */
+@media (min-width: 80rem) {
+  .figure {
+    width: 17rem;
+  }
+
+  .compact .figure {
+    width: 13rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    transition: none;
+  }
+}

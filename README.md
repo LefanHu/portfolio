@@ -20,6 +20,7 @@ The app uses the Next.js App Router with route groups to separate different site
 - **Portfolio pages** for featured projects and project gallery
 - **Project detail pages** (e.g., media stack, drone, Three.js work, stable diffusion)
 - **Interactive visuals** using React Three Fiber / Drei and custom components
+- **Experience vignettes**: a small three.js animation on each role's card about the work done there
 - **LeetCode stats API integration** via GraphQL
 - **S3 bucket listing endpoint** for lightweight asset inspection
 
@@ -42,6 +43,7 @@ components/
   ui/                  Shared primitives (buttons, tags, panels, section headings, icons)
   site/                Header, footer, theme toggle, page transition, sky backdrop
   portfolio/           Home page sections
+    vignettes/         The animated figures on the experience cards (see below)
   projects/            Project page template, media gallery
   playground/          The /js experiment runner
   altar/               The 3D altar
@@ -49,6 +51,17 @@ lib/                   Shared data and utilities (lib/theme.ts is the theme)
 models/                Local model/component definitions
 public/                Static assets (images, models)
 ```
+
+## Experience vignettes
+
+Each role in `lib/portfolio/experience.ts` has a small animated figure on its card, drawn with plain three.js in `components/portfolio/vignettes/`:
+
+- `captions.ts` lists the roles that have a figure and the line shown under each.
+- `scenes/<role-id>.ts` is the scene: a function from the theme's colours to a group of objects and an `update(t)` that poses them. `update` must depend on `t` alone (see `types.ts`).
+- `kit.ts` holds the shared materials, shapes and timing helpers, so the scenes read as one set.
+- `engine.ts` draws all of them with a single WebGL context and copies each picture to an ordinary canvas on its card. It loads on demand, only draws figures that are on screen, follows the theme, and stops for the section's pause button (which starts paused under reduced motion).
+
+To add a role's figure: add its caption, write its scene, and register it in `scenes/index.ts`. `tests/experience-vignettes.spec.tsx` checks every role has one and that each scene is a pure function of time.
 
 ## Design system and themes
 

@@ -4,6 +4,10 @@ import Panel from "@/components/ui/Panel";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Tag, { TagList } from "@/components/ui/Tag";
 import TechnicalSkills from "./TechnicalSkills";
+import { isVignetteId, VIGNETTE_CAPTIONS } from "./vignettes/captions";
+import MotionToggle from "./vignettes/MotionToggle";
+import Vignette from "./vignettes/Vignette";
+import figure from "./vignettes/Vignette.module.css";
 import styles from "./ExperienceTimeline.module.css";
 
 export { experienceRoles };
@@ -41,30 +45,37 @@ function Role({ role }: { role: ExperienceRole }) {
           <span className="whitespace-nowrap lg:mt-0.5 lg:block">{role.location}</span>
         </p>
         <Panel className="p-4 sm:p-6">
-          {/* The status sits beside the heading, not in it, so the card is still named by the employer alone. */}
-          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-            <h3 id={headingId} className="font-display text-lead font-bold leading-tight text-ink">
-              {role.title}
-            </h3>
-            {role.upcoming ? <Tag tone="accent">Upcoming</Tag> : null}
+          <div className={role.highlights.length > 0 ? figure.card : `${figure.card} ${figure.compact}`}>
+            <div className={figure.head}>
+              {/* The status sits beside the heading, not in it, so the card is still named by the employer alone. */}
+              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                <h3 id={headingId} className="font-display text-lead font-bold leading-tight text-ink">
+                  {role.title}
+                </h3>
+                {role.upcoming ? <Tag tone="accent">Upcoming</Tag> : null}
+              </div>
+              <p className="mt-1 text-sm font-medium text-body">{role.subtitle}</p>
+              {role.theme ? (
+                <p className="mt-0.5 text-sm text-sig-experience">
+                  <span className="sr-only">Theme: </span>
+                  <span>{role.theme}</span>
+                </p>
+              ) : null}
+              <div className="mt-3">
+                <TagList label={`Focus areas at ${role.title}`} tags={role.tags} />
+              </div>
+            </div>
+            {isVignetteId(role.id) ? <Vignette id={role.id} caption={VIGNETTE_CAPTIONS[role.id]} /> : null}
+            {role.highlights.length > 0 ? (
+              <ul
+                className={`${figure.body} max-w-prose list-disc space-y-1.5 pl-4 text-sm text-body marker:text-sig-experience sm:mt-4 sm:space-y-2 sm:pl-5`}
+              >
+                {role.highlights.map((highlight) => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
+            ) : null}
           </div>
-          <p className="mt-1 text-sm font-medium text-body">{role.subtitle}</p>
-          {role.theme ? (
-            <p className="mt-0.5 text-sm text-sig-experience">
-              <span className="sr-only">Theme: </span>
-              <span>{role.theme}</span>
-            </p>
-          ) : null}
-          <div className="mt-3">
-            <TagList label={`Focus areas at ${role.title}`} tags={role.tags} />
-          </div>
-          {role.highlights.length > 0 ? (
-            <ul className="mt-3 max-w-prose list-disc space-y-1.5 pl-4 text-sm text-body marker:text-sig-experience sm:mt-4 sm:space-y-2 sm:pl-5">
-              {role.highlights.map((highlight) => (
-                <li key={highlight}>{highlight}</li>
-              ))}
-            </ul>
-          ) : null}
         </Panel>
       </article>
     </li>
@@ -83,9 +94,12 @@ export default function Experiences() {
         Internships where I shipped production systems, newest first, starting with the two co-op terms coming up
         next.
       </SectionHeading>
-      <p className="mt-4 text-sm text-mute">
-        {experienceRoles.length} roles <span aria-hidden="true">·</span> {yearSpan(experienceRoles)}
-      </p>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+        <p className="text-sm text-mute">
+          {experienceRoles.length} roles <span aria-hidden="true">·</span> {yearSpan(experienceRoles)}
+        </p>
+        <MotionToggle className="-mx-2" />
+      </div>
 
       <ol role="list" aria-label="Roles, newest first" className={`${styles.timeline} mt-6 sm:mt-10`}>
         {experienceRoles.map((role) => (
